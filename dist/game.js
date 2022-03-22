@@ -9,19 +9,19 @@
   var rr = Object.getOwnPropertySymbols;
   var Ji = Object.prototype.hasOwnProperty;
   var Qi = Object.prototype.propertyIsEnumerable;
-  var Nt = /* @__PURE__ */ __name((i2, t2, l) => t2 in i2 ? ir(i2, t2, { enumerable: true, configurable: true, writable: true, value: l }) : i2[t2] = l, "Nt");
-  var P = /* @__PURE__ */ __name((i2, t2) => {
-    for (var l in t2 || (t2 = {}))
-      Ji.call(t2, l) && Nt(i2, l, t2[l]);
+  var Nt = /* @__PURE__ */ __name((i2, t, l) => t in i2 ? ir(i2, t, { enumerable: true, configurable: true, writable: true, value: l }) : i2[t] = l, "Nt");
+  var P = /* @__PURE__ */ __name((i2, t) => {
+    for (var l in t || (t = {}))
+      Ji.call(t, l) && Nt(i2, l, t[l]);
     if (rr)
-      for (var l of rr(t2))
-        Qi.call(t2, l) && Nt(i2, l, t2[l]);
+      for (var l of rr(t))
+        Qi.call(t, l) && Nt(i2, l, t[l]);
     return i2;
   }, "P");
-  var D = /* @__PURE__ */ __name((i2, t2) => Hi(i2, zi(t2)), "D");
-  var a = /* @__PURE__ */ __name((i2, t2) => ir(i2, "name", { value: t2, configurable: true }), "a");
-  var b = /* @__PURE__ */ __name((i2, t2, l) => (Nt(i2, typeof t2 != "symbol" ? t2 + "" : t2, l), l), "b");
-  var sr = /* @__PURE__ */ __name((i2, t2, l) => new Promise((w2, U) => {
+  var D = /* @__PURE__ */ __name((i2, t) => Hi(i2, zi(t)), "D");
+  var a = /* @__PURE__ */ __name((i2, t) => ir(i2, "name", { value: t, configurable: true }), "a");
+  var b = /* @__PURE__ */ __name((i2, t, l) => (Nt(i2, typeof t != "symbol" ? t + "" : t, l), l), "b");
+  var sr = /* @__PURE__ */ __name((i2, t, l) => new Promise((w, U) => {
     var p = /* @__PURE__ */ __name((q) => {
       try {
         A(l.next(q));
@@ -34,14 +34,14 @@
       } catch (V) {
         U(V);
       }
-    }, "S"), A = /* @__PURE__ */ __name((q) => q.done ? w2(q.value) : Promise.resolve(q.value).then(p, S), "A");
-    A((l = l.apply(i2, t2)).next());
+    }, "S"), A = /* @__PURE__ */ __name((q) => q.done ? w(q.value) : Promise.resolve(q.value).then(p, S), "A");
+    A((l = l.apply(i2, t)).next());
   }), "sr");
   var or = (() => {
-    for (var i2 = new Uint8Array(128), t2 = 0; t2 < 64; t2++)
-      i2[t2 < 26 ? t2 + 65 : t2 < 52 ? t2 + 71 : t2 < 62 ? t2 - 4 : t2 * 4 - 205] = t2;
+    for (var i2 = new Uint8Array(128), t = 0; t < 64; t++)
+      i2[t < 26 ? t + 65 : t < 52 ? t + 71 : t < 62 ? t - 4 : t * 4 - 205] = t;
     return (l) => {
-      for (var w2 = l.length, U = new Uint8Array((w2 - (l[w2 - 1] == "=") - (l[w2 - 2] == "=")) * 3 / 4 | 0), p = 0, S = 0; p < w2; ) {
+      for (var w = l.length, U = new Uint8Array((w - (l[w - 1] == "=") - (l[w - 2] == "=")) * 3 / 4 | 0), p = 0, S = 0; p < w; ) {
         var A = i2[l.charCodeAt(p++)], q = i2[l.charCodeAt(p++)], V = i2[l.charCodeAt(p++)], j = i2[l.charCodeAt(p++)];
         U[S++] = A << 2 | q >> 4, U[S++] = q << 4 | V >> 2, U[S++] = V << 6 | j;
       }
@@ -49,49 +49,49 @@
     };
   })();
   var $ = /* @__PURE__ */ __name(class extends Map {
-    constructor(...t2) {
-      super(...t2);
+    constructor(...t) {
+      super(...t);
       b(this, "_lastID");
       this._lastID = 0;
     }
-    push(t2) {
+    push(t) {
       let l = this._lastID;
-      return this.set(l, t2), this._lastID++, l;
+      return this.set(l, t), this._lastID++, l;
     }
-    pushd(t2) {
-      let l = this.push(t2);
+    pushd(t) {
+      let l = this.push(t);
       return () => this.delete(l);
     }
   }, "$");
   a($, "IDList");
-  function jt(i2, t2) {
-    let l = typeof i2, w2 = typeof t2;
-    if (l !== w2)
+  function jt(i2, t) {
+    let l = typeof i2, w = typeof t;
+    if (l !== w)
       return false;
-    if (l === "object" && w2 === "object") {
-      let U = Object.keys(i2), p = Object.keys(t2);
+    if (l === "object" && w === "object") {
+      let U = Object.keys(i2), p = Object.keys(t);
       if (U.length !== p.length)
         return false;
       for (let S of U) {
-        let A = i2[S], q = t2[S];
+        let A = i2[S], q = t[S];
         if (!(typeof A == "function" && typeof q == "function") && !jt(A, q))
           return false;
       }
       return true;
     }
-    return i2 === t2;
+    return i2 === t;
   }
   __name(jt, "jt");
   a(jt, "deepEq");
-  function Yt(i2, t2) {
+  function Yt(i2, t) {
     let l = document.createElement("a");
-    document.body.appendChild(l), l.setAttribute("style", "display: none"), l.href = i2, l.download = t2, l.click(), document.body.removeChild(l);
+    document.body.appendChild(l), l.setAttribute("style", "display: none"), l.href = i2, l.download = t, l.click(), document.body.removeChild(l);
   }
   __name(Yt, "Yt");
   a(Yt, "downloadURL");
-  function ur(i2, t2) {
+  function ur(i2, t) {
     let l = URL.createObjectURL(i2);
-    Yt(l, t2), URL.revokeObjectURL(l);
+    Yt(l, t), URL.revokeObjectURL(l);
   }
   __name(ur, "ur");
   a(ur, "downloadBlob");
@@ -105,12 +105,12 @@
     return () => i2++;
   })();
   var ar = /* @__PURE__ */ new Set();
-  function B(i2, t2) {
-    ar.has(i2) || (ar.add(i2), console.warn(`${i2} is deprecated. Use ${t2} instead.`));
+  function B(i2, t) {
+    ar.has(i2) || (ar.add(i2), console.warn(`${i2} is deprecated. Use ${t} instead.`));
   }
   __name(B, "B");
   a(B, "deprecateMsg");
-  var T = a((i2, t2, l) => (...w2) => (B(i2, t2), l(...w2)), "deprecate");
+  var T = a((i2, t, l) => (...w) => (B(i2, t), l(...w)), "deprecate");
   function he(i2) {
     return i2 * Math.PI / 180;
   }
@@ -121,53 +121,53 @@
   }
   __name(Xt, "Xt");
   a(Xt, "rad2deg");
-  function z(i2, t2, l) {
-    return t2 > l ? z(i2, l, t2) : Math.min(Math.max(i2, t2), l);
+  function z(i2, t, l) {
+    return t > l ? z(i2, l, t) : Math.min(Math.max(i2, t), l);
   }
   __name(z, "z");
   a(z, "clamp");
-  function Ve(i2, t2, l) {
-    return i2 + (t2 - i2) * l;
+  function Ve(i2, t, l) {
+    return i2 + (t - i2) * l;
   }
   __name(Ve, "Ve");
   a(Ve, "lerp");
-  function dt(i2, t2, l, w2, U) {
-    return w2 + (i2 - t2) / (l - t2) * (U - w2);
+  function dt(i2, t, l, w, U) {
+    return w + (i2 - t) / (l - t) * (U - w);
   }
   __name(dt, "dt");
   a(dt, "map");
-  function dr(i2, t2, l, w2, U) {
-    return z(dt(i2, t2, l, w2, U), w2, U);
+  function dr(i2, t, l, w, U) {
+    return z(dt(i2, t, l, w, U), w, U);
   }
   __name(dr, "dr");
   a(dr, "mapc");
   var N = /* @__PURE__ */ __name(class {
-    constructor(t2 = 0, l = t2) {
+    constructor(t = 0, l = t) {
       b(this, "x", 0);
       b(this, "y", 0);
-      this.x = t2, this.y = l;
+      this.x = t, this.y = l;
     }
-    static fromAngle(t2) {
-      let l = he(t2);
+    static fromAngle(t) {
+      let l = he(t);
       return new N(Math.cos(l), Math.sin(l));
     }
     clone() {
       return new N(this.x, this.y);
     }
-    add(...t2) {
-      let l = f(...t2);
+    add(...t) {
+      let l = f(...t);
       return new N(this.x + l.x, this.y + l.y);
     }
-    sub(...t2) {
-      let l = f(...t2);
+    sub(...t) {
+      let l = f(...t);
       return new N(this.x - l.x, this.y - l.y);
     }
-    scale(...t2) {
-      let l = f(...t2);
+    scale(...t) {
+      let l = f(...t);
       return new N(this.x * l.x, this.y * l.y);
     }
-    dist(...t2) {
-      let l = f(...t2);
+    dist(...t) {
+      let l = f(...t);
       return Math.sqrt((this.x - l.x) * (this.x - l.x) + (this.y - l.y) * (this.y - l.y));
     }
     len() {
@@ -179,21 +179,21 @@
     normal() {
       return new N(this.y, -this.x);
     }
-    dot(t2) {
-      return this.x * t2.x + this.y * t2.y;
+    dot(t) {
+      return this.x * t.x + this.y * t.y;
     }
-    angle(...t2) {
-      let l = f(...t2);
+    angle(...t) {
+      let l = f(...t);
       return Xt(Math.atan2(this.y - l.y, this.x - l.x));
     }
-    lerp(t2, l) {
-      return new N(Ve(this.x, t2.x, l), Ve(this.y, t2.y, l));
+    lerp(t, l) {
+      return new N(Ve(this.x, t.x, l), Ve(this.y, t.y, l));
     }
-    toFixed(t2) {
-      return new N(Number(this.x.toFixed(t2)), Number(this.y.toFixed(t2)));
+    toFixed(t) {
+      return new N(Number(this.x.toFixed(t)), Number(this.y.toFixed(t)));
     }
-    eq(t2) {
-      return this.x === t2.x && this.y === t2.y;
+    eq(t) {
+      return this.x === t.x && this.y === t.y;
     }
     toString() {
       return `(${this.x.toFixed(2)}, ${this.y.toFixed(2)})`;
@@ -216,45 +216,45 @@
   __name(f, "f");
   a(f, "vec2");
   var Fe = /* @__PURE__ */ __name(class {
-    constructor(t2, l, w2) {
+    constructor(t, l, w) {
       b(this, "x", 0);
       b(this, "y", 0);
       b(this, "z", 0);
-      this.x = t2, this.y = l, this.z = w2;
+      this.x = t, this.y = l, this.z = w;
     }
     xy() {
       return f(this.x, this.y);
     }
   }, "Fe");
   a(Fe, "Vec3");
-  var de = a((i2, t2, l) => new Fe(i2, t2, l), "vec3");
+  var de = a((i2, t, l) => new Fe(i2, t, l), "vec3");
   var ue = /* @__PURE__ */ __name(class {
-    constructor(t2, l, w2) {
+    constructor(t, l, w) {
       b(this, "r", 255);
       b(this, "g", 255);
       b(this, "b", 255);
-      this.r = z(t2, 0, 255), this.g = z(l, 0, 255), this.b = z(w2, 0, 255);
+      this.r = z(t, 0, 255), this.g = z(l, 0, 255), this.b = z(w, 0, 255);
     }
-    static fromArray(t2) {
-      return new ue(t2[0], t2[1], t2[2]);
+    static fromArray(t) {
+      return new ue(t[0], t[1], t[2]);
     }
     clone() {
       return new ue(this.r, this.g, this.b);
     }
-    lighten(t2) {
-      return new ue(this.r + t2, this.g + t2, this.b + t2);
+    lighten(t) {
+      return new ue(this.r + t, this.g + t, this.b + t);
     }
-    darken(t2) {
-      return this.lighten(-t2);
+    darken(t) {
+      return this.lighten(-t);
     }
     invert() {
       return new ue(255 - this.r, 255 - this.g, 255 - this.b);
     }
-    mult(t2) {
-      return new ue(this.r * t2.r / 255, this.g * t2.g / 255, this.b * t2.b / 255);
+    mult(t) {
+      return new ue(this.r * t.r / 255, this.g * t.g / 255, this.b * t.b / 255);
     }
-    eq(t2) {
-      return this.r === t2.r && this.g === t2.g && this.b === t2.b;
+    eq(t) {
+      return this.r === t.r && this.g === t.g && this.b === t.b;
     }
     str() {
       return B("str()", "toString()"), `(${this.r}, ${this.g}, ${this.b})`;
@@ -262,10 +262,10 @@
     toString() {
       return `(${this.r}, ${this.g}, ${this.b})`;
     }
-    static fromHSL(t2, l, w2) {
+    static fromHSL(t, l, w) {
       if (l == 0)
-        return E(255 * w2, 255 * w2, 255 * w2);
-      let U = a((j, X, Y) => (Y < 0 && (Y += 1), Y > 1 && (Y -= 1), Y < 1 / 6 ? j + (X - j) * 6 * Y : Y < 1 / 2 ? X : Y < 2 / 3 ? j + (X - j) * (2 / 3 - Y) * 6 : j), "hue2rgb"), p = w2 < 0.5 ? w2 * (1 + l) : w2 + l - w2 * l, S = 2 * w2 - p, A = U(S, p, t2 + 1 / 3), q = U(S, p, t2), V = U(S, p, t2 - 1 / 3);
+        return E(255 * w, 255 * w, 255 * w);
+      let U = a((j, X, Y) => (Y < 0 && (Y += 1), Y > 1 && (Y -= 1), Y < 1 / 6 ? j + (X - j) * 6 * Y : Y < 1 / 2 ? X : Y < 2 / 3 ? j + (X - j) * (2 / 3 - Y) * 6 : j), "hue2rgb"), p = w < 0.5 ? w * (1 + l) : w + l - w * l, S = 2 * w - p, A = U(S, p, t + 1 / 3), q = U(S, p, t), V = U(S, p, t - 1 / 3);
       return new ue(Math.round(A * 255), Math.round(q * 255), Math.round(V * 255));
     }
   }, "ue");
@@ -284,105 +284,105 @@
   }
   __name(E, "E");
   a(E, "rgb");
-  var fr = a((i2, t2, l) => v.fromHSL(i2, t2, l), "hsl2rgb");
+  var fr = a((i2, t, l) => v.fromHSL(i2, t, l), "hsl2rgb");
   var k = /* @__PURE__ */ __name(class {
-    constructor(t2, l, w2, U) {
+    constructor(t, l, w, U) {
       b(this, "x", 0);
       b(this, "y", 0);
       b(this, "w", 1);
       b(this, "h", 1);
-      this.x = t2, this.y = l, this.w = w2, this.h = U;
+      this.x = t, this.y = l, this.w = w, this.h = U;
     }
-    scale(t2) {
-      return new k(this.x + this.w * t2.x, this.y + this.h * t2.y, this.w * t2.w, this.h * t2.h);
+    scale(t) {
+      return new k(this.x + this.w * t.x, this.y + this.h * t.y, this.w * t.w, this.h * t.h);
     }
     clone() {
       return new k(this.x, this.y, this.w, this.h);
     }
-    eq(t2) {
-      return this.x === t2.x && this.y === t2.y && this.w === t2.w && this.h === t2.h;
+    eq(t) {
+      return this.x === t.x && this.y === t.y && this.w === t.w && this.h === t.h;
     }
     toString() {
       return `quad(${this.x}, ${this.y}, ${this.w}, ${this.h})`;
     }
   }, "k");
   a(k, "Quad");
-  function pr(i2, t2, l, w2) {
-    return new k(i2, t2, l, w2);
+  function pr(i2, t, l, w) {
+    return new k(i2, t, l, w);
   }
   __name(pr, "pr");
   a(pr, "quad");
   var R = /* @__PURE__ */ __name(class {
-    constructor(t2) {
+    constructor(t) {
       b(this, "m", [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]);
-      t2 && (this.m = t2);
+      t && (this.m = t);
     }
     clone() {
       return new R(this.m);
     }
-    mult(t2) {
+    mult(t) {
       let l = [];
-      for (let w2 = 0; w2 < 4; w2++)
+      for (let w = 0; w < 4; w++)
         for (let U = 0; U < 4; U++)
-          l[w2 * 4 + U] = this.m[0 * 4 + U] * t2.m[w2 * 4 + 0] + this.m[1 * 4 + U] * t2.m[w2 * 4 + 1] + this.m[2 * 4 + U] * t2.m[w2 * 4 + 2] + this.m[3 * 4 + U] * t2.m[w2 * 4 + 3];
+          l[w * 4 + U] = this.m[0 * 4 + U] * t.m[w * 4 + 0] + this.m[1 * 4 + U] * t.m[w * 4 + 1] + this.m[2 * 4 + U] * t.m[w * 4 + 2] + this.m[3 * 4 + U] * t.m[w * 4 + 3];
       return new R(l);
     }
-    multVec4(t2) {
-      return { x: t2.x * this.m[0] + t2.y * this.m[4] + t2.z * this.m[8] + t2.w * this.m[12], y: t2.x * this.m[1] + t2.y * this.m[5] + t2.z * this.m[9] + t2.w * this.m[13], z: t2.x * this.m[2] + t2.y * this.m[6] + t2.z * this.m[10] + t2.w * this.m[14], w: t2.x * this.m[3] + t2.y * this.m[7] + t2.z * this.m[11] + t2.w * this.m[15] };
+    multVec4(t) {
+      return { x: t.x * this.m[0] + t.y * this.m[4] + t.z * this.m[8] + t.w * this.m[12], y: t.x * this.m[1] + t.y * this.m[5] + t.z * this.m[9] + t.w * this.m[13], z: t.x * this.m[2] + t.y * this.m[6] + t.z * this.m[10] + t.w * this.m[14], w: t.x * this.m[3] + t.y * this.m[7] + t.z * this.m[11] + t.w * this.m[15] };
     }
-    multVec3(t2) {
-      let l = this.multVec4({ x: t2.x, y: t2.y, z: t2.z, w: 1 });
+    multVec3(t) {
+      let l = this.multVec4({ x: t.x, y: t.y, z: t.z, w: 1 });
       return de(l.x, l.y, l.z);
     }
-    multVec2(t2) {
-      return f(t2.x * this.m[0] + t2.y * this.m[4] + 0 * this.m[8] + 1 * this.m[12], t2.x * this.m[1] + t2.y * this.m[5] + 0 * this.m[9] + 1 * this.m[13]);
+    multVec2(t) {
+      return f(t.x * this.m[0] + t.y * this.m[4] + 0 * this.m[8] + 1 * this.m[12], t.x * this.m[1] + t.y * this.m[5] + 0 * this.m[9] + 1 * this.m[13]);
     }
-    static translate(t2) {
-      return new R([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, t2.x, t2.y, 0, 1]);
+    static translate(t) {
+      return new R([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, t.x, t.y, 0, 1]);
     }
-    static scale(t2) {
-      return new R([t2.x, 0, 0, 0, 0, t2.y, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]);
+    static scale(t) {
+      return new R([t.x, 0, 0, 0, 0, t.y, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]);
     }
-    static rotateX(t2) {
-      return t2 = he(-t2), new R([1, 0, 0, 0, 0, Math.cos(t2), -Math.sin(t2), 0, 0, Math.sin(t2), Math.cos(t2), 0, 0, 0, 0, 1]);
+    static rotateX(t) {
+      return t = he(-t), new R([1, 0, 0, 0, 0, Math.cos(t), -Math.sin(t), 0, 0, Math.sin(t), Math.cos(t), 0, 0, 0, 0, 1]);
     }
-    static rotateY(t2) {
-      return t2 = he(-t2), new R([Math.cos(t2), 0, Math.sin(t2), 0, 0, 1, 0, 0, -Math.sin(t2), 0, Math.cos(t2), 0, 0, 0, 0, 1]);
+    static rotateY(t) {
+      return t = he(-t), new R([Math.cos(t), 0, Math.sin(t), 0, 0, 1, 0, 0, -Math.sin(t), 0, Math.cos(t), 0, 0, 0, 0, 1]);
     }
-    static rotateZ(t2) {
-      return t2 = he(-t2), new R([Math.cos(t2), -Math.sin(t2), 0, 0, Math.sin(t2), Math.cos(t2), 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]);
+    static rotateZ(t) {
+      return t = he(-t), new R([Math.cos(t), -Math.sin(t), 0, 0, Math.sin(t), Math.cos(t), 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]);
     }
-    translate(t2) {
-      return this.mult(R.translate(t2));
+    translate(t) {
+      return this.mult(R.translate(t));
     }
-    scale(t2) {
-      return this.mult(R.scale(t2));
+    scale(t) {
+      return this.mult(R.scale(t));
     }
-    rotateX(t2) {
-      return this.mult(R.rotateX(t2));
+    rotateX(t) {
+      return this.mult(R.rotateX(t));
     }
-    rotateY(t2) {
-      return this.mult(R.rotateY(t2));
+    rotateY(t) {
+      return this.mult(R.rotateY(t));
     }
-    rotateZ(t2) {
-      return this.mult(R.rotateZ(t2));
+    rotateZ(t) {
+      return this.mult(R.rotateZ(t));
     }
     invert() {
-      let t2 = [], l = this.m[10] * this.m[15] - this.m[14] * this.m[11], w2 = this.m[9] * this.m[15] - this.m[13] * this.m[11], U = this.m[9] * this.m[14] - this.m[13] * this.m[10], p = this.m[8] * this.m[15] - this.m[12] * this.m[11], S = this.m[8] * this.m[14] - this.m[12] * this.m[10], A = this.m[8] * this.m[13] - this.m[12] * this.m[9], q = this.m[6] * this.m[15] - this.m[14] * this.m[7], V = this.m[5] * this.m[15] - this.m[13] * this.m[7], j = this.m[5] * this.m[14] - this.m[13] * this.m[6], X = this.m[4] * this.m[15] - this.m[12] * this.m[7], Y = this.m[4] * this.m[14] - this.m[12] * this.m[6], an = this.m[5] * this.m[15] - this.m[13] * this.m[7], xt = this.m[4] * this.m[13] - this.m[12] * this.m[5], vt = this.m[6] * this.m[11] - this.m[10] * this.m[7], ve = this.m[5] * this.m[11] - this.m[9] * this.m[7], Ee = this.m[5] * this.m[10] - this.m[9] * this.m[6], Te = this.m[4] * this.m[11] - this.m[8] * this.m[7], J = this.m[4] * this.m[10] - this.m[8] * this.m[6], $e = this.m[4] * this.m[9] - this.m[8] * this.m[5];
-      t2[0] = this.m[5] * l - this.m[6] * w2 + this.m[7] * U, t2[4] = -(this.m[4] * l - this.m[6] * p + this.m[7] * S), t2[8] = this.m[4] * w2 - this.m[5] * p + this.m[7] * A, t2[12] = -(this.m[4] * U - this.m[5] * S + this.m[6] * A), t2[1] = -(this.m[1] * l - this.m[2] * w2 + this.m[3] * U), t2[5] = this.m[0] * l - this.m[2] * p + this.m[3] * S, t2[9] = -(this.m[0] * w2 - this.m[1] * p + this.m[3] * A), t2[13] = this.m[0] * U - this.m[1] * S + this.m[2] * A, t2[2] = this.m[1] * q - this.m[2] * V + this.m[3] * j, t2[6] = -(this.m[0] * q - this.m[2] * X + this.m[3] * Y), t2[10] = this.m[0] * an - this.m[1] * X + this.m[3] * xt, t2[14] = -(this.m[0] * j - this.m[1] * Y + this.m[2] * xt), t2[3] = -(this.m[1] * vt - this.m[2] * ve + this.m[3] * Ee), t2[7] = this.m[0] * vt - this.m[2] * Te + this.m[3] * J, t2[11] = -(this.m[0] * ve - this.m[1] * Te + this.m[3] * $e), t2[15] = this.m[0] * Ee - this.m[1] * J + this.m[2] * $e;
-      let Et = this.m[0] * t2[0] + this.m[1] * t2[4] + this.m[2] * t2[8] + this.m[3] * t2[12];
+      let t = [], l = this.m[10] * this.m[15] - this.m[14] * this.m[11], w = this.m[9] * this.m[15] - this.m[13] * this.m[11], U = this.m[9] * this.m[14] - this.m[13] * this.m[10], p = this.m[8] * this.m[15] - this.m[12] * this.m[11], S = this.m[8] * this.m[14] - this.m[12] * this.m[10], A = this.m[8] * this.m[13] - this.m[12] * this.m[9], q = this.m[6] * this.m[15] - this.m[14] * this.m[7], V = this.m[5] * this.m[15] - this.m[13] * this.m[7], j = this.m[5] * this.m[14] - this.m[13] * this.m[6], X = this.m[4] * this.m[15] - this.m[12] * this.m[7], Y = this.m[4] * this.m[14] - this.m[12] * this.m[6], an = this.m[5] * this.m[15] - this.m[13] * this.m[7], xt = this.m[4] * this.m[13] - this.m[12] * this.m[5], vt = this.m[6] * this.m[11] - this.m[10] * this.m[7], ve = this.m[5] * this.m[11] - this.m[9] * this.m[7], Ee = this.m[5] * this.m[10] - this.m[9] * this.m[6], Te = this.m[4] * this.m[11] - this.m[8] * this.m[7], J = this.m[4] * this.m[10] - this.m[8] * this.m[6], $e = this.m[4] * this.m[9] - this.m[8] * this.m[5];
+      t[0] = this.m[5] * l - this.m[6] * w + this.m[7] * U, t[4] = -(this.m[4] * l - this.m[6] * p + this.m[7] * S), t[8] = this.m[4] * w - this.m[5] * p + this.m[7] * A, t[12] = -(this.m[4] * U - this.m[5] * S + this.m[6] * A), t[1] = -(this.m[1] * l - this.m[2] * w + this.m[3] * U), t[5] = this.m[0] * l - this.m[2] * p + this.m[3] * S, t[9] = -(this.m[0] * w - this.m[1] * p + this.m[3] * A), t[13] = this.m[0] * U - this.m[1] * S + this.m[2] * A, t[2] = this.m[1] * q - this.m[2] * V + this.m[3] * j, t[6] = -(this.m[0] * q - this.m[2] * X + this.m[3] * Y), t[10] = this.m[0] * an - this.m[1] * X + this.m[3] * xt, t[14] = -(this.m[0] * j - this.m[1] * Y + this.m[2] * xt), t[3] = -(this.m[1] * vt - this.m[2] * ve + this.m[3] * Ee), t[7] = this.m[0] * vt - this.m[2] * Te + this.m[3] * J, t[11] = -(this.m[0] * ve - this.m[1] * Te + this.m[3] * $e), t[15] = this.m[0] * Ee - this.m[1] * J + this.m[2] * $e;
+      let Et = this.m[0] * t[0] + this.m[1] * t[4] + this.m[2] * t[8] + this.m[3] * t[12];
       for (let Se = 0; Se < 4; Se++)
         for (let Ce = 0; Ce < 4; Ce++)
-          t2[Se * 4 + Ce] *= 1 / Et;
-      return new R(t2);
+          t[Se * 4 + Ce] *= 1 / Et;
+      return new R(t);
     }
     toString() {
       return this.m.toString();
     }
   }, "R");
   a(R, "Mat4");
-  function Kt(i2, t2, l, w2 = Math.sin) {
-    return i2 + (w2(l) + 1) / 2 * (t2 - i2);
+  function Kt(i2, t, l, w = Math.sin) {
+    return i2 + (w(l) + 1) / 2 * (t - i2);
   }
   __name(Kt, "Kt");
   a(Kt, "wave");
@@ -390,27 +390,27 @@
   var es = 12345;
   var hr = 2147483648;
   var be = /* @__PURE__ */ __name(class {
-    constructor(t2) {
+    constructor(t) {
       b(this, "seed");
-      this.seed = t2;
+      this.seed = t;
     }
-    gen(...t2) {
-      if (t2.length === 0)
+    gen(...t) {
+      if (t.length === 0)
         return this.seed = (Zi * this.seed + es) % hr, this.seed / hr;
-      if (t2.length === 1) {
-        if (typeof t2[0] == "number")
-          return this.gen(0, t2[0]);
-        if (t2[0] instanceof L)
-          return this.gen(f(0, 0), t2[0]);
-        if (t2[0] instanceof v)
-          return this.gen(E(0, 0, 0), t2[0]);
-      } else if (t2.length === 2) {
-        if (typeof t2[0] == "number" && typeof t2[1] == "number")
-          return this.gen() * (t2[1] - t2[0]) + t2[0];
-        if (t2[0] instanceof L && t2[1] instanceof L)
-          return f(this.gen(t2[0].x, t2[1].x), this.gen(t2[0].y, t2[1].y));
-        if (t2[0] instanceof v && t2[1] instanceof v)
-          return E(this.gen(t2[0].r, t2[1].r), this.gen(t2[0].g, t2[1].g), this.gen(t2[0].b, t2[1].b));
+      if (t.length === 1) {
+        if (typeof t[0] == "number")
+          return this.gen(0, t[0]);
+        if (t[0] instanceof L)
+          return this.gen(f(0, 0), t[0]);
+        if (t[0] instanceof v)
+          return this.gen(E(0, 0, 0), t[0]);
+      } else if (t.length === 2) {
+        if (typeof t[0] == "number" && typeof t[1] == "number")
+          return this.gen() * (t[1] - t[0]) + t[0];
+        if (t[0] instanceof L && t[1] instanceof L)
+          return f(this.gen(t[0].x, t[1].x), this.gen(t[0].y, t[1].y));
+        if (t[0] instanceof v && t[1] instanceof v)
+          return E(this.gen(t[0].r, t[1].r), this.gen(t[0].g, t[1].g), this.gen(t[0].b, t[1].b));
       }
     }
   }, "be");
@@ -446,242 +446,242 @@
   }
   __name(Ur, "Ur");
   a(Ur, "choose");
-  function yr(i2, t2) {
-    return i2.p2.x >= t2.p1.x && i2.p1.x <= t2.p2.x && i2.p2.y >= t2.p1.y && i2.p1.y <= t2.p2.y;
+  function yr(i2, t) {
+    return i2.p2.x >= t.p1.x && i2.p1.x <= t.p2.x && i2.p2.y >= t.p1.y && i2.p1.y <= t.p2.y;
   }
   __name(yr, "yr");
   a(yr, "testRectRect2");
-  function zt(i2, t2) {
-    return i2.p2.x > t2.p1.x && i2.p1.x < t2.p2.x && i2.p2.y > t2.p1.y && i2.p1.y < t2.p2.y;
+  function zt(i2, t) {
+    return i2.p2.x > t.p1.x && i2.p1.x < t.p2.x && i2.p2.y > t.p1.y && i2.p1.y < t.p2.y;
   }
   __name(zt, "zt");
   a(zt, "testRectRect");
-  function Jt(i2, t2) {
-    if (i2.p1.x === i2.p2.x && i2.p1.y === i2.p2.y || t2.p1.x === t2.p2.x && t2.p1.y === t2.p2.y)
+  function Jt(i2, t) {
+    if (i2.p1.x === i2.p2.x && i2.p1.y === i2.p2.y || t.p1.x === t.p2.x && t.p1.y === t.p2.y)
       return null;
-    let l = (t2.p2.y - t2.p1.y) * (i2.p2.x - i2.p1.x) - (t2.p2.x - t2.p1.x) * (i2.p2.y - i2.p1.y);
+    let l = (t.p2.y - t.p1.y) * (i2.p2.x - i2.p1.x) - (t.p2.x - t.p1.x) * (i2.p2.y - i2.p1.y);
     if (l === 0)
       return null;
-    let w2 = ((t2.p2.x - t2.p1.x) * (i2.p1.y - t2.p1.y) - (t2.p2.y - t2.p1.y) * (i2.p1.x - t2.p1.x)) / l, U = ((i2.p2.x - i2.p1.x) * (i2.p1.y - t2.p1.y) - (i2.p2.y - i2.p1.y) * (i2.p1.x - t2.p1.x)) / l;
-    return w2 < 0 || w2 > 1 || U < 0 || U > 1 ? null : w2;
+    let w = ((t.p2.x - t.p1.x) * (i2.p1.y - t.p1.y) - (t.p2.y - t.p1.y) * (i2.p1.x - t.p1.x)) / l, U = ((i2.p2.x - i2.p1.x) * (i2.p1.y - t.p1.y) - (i2.p2.y - i2.p1.y) * (i2.p1.x - t.p1.x)) / l;
+    return w < 0 || w > 1 || U < 0 || U > 1 ? null : w;
   }
   __name(Jt, "Jt");
   a(Jt, "testLineLineT");
-  function ce(i2, t2) {
-    let l = Jt(i2, t2);
+  function ce(i2, t) {
+    let l = Jt(i2, t);
     return l ? f(i2.p1.x + l * (i2.p2.x - i2.p1.x), i2.p1.y + l * (i2.p2.y - i2.p1.y)) : null;
   }
   __name(ce, "ce");
   a(ce, "testLineLine");
-  function ft(i2, t2) {
-    return ae(i2, t2.p1) || ae(i2, t2.p2) ? true : !!ce(t2, new le(i2.p1, f(i2.p2.x, i2.p1.y))) || !!ce(t2, new le(f(i2.p2.x, i2.p1.y), i2.p2)) || !!ce(t2, new le(i2.p2, f(i2.p1.x, i2.p2.y))) || !!ce(t2, new le(f(i2.p1.x, i2.p2.y), i2.p1));
+  function ft(i2, t) {
+    return ae(i2, t.p1) || ae(i2, t.p2) ? true : !!ce(t, new le(i2.p1, f(i2.p2.x, i2.p1.y))) || !!ce(t, new le(f(i2.p2.x, i2.p1.y), i2.p2)) || !!ce(t, new le(i2.p2, f(i2.p1.x, i2.p2.y))) || !!ce(t, new le(f(i2.p1.x, i2.p2.y), i2.p1));
   }
   __name(ft, "ft");
   a(ft, "testRectLine");
-  function ae(i2, t2) {
-    return t2.x > i2.p1.x && t2.x < i2.p2.x && t2.y > i2.p1.y && t2.y < i2.p2.y;
+  function ae(i2, t) {
+    return t.x > i2.p1.x && t.x < i2.p2.x && t.y > i2.p1.y && t.y < i2.p2.y;
   }
   __name(ae, "ae");
   a(ae, "testRectPoint");
-  function br(i2, t2) {
-    let l = Math.max(i2.p1.x, Math.min(t2.center.x, i2.p2.x)), w2 = Math.max(i2.p1.y, Math.min(t2.center.y, i2.p2.y));
-    return f(l, w2).dist(t2.center) <= t2.radius;
+  function br(i2, t) {
+    let l = Math.max(i2.p1.x, Math.min(t.center.x, i2.p2.x)), w = Math.max(i2.p1.y, Math.min(t.center.y, i2.p2.y));
+    return f(l, w).dist(t.center) <= t.radius;
   }
   __name(br, "br");
   a(br, "testRectCircle");
-  function pt(i2, t2) {
-    return wt(t2, [i2.p1, f(i2.p2.x, i2.p1.y), i2.p2, f(i2.p1.x, i2.p2.y)]);
+  function pt(i2, t) {
+    return wt(t, [i2.p1, f(i2.p2.x, i2.p1.y), i2.p2, f(i2.p1.x, i2.p2.y)]);
   }
   __name(pt, "pt");
   a(pt, "testRectPolygon");
-  function xr(i2, t2) {
+  function xr(i2, t) {
     return false;
   }
   __name(xr, "xr");
   a(xr, "testLinePoint");
-  function vr(i2, t2) {
+  function vr(i2, t) {
     return false;
   }
   __name(vr, "vr");
   a(vr, "testLineCircle");
-  function _e(i2, t2) {
-    if (xe(t2, i2.p1) || xe(t2, i2.p2))
+  function _e(i2, t) {
+    if (xe(t, i2.p1) || xe(t, i2.p2))
       return true;
-    for (let l = 0; l < t2.length; l++) {
-      let w2 = t2[l], U = t2[(l + 1) % t2.length];
-      if (ce(i2, { p1: w2, p2: U }))
+    for (let l = 0; l < t.length; l++) {
+      let w = t[l], U = t[(l + 1) % t.length];
+      if (ce(i2, { p1: w, p2: U }))
         return true;
     }
     return false;
   }
   __name(_e, "_e");
   a(_e, "testLinePolygon");
-  function mt(i2, t2) {
-    return i2.center.dist(t2) < i2.radius;
+  function mt(i2, t) {
+    return i2.center.dist(t) < i2.radius;
   }
   __name(mt, "mt");
   a(mt, "testCirclePoint");
-  function Qt(i2, t2) {
-    return i2.center.dist(t2.center) < i2.radius + t2.radius;
+  function Qt(i2, t) {
+    return i2.center.dist(t.center) < i2.radius + t.radius;
   }
   __name(Qt, "Qt");
   a(Qt, "testCircleCircle");
-  function Er(i2, t2) {
+  function Er(i2, t) {
     return false;
   }
   __name(Er, "Er");
   a(Er, "testCirclePolygon");
-  function wt(i2, t2) {
+  function wt(i2, t) {
     for (let l = 0; l < i2.length; l++) {
-      let w2 = { p1: i2[l], p2: i2[(l + 1) % i2.length] };
-      if (_e(w2, t2))
+      let w = { p1: i2[l], p2: i2[(l + 1) % i2.length] };
+      if (_e(w, t))
         return true;
     }
     return false;
   }
   __name(wt, "wt");
   a(wt, "testPolygonPolygon");
-  function xe(i2, t2) {
+  function xe(i2, t) {
     let l = false;
-    for (let w2 = 0, U = i2.length - 1; w2 < i2.length; U = w2++)
-      i2[w2].y > t2.y != i2[U].y > t2.y && t2.x < (i2[U].x - i2[w2].x) * (t2.y - i2[w2].y) / (i2[U].y - i2[w2].y) + i2[w2].x && (l = !l);
+    for (let w = 0, U = i2.length - 1; w < i2.length; U = w++)
+      i2[w].y > t.y != i2[U].y > t.y && t.x < (i2[U].x - i2[w].x) * (t.y - i2[w].y) / (i2[U].y - i2[w].y) + i2[w].x && (l = !l);
     return l;
   }
   __name(xe, "xe");
   a(xe, "testPolygonPoint");
-  function ts(i2, t2) {
-    return i2.eq(t2);
+  function ts(i2, t) {
+    return i2.eq(t);
   }
   __name(ts, "ts");
   a(ts, "testPointPoint");
-  function gt(i2, t2) {
+  function gt(i2, t) {
     switch (i2.shape) {
       case "rect":
-        return zt(t2, i2);
+        return zt(t, i2);
       case "line":
-        return ft(t2, i2);
+        return ft(t, i2);
       case "circle":
-        return br(t2, i2);
+        return br(t, i2);
       case "polygon":
-        return pt(t2, i2.pts);
+        return pt(t, i2.pts);
       case "point":
-        return ae(t2, i2.pt);
+        return ae(t, i2.pt);
     }
     throw new Error(`Unknown area shape: ${i2.shape}`);
   }
   __name(gt, "gt");
   a(gt, "testAreaRect");
-  function Zt(i2, t2) {
+  function Zt(i2, t) {
     switch (i2.shape) {
       case "rect":
-        return ft(i2, t2);
+        return ft(i2, t);
       case "line":
-        return Boolean(ce(i2, t2));
+        return Boolean(ce(i2, t));
       case "circle":
-        return vr(t2, i2);
+        return vr(t, i2);
       case "polygon":
-        return _e(t2, i2.pts);
+        return _e(t, i2.pts);
       case "point":
-        return xr(t2, i2.pt);
+        return xr(t, i2.pt);
     }
     throw new Error(`Unknown area shape: ${i2.shape}`);
   }
   __name(Zt, "Zt");
   a(Zt, "testAreaLine");
-  function en(i2, t2) {
+  function en(i2, t) {
     switch (i2.shape) {
       case "rect":
-        return br(i2, t2);
+        return br(i2, t);
       case "line":
-        return vr(i2, t2);
+        return vr(i2, t);
       case "circle":
-        return Qt(i2, t2);
+        return Qt(i2, t);
       case "polygon":
-        return Er(t2, i2.pts);
+        return Er(t, i2.pts);
       case "point":
-        return mt(t2, i2.pt);
+        return mt(t, i2.pt);
     }
     throw new Error(`Unknown area shape: ${i2.shape}`);
   }
   __name(en, "en");
   a(en, "testAreaCircle");
-  function tn(i2, t2) {
+  function tn(i2, t) {
     switch (i2.shape) {
       case "rect":
-        return pt(i2, t2);
+        return pt(i2, t);
       case "line":
-        return _e(i2, t2);
+        return _e(i2, t);
       case "circle":
-        return Er(i2, t2);
+        return Er(i2, t);
       case "polygon":
-        return wt(t2, i2.pts);
+        return wt(t, i2.pts);
       case "point":
-        return xe(t2, i2.pt);
+        return xe(t, i2.pt);
     }
     throw new Error(`Unknown area shape: ${i2.shape}`);
   }
   __name(tn, "tn");
   a(tn, "testAreaPolygon");
-  function Ut(i2, t2) {
+  function Ut(i2, t) {
     switch (i2.shape) {
       case "rect":
-        return ae(i2, t2);
+        return ae(i2, t);
       case "line":
-        return xr(i2, t2);
+        return xr(i2, t);
       case "circle":
-        return mt(i2, t2);
+        return mt(i2, t);
       case "polygon":
-        return xe(i2.pts, t2);
+        return xe(i2.pts, t);
       case "point":
-        return ts(i2.pt, t2);
+        return ts(i2.pt, t);
     }
     throw new Error(`Unknown area shape: ${i2.shape}`);
   }
   __name(Ut, "Ut");
   a(Ut, "testAreaPoint");
-  function nn(i2, t2) {
-    switch (t2.shape) {
+  function nn(i2, t) {
+    switch (t.shape) {
       case "rect":
-        return gt(i2, t2);
+        return gt(i2, t);
       case "line":
-        return Zt(i2, t2);
+        return Zt(i2, t);
       case "circle":
-        return en(i2, t2);
+        return en(i2, t);
       case "polygon":
-        return tn(i2, t2.pts);
+        return tn(i2, t.pts);
       case "point":
-        return Ut(i2, t2.pt);
+        return Ut(i2, t.pt);
     }
-    throw new Error(`Unknown area shape: ${t2.shape}`);
+    throw new Error(`Unknown area shape: ${t.shape}`);
   }
   __name(nn, "nn");
   a(nn, "testAreaArea");
-  function yt(i2, t2) {
-    return { p1: f(i2.p1.x - t2.p2.x, i2.p1.y - t2.p2.y), p2: f(i2.p2.x - t2.p1.x, i2.p2.y - t2.p1.y) };
+  function yt(i2, t) {
+    return { p1: f(i2.p1.x - t.p2.x, i2.p1.y - t.p2.y), p2: f(i2.p2.x - t.p1.x, i2.p2.y - t.p1.y) };
   }
   __name(yt, "yt");
   a(yt, "minkDiff");
   var le = /* @__PURE__ */ __name(class {
-    constructor(t2, l) {
+    constructor(t, l) {
       b(this, "p1");
       b(this, "p2");
-      this.p1 = t2, this.p2 = l;
+      this.p1 = t, this.p2 = l;
     }
   }, "le");
   a(le, "Line");
   var ke = /* @__PURE__ */ __name(class {
-    constructor(t2, l) {
+    constructor(t, l) {
       b(this, "p1");
       b(this, "p2");
-      this.p1 = t2, this.p2 = l;
+      this.p1 = t, this.p2 = l;
     }
   }, "ke");
   a(ke, "Rect");
   var ht = /* @__PURE__ */ __name(class {
-    constructor(t2, l) {
+    constructor(t, l) {
       b(this, "center");
       b(this, "radius");
-      this.center = t2, this.radius = l;
+      this.center = t, this.radius = l;
     }
   }, "ht");
   a(ht, "Circle");
@@ -691,24 +691,24 @@
       b(this, "timer", 0);
       b(this, "fps", 0);
     }
-    tick(t2) {
-      this.buf.push(1 / t2), this.timer += t2, this.timer >= 1 && (this.timer = 0, this.fps = Math.round(this.buf.reduce((l, w2) => l + w2) / this.buf.length), this.buf = []);
+    tick(t) {
+      this.buf.push(1 / t), this.timer += t, this.timer >= 1 && (this.timer = 0, this.fps = Math.round(this.buf.reduce((l, w) => l + w) / this.buf.length), this.buf = []);
     }
   }, "Be");
   a(Be, "FPSCounter");
   var fe = /* @__PURE__ */ __name(class {
-    constructor(t2, l) {
+    constructor(t, l) {
       b(this, "time");
       b(this, "action");
       b(this, "finished", false);
       b(this, "paused", false);
-      this.time = t2, this.action = l;
+      this.time = t, this.action = l;
     }
-    tick(t2) {
-      return this.finished || this.paused ? false : (this.time -= t2, this.time <= 0 ? (this.action(), this.finished = true, this.time = 0, true) : false);
+    tick(t) {
+      return this.finished || this.paused ? false : (this.time -= t, this.time <= 0 ? (this.action(), this.finished = true, this.time = 0, true) : false);
     }
-    reset(t2) {
-      this.time = t2, this.finished = false;
+    reset(t) {
+      this.time = t, this.finished = false;
     }
   }, "fe");
   a(fe, "Timer");
@@ -847,7 +847,7 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
   __name(Gr, "Gr");
   a(Gr, "createEmptyAudioBuffer");
   var no = a((i2 = {}) => {
-    let t2 = (() => {
+    let t = (() => {
       var s, o, d;
       let e = (s = i2.root) != null ? s : document.body;
       e === document.body && (document.body.style.width = "100%", document.body.style.height = "100%", document.body.style.margin = "0px", document.documentElement.style.width = "100%", document.documentElement.style.height = "100%");
@@ -862,7 +862,7 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
       return { canvas: n, scale: r, gl: c, keyStates: {}, mouseStates: {}, charInputted: [], isMouseMoved: false, isKeyPressed: false, isKeyPressedRepeat: false, isKeyReleased: false, mousePos: f(0, 0), mouseDeltaPos: f(0, 0), time: 0, realTime: 0, skipTime: false, dt: 0, numFrames: 0, isTouch: "ontouchstart" in window || navigator.maxTouchPoints > 0, loopID: null, stopped: false, paused: false, fpsCounter: new Be(), loaded: false };
     })(), l = (() => {
       var d;
-      let e = t2.gl, n = cn(sn, on), r = Ke(new ImageData(new Uint8ClampedArray([255, 255, 255, 255]), 1, 1)), u = (d = i2.background) != null ? d : E(0, 0, 0);
+      let e = t.gl, n = cn(sn, on), r = Ke(new ImageData(new Uint8ClampedArray([255, 255, 255, 255]), 1, 1)), u = (d = i2.background) != null ? d : E(0, 0, 0);
       if (i2.background) {
         let h = v.fromArray(i2.background);
         e.clearColor(h.r / 255, h.g / 255, h.b / 255, 1);
@@ -876,7 +876,7 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
       return { drawCalls: 0, lastDrawCalls: 0, defShader: n, curShader: n, defTex: r, curTex: r, curUniform: {}, vbuf: c, ibuf: s, vqueue: [], iqueue: [], transform: new R(), transformStack: [], bgTex: o, width: i2.width, height: i2.height, viewport: { x: 0, y: 0, width: e.drawingBufferWidth, height: e.drawingBufferHeight } };
     })();
     Un();
-    let w2 = (() => {
+    let w = (() => {
       let e = new (window.AudioContext || window.webkitAudioContext)(), n = e.createGain();
       n.connect(e.destination);
       let r = { buf: Gr() };
@@ -1058,7 +1058,7 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
       return S(new Promise((r, u) => {
         if (!n)
           return u(`expected sound src for "${e}"`);
-        typeof n == "string" && V(n).then((c) => c.arrayBuffer()).then((c) => new Promise((s, o) => w2.ctx.decodeAudioData(c, s, o))).then((c) => {
+        typeof n == "string" && V(n).then((c) => c.arrayBuffer()).then((c) => new Promise((s, o) => w.ctx.decodeAudioData(c, s, o))).then((c) => {
           let s = { buf: c };
           e && (U.sounds[e] = s), r(s);
         }).catch(u);
@@ -1072,7 +1072,7 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
     __name(_r, "_r");
     a(_r, "loadBean");
     function Br(e) {
-      return e !== void 0 && (w2.masterNode.gain.value = z(e, Or, Ir)), w2.masterNode.gain.value;
+      return e !== void 0 && (w.masterNode.gain.value = z(e, Or, Ir)), w.masterNode.gain.value;
     }
     __name(Br, "Br");
     a(Br, "volume");
@@ -1089,10 +1089,10 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
             y[O] = W[O];
         }), y;
       }
-      let r = w2.ctx, u = false, c = r.createBufferSource();
+      let r = w.ctx, u = false, c = r.createBufferSource();
       c.buffer = e.buf, c.loop = !!n.loop;
       let s = r.createGain();
-      c.connect(s), s.connect(w2.masterNode);
+      c.connect(s), s.connect(w.masterNode);
       let o = (g = n.seek) != null ? g : 0;
       c.start(0, o);
       let d = r.currentTime - o, h = null, m = { stop() {
@@ -1134,12 +1134,12 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
     __name(Xe, "Xe");
     a(Xe, "play");
     function un(e) {
-      return Xe(w2.burpSnd, e);
+      return Xe(w.burpSnd, e);
     }
     __name(un, "un");
     a(un, "burp");
     function Ke(e, n = {}) {
-      let r = t2.gl, u = r.createTexture();
+      let r = t.gl, u = r.createTexture();
       r.bindTexture(r.TEXTURE_2D, u), r.texImage2D(r.TEXTURE_2D, 0, r.RGBA, r.RGBA, r.UNSIGNED_BYTE, e);
       let c = (() => {
         var o;
@@ -1170,7 +1170,7 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
     __name(Ke, "Ke");
     a(Ke, "makeTex");
     function cn(e = sn, n = on) {
-      let r = t2.gl, u, c = gs.replace("{{user}}", e != null ? e : sn), s = Us.replace("{{user}}", n != null ? n : on), o = r.createShader(r.VERTEX_SHADER), d = r.createShader(r.FRAGMENT_SHADER);
+      let r = t.gl, u, c = gs.replace("{{user}}", e != null ? e : sn), s = Us.replace("{{user}}", n != null ? n : on), o = r.createShader(r.VERTEX_SHADER), d = r.createShader(r.FRAGMENT_SHADER);
       if (r.shaderSource(o, c), r.shaderSource(d, s), r.compileShader(o), r.compileShader(d), u = r.getShaderInfoLog(o))
         throw new Error(u);
       if (u = r.getShaderInfoLog(d))
@@ -1217,13 +1217,13 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
     function ln() {
       if (!l.curTex || !l.curShader || l.vqueue.length === 0 || l.iqueue.length === 0)
         return;
-      let e = t2.gl;
+      let e = t.gl;
       l.curShader.send(l.curUniform), e.bindBuffer(e.ARRAY_BUFFER, l.vbuf), e.bufferSubData(e.ARRAY_BUFFER, 0, new Float32Array(l.vqueue)), e.bindBuffer(e.ELEMENT_ARRAY_BUFFER, l.ibuf), e.bufferSubData(e.ELEMENT_ARRAY_BUFFER, 0, new Uint16Array(l.iqueue)), l.curShader.bind(), l.curTex.bind(), e.drawElements(e.TRIANGLES, l.iqueue.length, e.UNSIGNED_SHORT, 0), l.curTex.unbind(), l.curShader.unbind(), e.bindBuffer(e.ARRAY_BUFFER, null), e.bindBuffer(e.ELEMENT_ARRAY_BUFFER, null), l.iqueue = [], l.vqueue = [], l.drawCalls++;
     }
     __name(ln, "ln");
     a(ln, "flush");
     function He() {
-      t2.gl.clear(t2.gl.COLOR_BUFFER_BIT), i2.background || pe({ width: F(), height: G(), quad: new k(0, 0, F() * t2.scale / Fr, G() * t2.scale / Fr), tex: l.bgTex, fixed: true }), l.drawCalls = 0, l.transformStack = [], l.transform = new R();
+      t.gl.clear(t.gl.COLOR_BUFFER_BIT), i2.background || pe({ width: F(), height: G(), quad: new k(0, 0, F() * t.scale / Fr, G() * t.scale / Fr), tex: l.bgTex, fixed: true }), l.drawCalls = 0, l.transformStack = [], l.transform = new R();
     }
     __name(He, "He");
     a(He, "frameStart");
@@ -1515,7 +1515,7 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
     __name(we, "we");
     a(we, "drawFormattedText");
     function Un() {
-      let e = t2.gl, n = e.drawingBufferWidth, r = e.drawingBufferHeight, u = F(), c = G();
+      let e = t.gl, n = e.drawingBufferWidth, r = e.drawingBufferHeight, u = F(), c = G();
       if (vn()) {
         let s = window.innerWidth, o = window.innerHeight, d = s / o, h = n / r;
         if (d > h) {
@@ -1548,7 +1548,7 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
         e.viewport(0, 0, n, r), l.viewport = { x: 0, y: 0, width: n, height: r };
         return;
       }
-      l.width = n / t2.scale, l.height = r / t2.scale, e.viewport(0, 0, n, r), l.viewport = { x: 0, y: 0, width: n, height: r };
+      l.width = n / t.scale, l.height = r / t.scale, e.viewport(0, 0, n, r), l.viewport = { x: 0, y: 0, width: n, height: r };
     }
     __name(Un, "Un");
     a(Un, "updateViewport");
@@ -1561,132 +1561,132 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
       return l.height;
     }
     __name(G, "G");
-    a(G, "height"), t2.canvas.addEventListener("mousemove", (e) => {
-      t2.mousePos = f((e.offsetX - l.viewport.x) * F() / l.viewport.width, (e.offsetY - l.viewport.y) * G() / l.viewport.height), t2.mouseDeltaPos = f(e.movementX, e.movementY).scale(1 / t2.scale), t2.isMouseMoved = true;
-    }), t2.canvas.addEventListener("mousedown", (e) => {
+    a(G, "height"), t.canvas.addEventListener("mousemove", (e) => {
+      t.mousePos = f((e.offsetX - l.viewport.x) * F() / l.viewport.width, (e.offsetY - l.viewport.y) * G() / l.viewport.height), t.mouseDeltaPos = f(e.movementX, e.movementY).scale(1 / t.scale), t.isMouseMoved = true;
+    }), t.canvas.addEventListener("mousedown", (e) => {
       let n = Dr[e.button];
-      n && (t2.mouseStates[n] = "pressed");
-    }), t2.canvas.addEventListener("mouseup", (e) => {
+      n && (t.mouseStates[n] = "pressed");
+    }), t.canvas.addEventListener("mouseup", (e) => {
       let n = Dr[e.button];
-      n && (t2.mouseStates[n] = "released");
-    }), t2.canvas.addEventListener("keydown", (e) => {
+      n && (t.mouseStates[n] = "released");
+    }), t.canvas.addEventListener("keydown", (e) => {
       let n = Pr[e.key] || e.key.toLowerCase();
-      ls.includes(n) && e.preventDefault(), n.length === 1 && t2.charInputted.push(e.key), n === "space" && t2.charInputted.push(" "), e.repeat ? (t2.isKeyPressedRepeat = true, t2.keyStates[n] = "rpressed") : (t2.isKeyPressed = true, t2.keyStates[n] = "pressed");
-    }), t2.canvas.addEventListener("keyup", (e) => {
+      ls.includes(n) && e.preventDefault(), n.length === 1 && t.charInputted.push(e.key), n === "space" && t.charInputted.push(" "), e.repeat ? (t.isKeyPressedRepeat = true, t.keyStates[n] = "rpressed") : (t.isKeyPressed = true, t.keyStates[n] = "pressed");
+    }), t.canvas.addEventListener("keyup", (e) => {
       let n = Pr[e.key] || e.key.toLowerCase();
-      t2.keyStates[n] = "released", t2.isKeyReleased = true;
-    }), t2.canvas.addEventListener("touchstart", (e) => {
+      t.keyStates[n] = "released", t.isKeyReleased = true;
+    }), t.canvas.addEventListener("touchstart", (e) => {
       if (!i2.touchToMouse)
         return;
       e.preventDefault();
       let n = e.touches[0];
-      t2.mousePos = f(n.clientX, n.clientY).scale(1 / t2.scale), t2.mouseStates.left = "pressed";
-    }), t2.canvas.addEventListener("touchmove", (e) => {
+      t.mousePos = f(n.clientX, n.clientY).scale(1 / t.scale), t.mouseStates.left = "pressed";
+    }), t.canvas.addEventListener("touchmove", (e) => {
       if (!i2.touchToMouse)
         return;
       e.preventDefault();
       let n = e.touches[0];
-      t2.mousePos = f(n.clientX, n.clientY).scale(1 / t2.scale), t2.isMouseMoved = true;
-    }), t2.canvas.addEventListener("touchend", (e) => {
-      !i2.touchToMouse || (t2.mouseStates.left = "released");
-    }), t2.canvas.addEventListener("touchcancel", (e) => {
-      !i2.touchToMouse || (t2.mouseStates.left = "released");
-    }), t2.canvas.addEventListener("touchstart", (e) => {
+      t.mousePos = f(n.clientX, n.clientY).scale(1 / t.scale), t.isMouseMoved = true;
+    }), t.canvas.addEventListener("touchend", (e) => {
+      !i2.touchToMouse || (t.mouseStates.left = "released");
+    }), t.canvas.addEventListener("touchcancel", (e) => {
+      !i2.touchToMouse || (t.mouseStates.left = "released");
+    }), t.canvas.addEventListener("touchstart", (e) => {
       [...e.changedTouches].forEach((n) => {
-        p.trigger("onTouchStart", n.identifier, f(n.clientX, n.clientY).scale(1 / t2.scale));
+        p.trigger("onTouchStart", n.identifier, f(n.clientX, n.clientY).scale(1 / t.scale));
       });
-    }), t2.canvas.addEventListener("touchmove", (e) => {
+    }), t.canvas.addEventListener("touchmove", (e) => {
       [...e.changedTouches].forEach((n) => {
-        p.trigger("onTouchMove", n.identifier, f(n.clientX, n.clientY).scale(1 / t2.scale));
+        p.trigger("onTouchMove", n.identifier, f(n.clientX, n.clientY).scale(1 / t.scale));
       });
-    }), t2.canvas.addEventListener("touchend", (e) => {
+    }), t.canvas.addEventListener("touchend", (e) => {
       [...e.changedTouches].forEach((n) => {
-        p.trigger("onTouchEnd", n.identifier, f(n.clientX, n.clientY).scale(1 / t2.scale));
+        p.trigger("onTouchEnd", n.identifier, f(n.clientX, n.clientY).scale(1 / t.scale));
       });
-    }), t2.canvas.addEventListener("contextmenu", function(e) {
+    }), t.canvas.addEventListener("contextmenu", function(e) {
       e.preventDefault();
     }), document.addEventListener("visibilitychange", () => {
       switch (document.visibilityState) {
         case "visible":
-          t2.skipTime = true, w2.ctx.resume();
+          t.skipTime = true, w.ctx.resume();
           break;
         case "hidden":
-          w2.ctx.suspend();
+          w.ctx.suspend();
           break;
       }
     });
     function K() {
-      return t2.mousePos.clone();
+      return t.mousePos.clone();
     }
     __name(K, "K");
     a(K, "mousePos");
     function yn() {
-      return t2.mouseDeltaPos.clone();
+      return t.mouseDeltaPos.clone();
     }
     __name(yn, "yn");
     a(yn, "mouseDeltaPos");
     function Me(e = "left") {
-      return t2.mouseStates[e] === "pressed";
+      return t.mouseStates[e] === "pressed";
     }
     __name(Me, "Me");
     a(Me, "isMousePressed");
     function Ze(e = "left") {
-      return t2.mouseStates[e] === "pressed" || t2.mouseStates[e] === "down";
+      return t.mouseStates[e] === "pressed" || t.mouseStates[e] === "down";
     }
     __name(Ze, "Ze");
     a(Ze, "isMouseDown");
     function et(e = "left") {
-      return t2.mouseStates[e] === "released";
+      return t.mouseStates[e] === "released";
     }
     __name(et, "et");
     a(et, "isMouseReleased");
     function Rt() {
-      return t2.isMouseMoved;
+      return t.isMouseMoved;
     }
     __name(Rt, "Rt");
     a(Rt, "isMouseMoved");
     function Le(e) {
-      return e === void 0 ? t2.isKeyPressed : t2.keyStates[e] === "pressed";
+      return e === void 0 ? t.isKeyPressed : t.keyStates[e] === "pressed";
     }
     __name(Le, "Le");
     a(Le, "isKeyPressed");
     function Wt(e) {
-      return e === void 0 ? t2.isKeyPressedRepeat : t2.keyStates[e] === "pressed" || t2.keyStates[e] === "rpressed";
+      return e === void 0 ? t.isKeyPressedRepeat : t.keyStates[e] === "pressed" || t.keyStates[e] === "rpressed";
     }
     __name(Wt, "Wt");
     a(Wt, "isKeyPressedRepeat");
     function Mt(e) {
-      return t2.keyStates[e] === "pressed" || t2.keyStates[e] === "rpressed" || t2.keyStates[e] === "down";
+      return t.keyStates[e] === "pressed" || t.keyStates[e] === "rpressed" || t.keyStates[e] === "down";
     }
     __name(Mt, "Mt");
     a(Mt, "isKeyDown");
     function tt(e) {
-      return e === void 0 ? t2.isKeyReleased : t2.keyStates[e] === "released";
+      return e === void 0 ? t.isKeyReleased : t.keyStates[e] === "released";
     }
     __name(tt, "tt");
     a(tt, "isKeyReleased");
     function Kr() {
-      return [...t2.charInputted];
+      return [...t.charInputted];
     }
     __name(Kr, "Kr");
     a(Kr, "charInputted");
     function nt() {
-      return t2.time;
+      return t.time;
     }
     __name(nt, "nt");
     a(nt, "time");
     function bn() {
-      return t2.canvas.toDataURL();
+      return t.canvas.toDataURL();
     }
     __name(bn, "bn");
     a(bn, "screenshot");
     function xn(e) {
-      return e && (t2.canvas.style.cursor = e), t2.canvas.style.cursor;
+      return e && (t.canvas.style.cursor = e), t.canvas.style.cursor;
     }
     __name(xn, "xn");
     a(xn, "cursor");
     function Hr(e = true) {
-      e ? xs(t2.canvas) : vs();
+      e ? xs(t.canvas) : vs();
     }
     __name(Hr, "Hr");
     a(Hr, "fullscreen");
@@ -1696,19 +1696,19 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
     __name(vn, "vn");
     a(vn, "isFullscreen");
     function zr() {
-      cancelAnimationFrame(t2.loopID), t2.stopped = true;
+      cancelAnimationFrame(t.loopID), t.stopped = true;
     }
     __name(zr, "zr");
     a(zr, "quit");
-    let C = { inspect: false, timeScale: 1, showLog: true, fps: () => t2.fpsCounter.fps, objCount() {
+    let C = { inspect: false, timeScale: 1, showLog: true, fps: () => t.fpsCounter.fps, objCount() {
       return p.root.children.length;
     }, stepFrame: Kn, drawCalls: () => l.drawCalls, clearLog: () => p.logs = [], log: (e) => p.logs.unshift(`[${nt().toFixed(2)}].time [${e}].info`), error: (e) => p.logs.unshift(`[${nt().toFixed(2)}].time [${e}].error`), curRecording: null, get paused() {
-      return t2.paused;
+      return t.paused;
     }, set paused(e) {
-      t2.paused = e, e ? w2.ctx.suspend() : w2.ctx.resume();
+      t.paused = e, e ? w.ctx.suspend() : w.ctx.resume();
     } };
     function Z() {
-      return t2.dt * C.timeScale;
+      return t.dt * C.timeScale;
     }
     __name(Z, "Z");
     a(Z, "dt");
@@ -2599,7 +2599,7 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
     __name(Ri, "Ri");
     a(Ri, "state");
     function Ue(e) {
-      t2.loaded ? e() : p.on("load", e);
+      t.loaded ? e() : p.on("load", e);
     }
     __name(Ue, "Ue");
     a(Ue, "onLoad");
@@ -2712,13 +2712,13 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
     __name(Pi, "Pi");
     a(Pi, "addLevel");
     function Nn(e) {
-      let n = t2.canvas.captureStream(e), r = w2.ctx.createMediaStreamDestination();
-      w2.masterNode.connect(r);
+      let n = t.canvas.captureStream(e), r = w.ctx.createMediaStreamDestination();
+      w.masterNode.connect(r);
       let u = r.stream, [c] = u.getAudioTracks(), s = new MediaRecorder(n), o = [];
       return s.ondataavailable = (d) => {
         d.data.size > 0 && o.push(d.data);
       }, s.onerror = (d) => {
-        w2.masterNode.disconnect(r), n.getTracks().forEach((h) => h.stop());
+        w.masterNode.disconnect(r), n.getTracks().forEach((h) => h.stop());
       }, s.start(), { resume() {
         s.resume();
       }, pause() {
@@ -2726,18 +2726,18 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
       }, download(d = "kaboom.mp4") {
         s.onstop = () => {
           ur(new Blob(o, { type: "video/mp4" }), d);
-        }, s.stop(), w2.masterNode.disconnect(r), n.getTracks().forEach((h) => h.stop());
+        }, s.stop(), w.masterNode.disconnect(r), n.getTracks().forEach((h) => h.stop());
       } };
     }
     __name(Nn, "Nn");
     a(Nn, "record");
     function Di() {
-      B("focus()", "canvas.focus()"), t2.canvas.focus();
+      B("focus()", "canvas.focus()"), t.canvas.focus();
     }
     __name(Di, "Di");
     a(Di, "focus");
     function jn() {
-      return document.activeElement === t2.canvas;
+      return document.activeElement === t.canvas;
     }
     __name(jn, "jn");
     a(jn, "isFocused");
@@ -2797,7 +2797,7 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
     __name(ki, "ki");
     a(ki, "addKaboom");
     function Ms() {
-      return t2.numFrames;
+      return t.numFrames;
     }
     __name(Ms, "Ms");
     a(Ms, "frames");
@@ -2817,19 +2817,19 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
     function _i() {
       let e = A();
       if (e === 1)
-        t2.loaded = true, p.trigger("load");
+        t.loaded = true, p.trigger("load");
       else {
-        let n = F() / 2, r = 24 / t2.scale, u = f(F() / 2, G() / 2).sub(f(n / 2, r / 2));
-        Q({ pos: f(0), width: F(), height: G(), color: E(0, 0, 0) }), Q({ pos: u, width: n, height: r, fill: false, outline: { width: 4 / t2.scale } }), Q({ pos: u, width: n * e, height: r });
+        let n = F() / 2, r = 24 / t.scale, u = f(F() / 2, G() / 2).sub(f(n / 2, r / 2));
+        Q({ pos: f(0), width: F(), height: G(), color: E(0, 0, 0) }), Q({ pos: u, width: n, height: r, fill: false, outline: { width: 4 / t.scale } }), Q({ pos: u, width: n * e, height: r });
       }
     }
     __name(_i, "_i");
     a(_i, "drawLoadScreen");
     function Hn(e, n) {
       let r = f(8);
-      re(), I(e), ne(1 / t2.scale);
+      re(), I(e), ne(1 / t.scale);
       let u = me({ text: n, font: U.fonts[rn], size: 16, pos: r, color: E(255, 255, 255), fixed: true }), c = u.width + r.x * 2, s = u.height + r.x * 2;
-      e.x + c / t2.scale >= F() && I(f(-c, 0)), e.y + s / t2.scale >= G() && I(f(0, -s)), Q({ width: c, height: s, color: E(0, 0, 0), radius: 4, opacity: 0.8, fixed: true }), we(u), ie();
+      e.x + c / t.scale >= F() && I(f(-c, 0)), e.y + s / t.scale >= G() && I(f(0, -s)), Q({ width: c, height: s, color: E(0, 0, 0), radius: 4, opacity: 0.8, fixed: true }), we(u), ie();
     }
     __name(Hn, "Hn");
     a(Hn, "drawInspectText");
@@ -2850,10 +2850,10 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
           Hn(K(), c.join(`
 `));
         }
-        Hn(f(8 / t2.scale), `FPS: ${C.fps()}`);
+        Hn(f(8 / t.scale), `FPS: ${C.fps()}`);
       }
       if (C.paused) {
-        re(), I(F(), 0), ne(1 / t2.scale), I(-8, 8);
+        re(), I(F(), 0), ne(1 / t.scale), I(-8, 8);
         let r = 32;
         Q({ width: r, height: r, origin: "topright", color: E(0, 0, 0), opacity: 0.8, radius: 4, fixed: true });
         for (let u = 1; u <= 2; u++)
@@ -2861,7 +2861,7 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
         ie();
       }
       if (C.timeScale !== 1) {
-        re(), I(F(), G()), ne(1 / t2.scale), I(-8, -8);
+        re(), I(F(), G()), ne(1 / t.scale), I(-8, -8);
         let r = 8, u = me({ text: C.timeScale.toFixed(1), font: U.fonts[rn], size: 16, color: E(255, 255, 255), pos: f(-r), origin: "botright", fixed: true });
         Q({ width: u.width + r * 2 + r * 4, height: u.height + r * 2, origin: "botright", color: E(0, 0, 0), opacity: 0.8, radius: 4, fixed: true });
         for (let c = 0; c < 2; c++) {
@@ -2870,12 +2870,12 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
         }
         we(u), ie();
       }
-      if (C.curRecording && (re(), I(0, G()), ne(1 / t2.scale), I(24, -24), Ct({ radius: 12, color: E(255, 0, 0), opacity: Kt(0, 1, nt() * 4), fixed: true }), ie()), C.showLog && p.logs.length > 0) {
-        re(), I(0, G()), ne(1 / t2.scale), I(8, -8);
+      if (C.curRecording && (re(), I(0, G()), ne(1 / t.scale), I(24, -24), Ct({ radius: 12, color: E(255, 0, 0), opacity: Kt(0, 1, nt() * 4), fixed: true }), ie()), C.showLog && p.logs.length > 0) {
+        re(), I(0, G()), ne(1 / t.scale), I(8, -8);
         let r = 8, u = (n = i2.logMax) != null ? n : 1;
         p.logs.length > u && (p.logs = p.logs.slice(0, u));
         let c = me({ text: p.logs.join(`
-`), font: U.fonts[rn], pos: f(r, -r), origin: "botleft", size: 16, width: F() * t2.scale * 0.6, lineSpacing: r / 2, fixed: true, styles: { time: { color: E(127, 127, 127) }, info: { color: E(255, 255, 255) }, error: { color: E(255, 0, 127) } } });
+`), font: U.fonts[rn], pos: f(r, -r), origin: "botleft", size: 16, width: F() * t.scale * 0.6, lineSpacing: r / 2, fixed: true, styles: { time: { color: E(127, 127, 127) }, info: { color: E(255, 255, 255) }, error: { color: E(255, 0, 127) } } });
         Q({ width: c.width + r * 2, height: c.height + r * 2, origin: "botleft", color: E(0, 0, 0), radius: 4, opacity: 0.8, fixed: true }), we(c), ie();
       }
     }
@@ -2888,24 +2888,24 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
     function Jn(e) {
       let n = a((r) => {
         if (document.visibilityState !== "visible") {
-          t2.loopID = requestAnimationFrame(n);
+          t.loopID = requestAnimationFrame(n);
           return;
         }
-        let u = r / 1e3, c = u - t2.realTime;
-        t2.realTime = u, t2.skipTime || (t2.dt = c, t2.time += t2.dt, t2.fpsCounter.tick(t2.dt)), t2.skipTime = false, t2.numFrames++, e();
-        for (let s in t2.keyStates)
-          t2.keyStates[s] = kr(t2.keyStates[s]);
-        for (let s in t2.mouseStates)
-          t2.mouseStates[s] = kr(t2.mouseStates[s]);
-        t2.charInputted = [], t2.isMouseMoved = false, t2.isKeyPressed = false, t2.isKeyPressedRepeat = false, t2.isKeyReleased = false, t2.loopID = requestAnimationFrame(n);
+        let u = r / 1e3, c = u - t.realTime;
+        t.realTime = u, t.skipTime || (t.dt = c, t.time += t.dt, t.fpsCounter.tick(t.dt)), t.skipTime = false, t.numFrames++, e();
+        for (let s in t.keyStates)
+          t.keyStates[s] = kr(t.keyStates[s]);
+        for (let s in t.mouseStates)
+          t.mouseStates[s] = kr(t.mouseStates[s]);
+        t.charInputted = [], t.isMouseMoved = false, t.isKeyPressed = false, t.isKeyPressedRepeat = false, t.isKeyReleased = false, t.loopID = requestAnimationFrame(n);
       }, "frame");
-      t2.stopped = false, t2.loopID = requestAnimationFrame(n);
+      t.stopped = false, t.loopID = requestAnimationFrame(n);
     }
     __name(Jn, "Jn");
     a(Jn, "run"), Jn(() => {
-      Un(), t2.loaded ? (p.trigger("input"), C.paused || Kn(), He(), Gi(), i2.debug !== false && zn(), ze()) : (He(), _i(), ze());
+      Un(), t.loaded ? (p.trigger("input"), C.paused || Kn(), He(), Gi(), i2.debug !== false && zn(), ze()) : (He(), _i(), ze());
     }), X("apl386", Tr, 45, 74), X("apl386o", Sr, 45, 74), X("sink", Cr, 6, 8, { chars: "\u2588\u263A\u263B\u2665\u2666\u2663\u2660\u25CF\u25CB\u25AA\u25A1\u25A0\u25D8\u266A\u266B\u2261\u25BA\u25C4\u2302\xDE\xC0\xDF\xD7\xA5\u2191\u2193\u2192\u2190\u25CC\u25CF\u25BC\u25B2 !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~\u03A7\u2591\u2592\u2593\u1E00\u1E01\u1E02\u2502\u252C\u2524\u250C\u2510\u1E03\u1E04\u253C\u1E05\u1E06\u1E07\u1E08\u1E09\u1E0A\u1E0B\u1E0C\u2500\u251C\u2534\u2514\u2518\u1E0D\u1E0E\u205E\u1E0F\u1E10\u1E11\u1E12\u1E13\u1E14\u1E15\u1E16\u1E17\u1E18\u2584\u1E19\u1E1A\u1E1B\u1E1C\u2026\u1E1D\u1E1E\u1E1F\u1E20\u1E21\u1E22\u1E23\u1E24\u1E25\u1E26\u258C\u2590\u1E27\u1E28\u1E29\u1E2A\u1E2B\u1E2C\u1E2D\u1E2E\u1E2F\u1E30\u1E31\u1E32\u1E33\u1E34\u1E35\u1E36\u1E37\u1E38\u1E39\u1E3A\u1E3B\u1E3C\u1E3D\u1E3E\u1E3F\u1E40\u1E41\u1E42\u1E43\u1E44\u1E45\u1E46\u1E47\u1E48\u1E49\u1E4A\u1E4B\u1E4C\u1E4D\u1E4E\u1E4F\u1E50\u1E51\u1E52\u1E53\u1E54\u1E55\u1E56\u1E57\u1E58\u1E59\u1E5A\u1E5B\u1E5C\u1E5D\u1E5E\u1E5F\u1E60\u1E61\u1E62\u1E63\u1E64\u1E65\u1E66\u1E67\u1E68\u1E69\u1E6A\u1E6B\u1E6C\u1E6D\u1E6E\u1E6F\u1E70\u1E71\u1E72\u1E73\u1E74\u1E75\u1E76\u1E77\u1E78\u1E79\u1E7A\u1E7B\u1E7C" }), X("sinko", Rr, 8, 10), He(), ze();
-    let ye = { loadRoot: q, loadSprite: J, loadSpriteAtlas: Ee, loadSound: Ce, loadFont: X, loadShader: Se, loadAseprite: Et, loadPedit: $e, loadBean: _r, load: S, width: F, height: G, center: ot, dt: Z, time: nt, screenshot: bn, record: Nn, isFocused: jn, focus: Di, cursor: xn, regCursor: ii, fullscreen: Hr, isFullscreen: vn, onLoad: Ue, isTouch: () => t2.isTouch, layers: Qr, camPos: Zr, camScale: ei, camRot: ti, shake: ni, toScreen: rt, toWorld: Lt, gravity: Fn, add: kt, readd: Ai, destroy: at, destroyAll: Oi, get: Ii, every: Vi, revery: Fi, pos: it, scale: st, rotate: si, color: oi, opacity: ai, origin: Ot, layer: ui, area: fi, sprite: Vt, text: pi, rect: mi, circle: gi, uvquad: wi, outline: Ui, body: xi, shader: vi, timer: Gn, solid: Ei, fixed: Ti, stay: Ft, health: Si, lifespan: Ci, z: ci, move: hi, outview: It, cleanup: di, follow: li, state: Ri, on: qe, onUpdate: Pe, onDraw: Tn, onCollide: Sn, onClick: Cn, onHover: Rn, onKeyDown: qt, onKeyPress: H, onKeyPressRepeat: Pt, onKeyRelease: Dt, onMouseDown: Mn, onMousePress: At, onMouseRelease: Ln, onMouseMove: qn, onCharInput: Pn, onTouchStart: Dn, onTouchMove: An, onTouchEnd: On, mousePos: K, mouseWorldPos: Jr, mouseDeltaPos: yn, isKeyDown: Mt, isKeyPressed: Le, isKeyPressedRepeat: Wt, isKeyReleased: tt, isMouseDown: Ze, isMousePressed: Me, isMouseReleased: et, isMouseMoved: Rt, loop: ri, wait: Wn, play: Xe, volume: Br, burp: un, audioCtx: w2.ctx, Timer: fe, Line: le, Rect: ke, Circle: ht, Vec2: L, Color: v, Mat4: R, Quad: k, RNG: be, rng: mr, rand: Ge, randi: Ht, randSeed: wr, vec2: f, rgb: E, hsl2rgb: fr, quad: pr, choose: Ur, chance: gr, lerp: Ve, map: dt, mapc: dr, wave: Kt, deg2rad: he, rad2deg: Xt, testAreaRect: gt, testAreaLine: Zt, testAreaCircle: en, testAreaPolygon: tn, testAreaPoint: Ut, testAreaArea: nn, testLineLine: ce, testRectRect: zt, testRectLine: ft, testRectPoint: ae, testPolygonPoint: xe, testLinePolygon: _e, testPolygonPolygon: wt, testCircleCircle: Qt, testCirclePoint: mt, testRectPolygon: pt, drawSprite: hn, drawText: Xr, formatText: me, drawRect: Q, drawLine: We, drawLines: dn, drawTriangle: fn, drawCircle: Ct, drawEllipse: pn, drawUVQuad: pe, drawPolygon: Qe, drawFormattedText: we, pushTransform: re, popTransform: ie, pushTranslate: I, pushRotate: Je, pushScale: ne, debug: C, scene: Wi, go: Mi, addLevel: Pi, getData: Li, setData: _n, plug: Bn, ASCII_CHARS: Ar, CP437_CHARS: hs, canvas: t2.canvas, addKaboom: ki, LEFT: L.LEFT, RIGHT: L.RIGHT, UP: L.UP, DOWN: L.DOWN, RED: v.RED, GREEN: v.GREEN, BLUE: v.BLUE, YELLOW: v.YELLOW, MAGENTA: v.MAGENTA, CYAN: v.CYAN, WHITE: v.WHITE, BLACK: v.BLACK, keyIsDown: T("keyIsDown()", "isKeyDown()", Mt), keyIsPressed: T("keyIsPressed()", "isKeyPressed()", Le), keyIsPressedRep: T("keyIsPressedRep()", "isKeyPressedRepeat()", Wt), keyIsReleased: T("keyIsReleased()", "isKeyReleased()", tt), mouseIsDown: T("mouseIsDown()", "isMouseDown()", Ze), mouseIsClicked: T("mouseIsClicked()", "isMousePressed()", Me), mouseIsReleased: T("mouseIsReleased()", "isMouseReleased()", et), mouseIsMoved: T("mouseIsMoved()", "isMouseMoved()", Rt), dir: T("dir()", "Vec2.fromAngle()", L.fromAngle), action: T("action()", "onUpdate()", Pe), render: T("render()", "onDraw()", Tn), collides: T("collides()", "onCollide()", Sn), clicks: T("clicks()", "onClick()", Cn), hovers: T("hovers()", "onHover()", Rn), keyDown: T("keyDown()", "onKeyDown()", qt), keyPress: T("keyPress()", "onKeyPress()", H), keyPressRep: T("keyPressRep()", "onKeyPressRepeat()", Pt), keyRelease: T("keyRelease()", "onKeyRelease()", Dt), mouseDown: T("mouseDown()", "onMouseDown()", Mn), mouseClick: T("mouseClick()", "onMousePress()", At), mouseRelease: T("mouseRelease()", "onMouseRelease()", Ln), mouseMove: T("mouseMove()", "onMouseMove()", qn), charInput: T("charInput()", "onCharInput()", Pn), touchStart: T("touchStart()", "onTouchStart()", Dn), touchMove: T("touchMove()", "onTouchMove()", An), touchEnd: T("touchEnd()", "onTouchEnd()", On), focused: T("focused()", "isFocused()", jn), ready: T("ready()", "onLoad()", Ue) };
+    let ye = { loadRoot: q, loadSprite: J, loadSpriteAtlas: Ee, loadSound: Ce, loadFont: X, loadShader: Se, loadAseprite: Et, loadPedit: $e, loadBean: _r, load: S, width: F, height: G, center: ot, dt: Z, time: nt, screenshot: bn, record: Nn, isFocused: jn, focus: Di, cursor: xn, regCursor: ii, fullscreen: Hr, isFullscreen: vn, onLoad: Ue, isTouch: () => t.isTouch, layers: Qr, camPos: Zr, camScale: ei, camRot: ti, shake: ni, toScreen: rt, toWorld: Lt, gravity: Fn, add: kt, readd: Ai, destroy: at, destroyAll: Oi, get: Ii, every: Vi, revery: Fi, pos: it, scale: st, rotate: si, color: oi, opacity: ai, origin: Ot, layer: ui, area: fi, sprite: Vt, text: pi, rect: mi, circle: gi, uvquad: wi, outline: Ui, body: xi, shader: vi, timer: Gn, solid: Ei, fixed: Ti, stay: Ft, health: Si, lifespan: Ci, z: ci, move: hi, outview: It, cleanup: di, follow: li, state: Ri, on: qe, onUpdate: Pe, onDraw: Tn, onCollide: Sn, onClick: Cn, onHover: Rn, onKeyDown: qt, onKeyPress: H, onKeyPressRepeat: Pt, onKeyRelease: Dt, onMouseDown: Mn, onMousePress: At, onMouseRelease: Ln, onMouseMove: qn, onCharInput: Pn, onTouchStart: Dn, onTouchMove: An, onTouchEnd: On, mousePos: K, mouseWorldPos: Jr, mouseDeltaPos: yn, isKeyDown: Mt, isKeyPressed: Le, isKeyPressedRepeat: Wt, isKeyReleased: tt, isMouseDown: Ze, isMousePressed: Me, isMouseReleased: et, isMouseMoved: Rt, loop: ri, wait: Wn, play: Xe, volume: Br, burp: un, audioCtx: w.ctx, Timer: fe, Line: le, Rect: ke, Circle: ht, Vec2: L, Color: v, Mat4: R, Quad: k, RNG: be, rng: mr, rand: Ge, randi: Ht, randSeed: wr, vec2: f, rgb: E, hsl2rgb: fr, quad: pr, choose: Ur, chance: gr, lerp: Ve, map: dt, mapc: dr, wave: Kt, deg2rad: he, rad2deg: Xt, testAreaRect: gt, testAreaLine: Zt, testAreaCircle: en, testAreaPolygon: tn, testAreaPoint: Ut, testAreaArea: nn, testLineLine: ce, testRectRect: zt, testRectLine: ft, testRectPoint: ae, testPolygonPoint: xe, testLinePolygon: _e, testPolygonPolygon: wt, testCircleCircle: Qt, testCirclePoint: mt, testRectPolygon: pt, drawSprite: hn, drawText: Xr, formatText: me, drawRect: Q, drawLine: We, drawLines: dn, drawTriangle: fn, drawCircle: Ct, drawEllipse: pn, drawUVQuad: pe, drawPolygon: Qe, drawFormattedText: we, pushTransform: re, popTransform: ie, pushTranslate: I, pushRotate: Je, pushScale: ne, debug: C, scene: Wi, go: Mi, addLevel: Pi, getData: Li, setData: _n, plug: Bn, ASCII_CHARS: Ar, CP437_CHARS: hs, canvas: t.canvas, addKaboom: ki, LEFT: L.LEFT, RIGHT: L.RIGHT, UP: L.UP, DOWN: L.DOWN, RED: v.RED, GREEN: v.GREEN, BLUE: v.BLUE, YELLOW: v.YELLOW, MAGENTA: v.MAGENTA, CYAN: v.CYAN, WHITE: v.WHITE, BLACK: v.BLACK, keyIsDown: T("keyIsDown()", "isKeyDown()", Mt), keyIsPressed: T("keyIsPressed()", "isKeyPressed()", Le), keyIsPressedRep: T("keyIsPressedRep()", "isKeyPressedRepeat()", Wt), keyIsReleased: T("keyIsReleased()", "isKeyReleased()", tt), mouseIsDown: T("mouseIsDown()", "isMouseDown()", Ze), mouseIsClicked: T("mouseIsClicked()", "isMousePressed()", Me), mouseIsReleased: T("mouseIsReleased()", "isMouseReleased()", et), mouseIsMoved: T("mouseIsMoved()", "isMouseMoved()", Rt), dir: T("dir()", "Vec2.fromAngle()", L.fromAngle), action: T("action()", "onUpdate()", Pe), render: T("render()", "onDraw()", Tn), collides: T("collides()", "onCollide()", Sn), clicks: T("clicks()", "onClick()", Cn), hovers: T("hovers()", "onHover()", Rn), keyDown: T("keyDown()", "onKeyDown()", qt), keyPress: T("keyPress()", "onKeyPress()", H), keyPressRep: T("keyPressRep()", "onKeyPressRepeat()", Pt), keyRelease: T("keyRelease()", "onKeyRelease()", Dt), mouseDown: T("mouseDown()", "onMouseDown()", Mn), mouseClick: T("mouseClick()", "onMousePress()", At), mouseRelease: T("mouseRelease()", "onMouseRelease()", Ln), mouseMove: T("mouseMove()", "onMouseMove()", qn), charInput: T("charInput()", "onCharInput()", Pn), touchStart: T("touchStart()", "onTouchStart()", Dn), touchMove: T("touchMove()", "onTouchMove()", An), touchEnd: T("touchEnd()", "onTouchEnd()", On), focused: T("focused()", "isFocused()", jn), ready: T("ready()", "onLoad()", Ue) };
     if (i2.plugins && i2.plugins.forEach(Bn), i2.global !== false)
       for (let e in ye)
         window[e] = ye[e];
@@ -2918,18 +2918,21 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
     width: 1200,
     height: 700
   });
-  gorasize = 50;
   loadSound("music", "/sounds/music.mp3");
   var music = play("music", {
     loop: true
   });
   loadSprite("bean", "https://minderimages.nyc3.digitaloceanspaces.com/minder-folden/2022.1.13..22.42.38-Week%2002%202022.png");
   loadSprite("player", "https://nyc3.digitaloceanspaces.com/archiv/littel-wolfur/2021.11.02..21.41.08-image.png");
-  layers([
-    "bg",
-    "game",
-    "ui"
-  ], "game");
+  gorasize = 50;
+  score = 0;
+  onDraw(() => {
+    drawText({
+      text: score,
+      pos: vec2(width() / 2, height() / 2),
+      origin: "center"
+    });
+  });
   player = add([
     sprite("player", { width: gorasize, height: gorasize }),
     pos(120, 120),
@@ -2951,10 +2954,8 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
     player.charging = 1;
   });
   onMouseDown(() => {
-    if (player.charge < player.maxcharge && player.charging == 1) {
+    if (player.charge < player.maxcharge && player.charging == 1)
       player.charge += player.chargerate;
-    }
-    player.move(Vec2.fromAngle(player.pos.angle(mousePos())).scale(10));
     player.move(Vec2.fromAngle(rand(360)).scale(30));
   });
   onMouseRelease(() => {
@@ -2979,9 +2980,8 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
     if (player.slamming == 1) {
       player.move(Vec2.fromAngle(player.slamdirection).scale(-player.slamspeed));
       player.slamspeed -= 20;
-      if (player.slamspeed <= 0) {
+      if (player.slamspeed <= 0)
         player.slamming = 0;
-      }
     }
   });
   player.onCollide("enemy", (enemy) => {
@@ -3037,7 +3037,6 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
     "enemy"
   ];
   add(enemy1);
-  score = 0;
   buffer = gorasize * 0.8;
   onUpdate("enemy", (enemy) => {
     if (enemy.pos.x > width() - buffer || enemy.pos.x < buffer || enemy.pos.y > height() - buffer || enemy.pos.y < buffer) {
@@ -3082,23 +3081,6 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
       width: gorasize,
       height: gorasize,
       origin: "center"
-    });
-  });
-  tempspeed = 0;
-  var t = /* @__PURE__ */ __name((n = 1) => time() * n, "t");
-  var w = /* @__PURE__ */ __name((a2, b2, n) => wave(a2, b2, t(n)), "w");
-  var px = 160;
-  var py = 200;
-  onDraw(() => {
-    const mx = (width() - px * 2) / 2;
-    const my = (height() - py * 2) / 1;
-    const p = /* @__PURE__ */ __name((x, y) => vec2(x, y).scale(mx, my).add(px, py), "p");
-    drawText({
-      text: score,
-      pos: vec2(width() / 2, height() / 2),
-      origin: "center",
-      size: w(80, 120, 2),
-      color: rgb(w(128, 255, 4), w(128, 255, 8), w(128, 255, 2))
     });
   });
 })();
