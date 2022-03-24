@@ -34,7 +34,7 @@ onDraw(() => {
 player = add([
 	sprite("player", {width: gorasize, height: gorasize}),
     //scale(.7, .7),
-	pos(120, 120),
+	pos(width()/2, height()/2 - 100),
 	area(),
     origin("center"),
     {
@@ -103,7 +103,7 @@ player.onCollide("enemy", (enemy) => {
     {
         enemy.direction = player.slamdirection
         player.slamdirection = player.slamdirection + 180
-        enemy.speed = player.slamspeed
+        enemy.speed = player.slamspeed 
         enemy.charge = player.slamspeed
 	    player.slamspeed = player.slamspeed * .5
         enemy.attacked = 1
@@ -111,7 +111,10 @@ player.onCollide("enemy", (enemy) => {
     }
     else
     {
-        //???
+        enemy.direction = player.slamdirection
+        enemy.speed = 10 
+        enemy.charge = 10
+        enemy.attacked = 1
     }
 })
 
@@ -145,10 +148,22 @@ player.onDraw(() => {
 
 
 
+ship = add([
+	sprite("player", {width: gorasize, height: gorasize}),
+    //scale(.7, .7),
+	pos(width()/2, height()/2),
+	area(),
+    origin("center"),
+
+])
+
+
+
 
 /**************** ENEMY ****************/
 tempsprite = "player"
-enemy1 = [
+
+/*enemy1 = [
 	sprite(tempsprite, {width: gorasize, height: gorasize}),
 	pos(rand(gorasize, width()-gorasize), rand(gorasize, height()-gorasize)),
 	area({scale: 1.2}),
@@ -162,17 +177,79 @@ enemy1 = [
         deathglow: 0
     },
     "enemy"
-]
+]*/
 
-add(enemy1)
+//add(enemy1)
+
+spawnpositionx = -20
+spawnpositiony = -20
+spawnseed = 0
+
+invasionspeed = 1
+spawntime = 3
+
+loop(.8, () => {
+
+    //invasionspeed += .05
+    //if(spawntime > .2)
+    //    spawntime -= .2
+    
+    spawnseed = rand(4)
+    if(spawnseed < 1)
+    {
+        spawnpositionx = -100
+        spawnpositiony = rand(height())
+    }
+    else if(spawnseed < 2)
+    {
+        spawnpositionx = width() + 100
+        spawnpositiony = rand(height())
+    }
+    else if(spawnseed < 3)
+    {
+        spawnpositionx = rand(width())
+        spawnpositiony = -100
+    }
+    else if(spawnseed < 4)
+    {
+        spawnpositionx = rand(width())
+        spawnpositiony = height() + 100
+    }
+
+    //spawnpositionx = 100
+    //spawnpositiony = 100
+    
+	add([
+	sprite(tempsprite, {width: gorasize, height: gorasize}),
+	pos(spawnpositionx, spawnpositiony),
+    //move(ship.pos.angle(pos), 12),
+	area({scale: 1.2}),
+    origin("center"),
+    color = rgb(100, 100, 0),
+    {
+        direction: 0,
+        charge: 0,
+        attacked: 0,
+        death: 0,
+        deathglow: 0,
+        invasionspeed: invasionspeed
+    },
+    "enemy"
+])
+})
 
 buffer = gorasize*.8
 onUpdate("enemy", (enemy) => {
     //Enemies die when they hit the edge of the screen
-    if(enemy.pos.x > width() - buffer || enemy.pos.x < buffer || enemy.pos.y > height() - buffer || enemy.pos.y < buffer)
+    if(enemy.pos.x > width() + buffer || enemy.pos.x < -buffer || enemy.pos.y > height() + buffer || enemy.pos.y < -buffer)
     {
-        enemy.death = 1
-        enemy.attacked = 0
+        if(enemy.attacked == 1)
+        {
+            destroy(enemy)
+            score += 1
+            //enemy.death = 1
+            //enemy.attacked = 0
+        }
     }
 
     //Death Animation
@@ -180,9 +257,9 @@ onUpdate("enemy", (enemy) => {
     {
         if(enemy.deathglow > 255)
         {   
-            enemy.pos.x = rand(gorasize, width() - gorasize)
-            enemy.pos.y = rand(gorasize, height() - gorasize)
-            add(enemy1)
+            //enemy.pos.x = rand(gorasize, width() - gorasize)
+            //enemy.pos.y = rand(gorasize, height() - gorasize)
+            //add(enemy1)
             destroy(enemy)
             score += 1
         }
@@ -191,24 +268,31 @@ onUpdate("enemy", (enemy) => {
         enemy.scale = 1 + enemy.deathglow/100
     }
     
-    if(enemy.attacked == 1)
+    if(enemy.attacked == 1 && enemy.death == 0)
     {
         enemy.move(Vec2.fromAngle(enemy.direction).scale(-enemy.charge))
-        enemy.charge -= 20
+        enemy.charge -= 0
 
-        if(enemy.charge <= 600)
+        if(enemy.charge <= 0)
         {
             enemy.attacked = 0;
             enemy.charge = 0;
-            enemy.death = 1
         }
     }
     else if(enemy.death == 0)
     {
-        if (!player.exists()) return
-	    const dir = player.pos.sub(enemy.pos).unit()
-	    enemy.move(dir.scale(200)) 
+        //if (!player.exists()) return
+	    //const dir = player.pos.sub(enemy.pos).unit()
+	    //enemy.move(dir.scale(200)) 
+        //enemy.move(vec2(width()/2, height()/2).angle(enemy.pos).scale(.1*invasionspeed))
+        enemy.moveTo(width()/2, height()/2, enemy.invasionspeed*100)
+        //enemy.move(Math.cos(width()/2), Math.sin(height()/2))
     }
+})
+
+onCollide("enemy", "enemy", (enemy1, enemy2) => {
+    enemy1.death = 1
+    enemy2.death = 1
 })
 
 //Enemies don't have circular sprites because that slows the game down too much
@@ -227,3 +311,6 @@ onDraw("enemy", (enemy) => {
         origin: "center"
     })
 })
+
+
+

@@ -2935,7 +2935,7 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
   });
   player = add([
     sprite("player", { width: gorasize, height: gorasize }),
-    pos(120, 120),
+    pos(width() / 2, height() / 2 - 100),
     area(),
     origin("center"),
     {
@@ -2994,6 +2994,10 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
       enemy.attacked = 1;
       shake(5);
     } else {
+      enemy.direction = player.slamdirection;
+      enemy.speed = 10;
+      enemy.charge = 10;
+      enemy.attacked = 1;
     }
   });
   goraBackground = rgb(0, 0, 0);
@@ -3020,54 +3024,80 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
       });
     }
   });
+  ship = add([
+    sprite("player", { width: gorasize, height: gorasize }),
+    pos(width() / 2, height() / 2),
+    area(),
+    origin("center")
+  ]);
   tempsprite = "player";
-  enemy1 = [
-    sprite(tempsprite, { width: gorasize, height: gorasize }),
-    pos(rand(gorasize, width() - gorasize), rand(gorasize, height() - gorasize)),
-    area({ scale: 1.2 }),
-    origin("center"),
-    color = rgb(100, 100, 0),
-    {
-      direction: 0,
-      charge: 0,
-      attacked: 0,
-      death: 0,
-      deathglow: 0
-    },
-    "enemy"
-  ];
-  add(enemy1);
+  spawnpositionx = -20;
+  spawnpositiony = -20;
+  spawnseed = 0;
+  invasionspeed = 1;
+  spawntime = 3;
+  loop(0.8, () => {
+    spawnseed = rand(4);
+    if (spawnseed < 1) {
+      spawnpositionx = -100;
+      spawnpositiony = rand(height());
+    } else if (spawnseed < 2) {
+      spawnpositionx = width() + 100;
+      spawnpositiony = rand(height());
+    } else if (spawnseed < 3) {
+      spawnpositionx = rand(width());
+      spawnpositiony = -100;
+    } else if (spawnseed < 4) {
+      spawnpositionx = rand(width());
+      spawnpositiony = height() + 100;
+    }
+    add([
+      sprite(tempsprite, { width: gorasize, height: gorasize }),
+      pos(spawnpositionx, spawnpositiony),
+      area({ scale: 1.2 }),
+      origin("center"),
+      color = rgb(100, 100, 0),
+      {
+        direction: 0,
+        charge: 0,
+        attacked: 0,
+        death: 0,
+        deathglow: 0,
+        invasionspeed
+      },
+      "enemy"
+    ]);
+  });
   buffer = gorasize * 0.8;
   onUpdate("enemy", (enemy) => {
-    if (enemy.pos.x > width() - buffer || enemy.pos.x < buffer || enemy.pos.y > height() - buffer || enemy.pos.y < buffer) {
-      enemy.death = 1;
-      enemy.attacked = 0;
+    if (enemy.pos.x > width() + buffer || enemy.pos.x < -buffer || enemy.pos.y > height() + buffer || enemy.pos.y < -buffer) {
+      if (enemy.attacked == 1) {
+        destroy(enemy);
+        score += 1;
+      }
     }
     if (enemy.death == 1) {
       if (enemy.deathglow > 255) {
-        enemy.pos.x = rand(gorasize, width() - gorasize);
-        enemy.pos.y = rand(gorasize, height() - gorasize);
-        add(enemy1);
         destroy(enemy);
         score += 1;
       }
       enemy.deathglow += 50;
       enemy.scale = 1 + enemy.deathglow / 100;
     }
-    if (enemy.attacked == 1) {
+    if (enemy.attacked == 1 && enemy.death == 0) {
       enemy.move(Vec2.fromAngle(enemy.direction).scale(-enemy.charge));
-      enemy.charge -= 20;
-      if (enemy.charge <= 600) {
+      enemy.charge -= 0;
+      if (enemy.charge <= 0) {
         enemy.attacked = 0;
         enemy.charge = 0;
-        enemy.death = 1;
       }
     } else if (enemy.death == 0) {
-      if (!player.exists())
-        return;
-      const dir = player.pos.sub(enemy.pos).unit();
-      enemy.move(dir.scale(200));
+      enemy.moveTo(width() / 2, height() / 2, enemy.invasionspeed * 100);
     }
+  });
+  onCollide("enemy", "enemy", (enemy1, enemy2) => {
+    enemy1.death = 1;
+    enemy2.death = 1;
   });
   onDraw("enemy", (enemy) => {
     drawCircle({
