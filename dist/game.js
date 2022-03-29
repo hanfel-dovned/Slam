@@ -2913,25 +2913,94 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
   }, "default");
 
   // code/main.js
+  function hsv2rgb(h, s, v2) {
+    let f2 = /* @__PURE__ */ __name((n, k2 = (n + h / 60) % 6) => v2 - v2 * s * Math.max(Math.min(k2, 4 - k2, 1), 0), "f");
+    return [f2(5) * 255, f2(3) * 255, f2(1) * 255];
+  }
+  __name(hsv2rgb, "hsv2rgb");
+  bghue = Math.random() * 360;
+  bgcolor = hsv2rgb(bghue, 0.75, 0.75);
   no({
-    background: [200, 200, 255],
+    background: [bgcolor[0], bgcolor[1], bgcolor[2]],
     width: 1200,
     height: 700
   });
-  loadSound("music", "/sounds/music.mp3");
-  var music = play("music", {
-    loop: true
-  });
+  loadSound("music", "/sounds/delete-this-music.mp3");
+  play("music");
   loadSprite("bean", "https://minderimages.nyc3.digitaloceanspaces.com/minder-folden/2022.1.13..22.42.38-Week%2002%202022.png");
   loadSprite("player", "https://nyc3.digitaloceanspaces.com/archiv/littel-wolfur/2021.11.02..21.41.08-image.png");
+  loadSprite("zod", "sprites/zod.png");
   gorasize = 50;
   score = 0;
-  onDraw(() => {
+  layers([
+    "bg",
+    "game",
+    "ui"
+  ], "game");
+  bgdrawer = add([
+    layer("bg"),
+    pos(-10, -10),
+    {
+      size: 500,
+      color: hsv2rgb(bghue, 0.8, 0.4)
+    }
+  ]);
+  colorcounter = 0;
+  bgdrawer.onDraw(() => {
+    drawRect({
+      pos: vec2(0),
+      width: width() + 20,
+      height: height() + 20,
+      color: rgb(bgcolor[0] + colorcounter, bgcolor[1] + colorcounter, bgcolor[2] + colorcounter)
+    });
+    colorcounter = Math.sin(time() * 2) * 20;
+  });
+  scoreboard = add([
+    layer("bg"),
+    pos(-1e3, -1e3),
+    {
+      size: 500,
+      color: hsv2rgb(bghue, 0.8, 0.4)
+    }
+  ]);
+  scoreboard.onUpdate(() => {
+    scoreboard.pos.x -= 0.5;
+    if (scoreboard.pos.x < -scoreboard.size) {
+      scoreboard.pos.x = width();
+      scoreboard.pos.y = rand(scoreboard.size, height() - scoreboard.size);
+    }
+  });
+  scoreboard.onDraw(() => {
     drawText({
       text: score,
-      pos: vec2(width() / 2, height() / 2),
-      origin: "center"
+      font: "sink",
+      pos: vec2(0, 0),
+      origin: "center",
+      size: scoreboard.size,
+      color: rgb(scoreboard.color[0], scoreboard.color[1], scoreboard.color[2]),
+      opacity: 0.1
     });
+  });
+  effectdrawer = add([
+    layer("ui"),
+    pos(0, height() / 2),
+    {
+      color: hsv2rgb(bghue, 0.8, 0.4)
+    }
+  ]);
+  effectdrawer.onDraw(() => {
+    for (i = 0; i < 12; i++) {
+      drawRect({
+        pos: (100 * i + Math.sin(time()) * 1e3, 100 * i + Math.cos(time()) * 800),
+        width: 20,
+        height: 20,
+        color: rgb(effectdrawer.color[0], effectdrawer.color[1], effectdrawer.color[2]),
+        opacity: 0.4
+      });
+    }
+  });
+  effectdrawer.onUpdate(() => {
+    effectdrawer.pos.y = Math.sin(time()) * 100;
   });
   player = add([
     sprite("player", { width: gorasize, height: gorasize }),
@@ -2988,17 +3057,19 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
     if (player.slamming == 1) {
       enemy.direction = player.slamdirection;
       player.slamdirection = player.slamdirection + 180;
-      enemy.speed = player.slamspeed;
       enemy.charge = player.slamspeed;
       player.slamspeed = player.slamspeed * 0.5;
       enemy.attacked = 1;
       shake(5);
-    } else {
-      enemy.direction = player.slamdirection;
-      enemy.speed = 10;
-      enemy.charge = 10;
-      enemy.attacked = 1;
     }
+  });
+  player.isColliding("enemy", (enemy) => {
+    enemy.direction = 150;
+    player.slamdirection = player.slamdirection + 180;
+    enemy.charge = player.slamspeed;
+    player.slamspeed = player.slamspeed * 0.5;
+    enemy.attacked = 1;
+    shake(5);
   });
   goraBackground = rgb(0, 0, 0);
   player.onDraw(() => {
@@ -3006,7 +3077,8 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
     drawCircle({
       pos: vec2(0),
       radius: gorasize * 0.8,
-      color: goraBackground
+      color: goraBackground,
+      outline: { width: 1, color: rgb(0, 0, 0) }
     });
     drawSprite({
       sprite: "player",
@@ -3015,20 +3087,13 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
       height: gorasize,
       origin: "center"
     });
-    for (i = 0; i < 7; i++) {
-      drawCircle({
-        pos: vec2(0),
-        radius: gorasize * (0.7 - i * 0.03),
-        outline: { width: 4, color: goraBackground },
-        fill: false
-      });
-    }
   });
   ship = add([
-    sprite("player", { width: gorasize, height: gorasize }),
+    sprite("zod", { width: gorasize, height: gorasize }),
     pos(width() / 2, height() / 2),
     area(),
-    origin("center")
+    origin("center"),
+    layer("bg")
   ]);
   tempsprite = "player";
   spawnpositionx = -20;
@@ -3036,7 +3101,14 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
   spawnseed = 0;
   invasionspeed = 1;
   spawntime = 3;
-  loop(0.8, () => {
+  wavesize = 1;
+  loop(2, () => {
+    issuer = rand(255);
+    pal = rand(255);
+    hue = pal * 360 / 255;
+    weight = issuer / 255;
+    size = gorasize + gorasize * (weight - 0.5);
+    invasionspeed = 1 - weight;
     spawnseed = rand(4);
     if (spawnseed < 1) {
       spawnpositionx = -100;
@@ -3052,18 +3124,22 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
       spawnpositiony = height() + 100;
     }
     add([
-      sprite(tempsprite, { width: gorasize, height: gorasize }),
+      sprite(tempsprite, { width: size, height: size }),
       pos(spawnpositionx, spawnpositiony),
       area({ scale: 1.2 }),
       origin("center"),
-      color = rgb(100, 100, 0),
       {
         direction: 0,
         charge: 0,
         attacked: 0,
         death: 0,
         deathglow: 0,
-        invasionspeed
+        issuer,
+        invasionspeed,
+        weight,
+        size,
+        pal,
+        color: hsv2rgb(hue, 1, 1 - weight * 0.7)
       },
       "enemy"
     ]);
@@ -3086,13 +3162,13 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
     }
     if (enemy.attacked == 1 && enemy.death == 0) {
       enemy.move(Vec2.fromAngle(enemy.direction).scale(-enemy.charge));
-      enemy.charge -= 0;
+      enemy.charge -= enemy.weight * 100;
       if (enemy.charge <= 0) {
         enemy.attacked = 0;
         enemy.charge = 0;
       }
     } else if (enemy.death == 0) {
-      enemy.moveTo(width() / 2, height() / 2, enemy.invasionspeed * 100);
+      enemy.moveTo(width() / 2, height() / 2, enemy.invasionspeed * 200);
     }
   });
   onCollide("enemy", "enemy", (enemy1, enemy2) => {
@@ -3102,14 +3178,15 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
   onDraw("enemy", (enemy) => {
     drawCircle({
       pos: vec2(0),
-      radius: gorasize * 0.8,
-      color: rgb(enemy.deathglow, enemy.deathglow, enemy.deathglow)
+      radius: enemy.size * 0.8,
+      color: rgb(enemy.color[0], enemy.color[1], enemy.color[2]),
+      outline: { width: 1, color: rgb(0, 0, 0) }
     });
     drawSprite({
       sprite: "bean",
       pos: vec2(0),
-      width: gorasize,
-      height: gorasize,
+      width: enemy.size,
+      height: enemy.size,
       origin: "center"
     });
   });
