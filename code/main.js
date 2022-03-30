@@ -170,13 +170,13 @@ onMouseRelease(() => {
 player.onUpdate(() => {
     //Loop around edge of screen
     if(player.pos.x < 0)
-        player.pos.x = width() - 1;
+        player.pos.x = 0
     if(player.pos.x > width())
-        player.pos.x = 1
+        player.pos.x = width()
     if(player.pos.y < 0)
-        player.pos.y = height() - 1;
+        player.pos.y = 0
     if(player.pos.y > height())
-        player.pos.y = 1
+        player.pos.y = height()
 
     if(player.slamming == 1)
     {
@@ -199,27 +199,9 @@ player.onCollide("enemy", (enemy) => {
         enemy.attacked = 1
         shake(5)
     }
-    /*else
-    {
-        enemy.direction = rand(360)
-        enemy.speed = 100
-        enemy.charge = 100
-        enemy.attacked = 1
-    }*/
 })
 
-player.isColliding("enemy", (enemy) => {
-   // if(player.slamming == 0)
-    //{
-        enemy.direction = 150
-        player.slamdirection = player.slamdirection + 180
-        //enemy.speed = player.slamspeed 
-        enemy.charge = player.slamspeed
-	    player.slamspeed = player.slamspeed * .5
-        enemy.attacked = 1
-        shake(5)
-    //}
-})
+
 
 //Draw the black circle around the gora sprite
 goraBackground = rgb(0, 0, 0)
@@ -238,22 +220,6 @@ player.onDraw(() => {
         height: gorasize,
         origin: "center"
     })
-    //Draw rings to make sprite look circular
-    /*for(i = 0; i < 7; i++)
-    {
-        drawCircle({
-            pos: vec2(0),
-            radius: gorasize*(.7-i*.03),
-            outline: {width: 4, color: goraBackground},
-            fill: false,
-        })
-    }
-    drawCircle({
-            pos: vec2(0),
-            radius: gorasize*(.7-i*.03),
-            outline: {width: 4, color: goraBackground},
-            fill: false,
-        })*/
 })
 
 
@@ -374,8 +340,6 @@ onUpdate("enemy", (enemy) => {
         {
             destroy(enemy)
             score += 1
-            //enemy.death = 1
-            //enemy.attacked = 0
         }
     }
 
@@ -384,9 +348,6 @@ onUpdate("enemy", (enemy) => {
     {
         if(enemy.deathglow > 255)
         {   
-            //enemy.pos.x = rand(gorasize, width() - gorasize)
-            //enemy.pos.y = rand(gorasize, height() - gorasize)
-            //add(enemy1)
             destroy(enemy)
             score += 1
         }
@@ -400,7 +361,7 @@ onUpdate("enemy", (enemy) => {
         enemy.move(Vec2.fromAngle(enemy.direction).scale(-enemy.charge))
         //enemy.charge -= 0
         enemy.charge -= enemy.weight*100 //make this weight
-
+            
         if(enemy.charge <= 0)
         {
             enemy.attacked = 0;
@@ -409,12 +370,10 @@ onUpdate("enemy", (enemy) => {
     }
     else if(enemy.death == 0)
     {
-        //if (!player.exists()) return
-	    //const dir = player.pos.sub(enemy.pos).unit()
-	    //enemy.move(dir.scale(200)) 
-        //enemy.move(vec2(width()/2, height()/2).angle(enemy.pos).scale(.1*invasionspeed))
-        enemy.moveTo(width()/2, height()/2, enemy.invasionspeed*200)
-        //enemy.move(Math.cos(width()/2), Math.sin(height()/2))
+        if(!enemy.isColliding(player)) 
+            enemy.moveTo(width()/2, height()/2, enemy.invasionspeed*200)
+        else
+            enemy.move(Vec2.fromAngle(enemy.direction).scale(-100))
     }
 })
 
@@ -425,14 +384,17 @@ onCollide("enemy", "enemy", (enemy1, enemy2) => {
 
 
 
-//Enemies don't have circular sprites because that slows the game down too much
-//Should the player not have a circular sprite either then?
 onDraw("enemy", (enemy) => {
+    if(enemy.isColliding(player) && enemy.attacked == 1) 
+        drawcolor = rgb(255, 255, 255)
+    else
+        drawcolor = rgb(enemy.color[0], enemy.color[1], enemy.color[2])
+    
     drawCircle({
         pos: vec2(0),
         radius: enemy.size*.8,
-        //color: rgb(255-enemy.issuer, 255-enemy.issuer, 255-enemy.issuer),
-        color: rgb(enemy.color[0], enemy.color[1], enemy.color[2]),
+        color: drawcolor,
+        //color: rgb(enemy.color[0], enemy.color[1], enemy.color[2]),
         outline: {width: 1, color: rgb(0, 0, 0)}
     })
     drawSprite({

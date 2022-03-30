@@ -3039,13 +3039,13 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
   });
   player.onUpdate(() => {
     if (player.pos.x < 0)
-      player.pos.x = width() - 1;
+      player.pos.x = 0;
     if (player.pos.x > width())
-      player.pos.x = 1;
+      player.pos.x = width();
     if (player.pos.y < 0)
-      player.pos.y = height() - 1;
+      player.pos.y = 0;
     if (player.pos.y > height())
-      player.pos.y = 1;
+      player.pos.y = height();
     if (player.slamming == 1) {
       player.move(Vec2.fromAngle(player.slamdirection).scale(-player.slamspeed));
       player.slamspeed -= 20;
@@ -3062,14 +3062,6 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
       enemy.attacked = 1;
       shake(5);
     }
-  });
-  player.isColliding("enemy", (enemy) => {
-    enemy.direction = 150;
-    player.slamdirection = player.slamdirection + 180;
-    enemy.charge = player.slamspeed;
-    player.slamspeed = player.slamspeed * 0.5;
-    enemy.attacked = 1;
-    shake(5);
   });
   goraBackground = rgb(0, 0, 0);
   player.onDraw(() => {
@@ -3168,7 +3160,10 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
         enemy.charge = 0;
       }
     } else if (enemy.death == 0) {
-      enemy.moveTo(width() / 2, height() / 2, enemy.invasionspeed * 200);
+      if (!enemy.isColliding(player))
+        enemy.moveTo(width() / 2, height() / 2, enemy.invasionspeed * 200);
+      else
+        enemy.move(Vec2.fromAngle(enemy.direction).scale(-100));
     }
   });
   onCollide("enemy", "enemy", (enemy1, enemy2) => {
@@ -3176,10 +3171,14 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
     enemy2.death = 1;
   });
   onDraw("enemy", (enemy) => {
+    if (enemy.isColliding(player) && enemy.attacked == 1)
+      drawcolor = rgb(255, 255, 255);
+    else
+      drawcolor = rgb(enemy.color[0], enemy.color[1], enemy.color[2]);
     drawCircle({
       pos: vec2(0),
       radius: enemy.size * 0.8,
-      color: rgb(enemy.color[0], enemy.color[1], enemy.color[2]),
+      color: drawcolor,
       outline: { width: 1, color: rgb(0, 0, 0) }
     });
     drawSprite({
