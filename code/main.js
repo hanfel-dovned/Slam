@@ -12,7 +12,7 @@ bgcolor = hsv2rgb(bghue, .75, .75)
 kaboom({
 	background: [ bgcolor[0], bgcolor[1], bgcolor[2] ],
     width: 1200,
-    height: 700
+    height: 700,
 })
 
 loadSound("music", "/sounds/delete-this-music2.wav")
@@ -28,7 +28,13 @@ loadSound("slam", "/sounds/slam.wav")
 loadSound("bump", "/sounds/bump.wav")
 
 //TODO: handle case where gora fails to load
-loadSprite("bean", "https://minderimages.nyc3.digitaloceanspaces.com/minder-folden/2022.1.13..22.42.38-Week%2002%202022.png")
+loadSprite("enemy1", "https://minderimages.nyc3.digitaloceanspaces.com/minder-folden/2022.1.13..22.42.38-Week%2002%202022.png")
+loadSprite("enemy2", "https://minderimages.nyc3.digitaloceanspaces.com/minder-folden/2022.3.25..13.19.35-Week%2012%202022.png")
+loadSprite("enemy3", "https://minderimages.nyc3.digitaloceanspaces.com/mister-master-minder-folden/2022.3.04..13.58.06-Week%2009%202022.png")
+loadSprite("enemy4", "https://minderimages.nyc3.digitaloceanspaces.com/minder-folden/2022.3.11..13.43.17-Week%2010%202022.png")
+loadSprite("enemy5", "https://minderimages.nyc3.digitaloceanspaces.com/minder-folden/2022.4.01..15.10.19-Week%2013%202022.png")
+loadSprite("enemy6", "https://minderimages.nyc3.digitaloceanspaces.com/minder-folden/2022.2.11..13.45.09-Week%2006%202022.png")
+
 loadSprite("player", "https://nyc3.digitaloceanspaces.com/archiv/littel-wolfur/2021.11.02..21.41.08-image.png")
 loadSprite("ship", "sprites/sampel-palnet.png")
 
@@ -242,24 +248,6 @@ player.onDraw(() => {
 /**************** ENEMY ****************/
 tempsprite = "player"
 
-/*enemy1 = [
-	sprite(tempsprite, {width: gorasize, height: gorasize}),
-	pos(rand(gorasize, width()-gorasize), rand(gorasize, height()-gorasize)),
-	area({scale: 1.2}),
-    origin("center"),
-    color = rgb(100, 100, 0),
-    {
-        direction: 0,
-        charge: 0,
-        attacked: 0,
-        death: 0,
-        deathglow: 0
-    },
-    "enemy"
-]*/
-
-//add(enemy1)
-
 
 spawnpositionx = -20
 spawnpositiony = -20
@@ -269,15 +257,11 @@ invasionspeed = 1
 spawntime = 3
 wavesize = 1
 
+enemysprite = "enemy1"
+
 loop(2, () => {
-    //wavesize += 1
 
-    //invasionspeed += .01
-    //if(spawntime > .2)
-    //    spawntime -= .2
-
-    
-    //invasionspeed = rand(2)
+    enemysprite = "enemy" + Math.ceil(rand(6))
 
     issuer = rand(255)
     pal = rand(255)
@@ -313,7 +297,7 @@ loop(2, () => {
     if(gameover == 0)
     {
         add([
-            sprite(tempsprite, {width: size, height: size}),
+            sprite(enemysprite, {width: size, height: size}),
             pos(spawnpositionx, spawnpositiony),
             //move(ship.pos.angle(pos), 12),
             area({scale: 1.2}),
@@ -330,7 +314,8 @@ loop(2, () => {
                 weight: weight,
                 size: size,
                 pal: pal,
-                color: hsv2rgb(hue, 1, 1 - weight*.7)
+                color: hsv2rgb(hue, 1, 1 - weight*.7),
+                sprite: enemysprite
             },
             "enemy"
         ])
@@ -406,7 +391,7 @@ onDraw("enemy", (enemy) => {
         outline: {width: 1, color: rgb(0, 0, 0)}
     })
     drawSprite({
-        sprite: "bean",
+        sprite: enemy.sprite,
         pos: vec2(0),
         width: enemy.size, 
         height: enemy.size,

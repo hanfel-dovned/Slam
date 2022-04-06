@@ -2931,7 +2931,12 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
   loadSound("charge", "/sounds/charge.wav");
   loadSound("slam", "/sounds/slam.wav");
   loadSound("bump", "/sounds/bump.wav");
-  loadSprite("bean", "https://minderimages.nyc3.digitaloceanspaces.com/minder-folden/2022.1.13..22.42.38-Week%2002%202022.png");
+  loadSprite("enemy1", "https://minderimages.nyc3.digitaloceanspaces.com/minder-folden/2022.1.13..22.42.38-Week%2002%202022.png");
+  loadSprite("enemy2", "https://minderimages.nyc3.digitaloceanspaces.com/minder-folden/2022.3.25..13.19.35-Week%2012%202022.png");
+  loadSprite("enemy3", "https://minderimages.nyc3.digitaloceanspaces.com/mister-master-minder-folden/2022.3.04..13.58.06-Week%2009%202022.png");
+  loadSprite("enemy4", "https://minderimages.nyc3.digitaloceanspaces.com/minder-folden/2022.3.11..13.43.17-Week%2010%202022.png");
+  loadSprite("enemy5", "https://minderimages.nyc3.digitaloceanspaces.com/minder-folden/2022.4.01..15.10.19-Week%2013%202022.png");
+  loadSprite("enemy6", "https://minderimages.nyc3.digitaloceanspaces.com/minder-folden/2022.2.11..13.45.09-Week%2006%202022.png");
   loadSprite("player", "https://nyc3.digitaloceanspaces.com/archiv/littel-wolfur/2021.11.02..21.41.08-image.png");
   loadSprite("ship", "sprites/sampel-palnet.png");
   gorasize = 50;
@@ -3100,7 +3105,9 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
   invasionspeed = 1;
   spawntime = 3;
   wavesize = 1;
+  enemysprite = "enemy1";
   loop(2, () => {
+    enemysprite = "enemy" + Math.ceil(rand(6));
     issuer = rand(255);
     pal = rand(255);
     hue = pal * 360 / 255;
@@ -3123,7 +3130,7 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
     }
     if (gameover == 0) {
       add([
-        sprite(tempsprite, { width: size, height: size }),
+        sprite(enemysprite, { width: size, height: size }),
         pos(spawnpositionx, spawnpositiony),
         area({ scale: 1.2 }),
         origin("center"),
@@ -3138,7 +3145,8 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
           weight,
           size,
           pal,
-          color: hsv2rgb(hue, 1, 1 - weight * 0.7)
+          color: hsv2rgb(hue, 1, 1 - weight * 0.7),
+          sprite: enemysprite
         },
         "enemy"
       ]);
@@ -3190,7 +3198,7 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
       outline: { width: 1, color: rgb(0, 0, 0) }
     });
     drawSprite({
-      sprite: "bean",
+      sprite: enemy.sprite,
       pos: vec2(0),
       width: enemy.size,
       height: enemy.size,
