@@ -15,25 +15,32 @@ kaboom({
     height: 700
 })
 
-loadSound("music", "/sounds/delete-this-music.mp3")
+loadSound("music", "/sounds/delete-this-music2.wav")
 //const music = play("music", {
 //	loop: true,
 //})
-play("music")
+music = play("music", {loop: true})
 //volume(0.5)
+
+loadSound("explosion", "/sounds/explosion.wav")
+loadSound("charge", "/sounds/charge.wav")
+loadSound("slam", "/sounds/slam.wav")
+loadSound("bump", "/sounds/bump.wav")
 
 //TODO: handle case where gora fails to load
 loadSprite("bean", "https://minderimages.nyc3.digitaloceanspaces.com/minder-folden/2022.1.13..22.42.38-Week%2002%202022.png")
 loadSprite("player", "https://nyc3.digitaloceanspaces.com/archiv/littel-wolfur/2021.11.02..21.41.08-image.png")
-loadSprite("zod", "sprites/zod.png")
+loadSprite("ship", "sprites/sampel-palnet.png")
 
 gorasize = 50
 score = 0
+gameover = 0
 
 layers([
     "bg",
     "game",
     "ui",
+    "gameover"
 ], "game")
 
 bgdrawer = add([
@@ -146,7 +153,9 @@ player = add([
 
 //Mouse Controls - Charging and Slamming
 onMousePress(() => {
-        player.charging = 1
+    player.charging = 1
+    if(gameover == 0)
+        play("charge", {volume: .5})
 })
 
 onMouseDown(() => {
@@ -164,6 +173,8 @@ onMouseRelease(() => {
         player.color = rgb()
         player.slamspeed = player.charge * 10
         player.charge = 0
+        if(gameover == 0)
+            play("slam", {volume: .5})
     }
 })
 
@@ -197,7 +208,11 @@ player.onCollide("enemy", (enemy) => {
         enemy.charge = player.slamspeed
 	    player.slamspeed = player.slamspeed * .5
         enemy.attacked = 1
-        shake(5)
+        if(gameover == 0)
+        {
+            shake(5)
+            play("bump", {volume: .5})
+        }
     }
 })
 
@@ -221,18 +236,6 @@ player.onDraw(() => {
         origin: "center"
     })
 })
-
-
-
-ship = add([
-	sprite("zod", {width: gorasize, height: gorasize}),
-    //scale(.7, .7),
-	pos(width()/2, height()/2),
-	area(),
-    origin("center"),
-    layer("bg")
-])
-
 
 
 
@@ -307,28 +310,31 @@ loop(2, () => {
         spawnpositiony = height() + 100
     }
 
-    add([
-        sprite(tempsprite, {width: size, height: size}),
-        pos(spawnpositionx, spawnpositiony),
-        //move(ship.pos.angle(pos), 12),
-        area({scale: 1.2}),
-        origin("center"),
-        //color = rgb(100, 100, 0),
-        {
-            direction: 0,
-            charge: 0,
-            attacked: 0,
-            death: 0,
-            deathglow: 0,
-            issuer: issuer,
-            invasionspeed: invasionspeed,
-            weight: weight,
-            size: size,
-            pal: pal,
-            color: hsv2rgb(hue, 1, 1 - weight*.7)
-        },
-        "enemy"
-    ])
+    if(gameover == 0)
+    {
+        add([
+            sprite(tempsprite, {width: size, height: size}),
+            pos(spawnpositionx, spawnpositiony),
+            //move(ship.pos.angle(pos), 12),
+            area({scale: 1.2}),
+            origin("center"),
+            //color = rgb(100, 100, 0),
+            {
+                direction: 0,
+                charge: 0,
+                attacked: 0,
+                death: 0,
+                deathglow: 0,
+                issuer: issuer,
+                invasionspeed: invasionspeed,
+                weight: weight,
+                size: size,
+                pal: pal,
+                color: hsv2rgb(hue, 1, 1 - weight*.7)
+            },
+            "enemy"
+        ])
+    }
 })
 
 buffer = gorasize*.8
@@ -339,7 +345,9 @@ onUpdate("enemy", (enemy) => {
         if(enemy.attacked == 1)
         {
             destroy(enemy)
-            score += 1
+            play("explosion")
+            if(gameover == 0)
+                score += 1
         }
     }
 
@@ -349,6 +357,7 @@ onUpdate("enemy", (enemy) => {
         if(enemy.deathglow > 255)
         {   
             destroy(enemy)
+            play("explosion")
             score += 1
         }
         
@@ -383,11 +392,10 @@ onCollide("enemy", "enemy", (enemy1, enemy2) => {
 })
 
 
-
 onDraw("enemy", (enemy) => {
-    if(enemy.isColliding(player) && enemy.attacked == 1) 
-        drawcolor = rgb(255, 255, 255)
-    else
+    //if(enemy.isColliding(player) && enemy.attacked == 1) 
+    //    drawcolor = rgb(255, 255, 255)
+    //else
         drawcolor = rgb(enemy.color[0], enemy.color[1], enemy.color[2])
     
     drawCircle({
@@ -408,3 +416,91 @@ onDraw("enemy", (enemy) => {
 
 
 
+
+ship = add([
+	sprite("ship", {width: gorasize, height: gorasize}),
+    //scale(.7, .7),
+	pos(width()/2, height()/2),
+	area(),
+    origin("center"),
+    layer("bg")
+])
+
+ship.onDraw(() => {
+    drawCircle({
+        pos: vec2(0),
+        radius: gorasize*.8 + Math.sin(time())*3,
+        color: rgb(0,0,0)
+    })
+    drawSprite({
+        sprite: "ship",
+        pos: vec2(0),
+        width: gorasize*.8 + Math.sin(time())*3, 
+        height: gorasize*.8 + Math.sin(time())*3,
+        origin: "center"
+    })
+})
+
+gameoverenemypos = vec2(0)
+gameoverenemysize = 0
+
+ship.onCollide("enemy", (enemy) => {
+    if(gameover == 0 && enemy.death == 0)
+    {
+        play("explosion")
+        music.pause()
+        gameover = 1
+        gameoverenemypos = enemy.pos 
+        gameoverenemysize = enemy.size
+        destroyAll("enemy")
+    }
+})
+
+gameoverdrawer = add([
+    layer("gameover"),
+    pos(0, 0)
+])
+
+scoreopacity = -10
+gameoverdrawer.onDraw(() => {
+    if(gameover == 1)
+    {
+        drawRect({
+            pos: vec2(-20, -20),
+            width: width() + 40,
+            height: height() + 40,
+            color: rgb(255, 255, 255),
+        })
+        drawCircle({
+            pos: center(),
+            radius: gorasize*.8+3,
+            color: rgb(0,0,0)
+        })
+        drawSprite({
+            sprite: "ship",
+            pos: center(),
+            origin: "center",
+            width: gorasize,
+            height: gorasize
+        })
+        
+        drawCircle({
+            pos: gameoverenemypos,
+            radius: gameoverenemysize*.8,
+            color: rgb(0, 0, 0),
+        })
+
+        drawText({
+    		text: score,
+            font: "sink",
+    		pos: vec2(width()*.5, height()*.25),
+    		origin: "center",
+            size: scoreboard.size*.25,
+            color: rgb(0, 0, 0),
+            opacity: scoreopacity
+	    })
+
+        if(scoreopacity < 1)
+            scoreopacity += .1
+    }
+})

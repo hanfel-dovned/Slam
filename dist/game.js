@@ -2925,17 +2925,23 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
     width: 1200,
     height: 700
   });
-  loadSound("music", "/sounds/delete-this-music.mp3");
-  play("music");
+  loadSound("music", "/sounds/delete-this-music2.wav");
+  music = play("music", { loop: true });
+  loadSound("explosion", "/sounds/explosion.wav");
+  loadSound("charge", "/sounds/charge.wav");
+  loadSound("slam", "/sounds/slam.wav");
+  loadSound("bump", "/sounds/bump.wav");
   loadSprite("bean", "https://minderimages.nyc3.digitaloceanspaces.com/minder-folden/2022.1.13..22.42.38-Week%2002%202022.png");
   loadSprite("player", "https://nyc3.digitaloceanspaces.com/archiv/littel-wolfur/2021.11.02..21.41.08-image.png");
-  loadSprite("zod", "sprites/zod.png");
+  loadSprite("ship", "sprites/sampel-palnet.png");
   gorasize = 50;
   score = 0;
+  gameover = 0;
   layers([
     "bg",
     "game",
-    "ui"
+    "ui",
+    "gameover"
   ], "game");
   bgdrawer = add([
     layer("bg"),
@@ -3021,6 +3027,8 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
   ]);
   onMousePress(() => {
     player.charging = 1;
+    if (gameover == 0)
+      play("charge", { volume: 0.5 });
   });
   onMouseDown(() => {
     if (player.charge < player.maxcharge && player.charging == 1)
@@ -3035,6 +3043,8 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
       player.color = rgb();
       player.slamspeed = player.charge * 10;
       player.charge = 0;
+      if (gameover == 0)
+        play("slam", { volume: 0.5 });
     }
   });
   player.onUpdate(() => {
@@ -3060,7 +3070,10 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
       enemy.charge = player.slamspeed;
       player.slamspeed = player.slamspeed * 0.5;
       enemy.attacked = 1;
-      shake(5);
+      if (gameover == 0) {
+        shake(5);
+        play("bump", { volume: 0.5 });
+      }
     }
   });
   goraBackground = rgb(0, 0, 0);
@@ -3080,13 +3093,6 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
       origin: "center"
     });
   });
-  ship = add([
-    sprite("zod", { width: gorasize, height: gorasize }),
-    pos(width() / 2, height() / 2),
-    area(),
-    origin("center"),
-    layer("bg")
-  ]);
   tempsprite = "player";
   spawnpositionx = -20;
   spawnpositiony = -20;
@@ -3115,38 +3121,43 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
       spawnpositionx = rand(width());
       spawnpositiony = height() + 100;
     }
-    add([
-      sprite(tempsprite, { width: size, height: size }),
-      pos(spawnpositionx, spawnpositiony),
-      area({ scale: 1.2 }),
-      origin("center"),
-      {
-        direction: 0,
-        charge: 0,
-        attacked: 0,
-        death: 0,
-        deathglow: 0,
-        issuer,
-        invasionspeed,
-        weight,
-        size,
-        pal,
-        color: hsv2rgb(hue, 1, 1 - weight * 0.7)
-      },
-      "enemy"
-    ]);
+    if (gameover == 0) {
+      add([
+        sprite(tempsprite, { width: size, height: size }),
+        pos(spawnpositionx, spawnpositiony),
+        area({ scale: 1.2 }),
+        origin("center"),
+        {
+          direction: 0,
+          charge: 0,
+          attacked: 0,
+          death: 0,
+          deathglow: 0,
+          issuer,
+          invasionspeed,
+          weight,
+          size,
+          pal,
+          color: hsv2rgb(hue, 1, 1 - weight * 0.7)
+        },
+        "enemy"
+      ]);
+    }
   });
   buffer = gorasize * 0.8;
   onUpdate("enemy", (enemy) => {
     if (enemy.pos.x > width() + buffer || enemy.pos.x < -buffer || enemy.pos.y > height() + buffer || enemy.pos.y < -buffer) {
       if (enemy.attacked == 1) {
         destroy(enemy);
-        score += 1;
+        play("explosion");
+        if (gameover == 0)
+          score += 1;
       }
     }
     if (enemy.death == 1) {
       if (enemy.deathglow > 255) {
         destroy(enemy);
+        play("explosion");
         score += 1;
       }
       enemy.deathglow += 50;
@@ -3171,10 +3182,7 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
     enemy2.death = 1;
   });
   onDraw("enemy", (enemy) => {
-    if (enemy.isColliding(player) && enemy.attacked == 1)
-      drawcolor = rgb(255, 255, 255);
-    else
-      drawcolor = rgb(enemy.color[0], enemy.color[1], enemy.color[2]);
+    drawcolor = rgb(enemy.color[0], enemy.color[1], enemy.color[2]);
     drawCircle({
       pos: vec2(0),
       radius: enemy.size * 0.8,
@@ -3188,6 +3196,82 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
       height: enemy.size,
       origin: "center"
     });
+  });
+  ship = add([
+    sprite("ship", { width: gorasize, height: gorasize }),
+    pos(width() / 2, height() / 2),
+    area(),
+    origin("center"),
+    layer("bg")
+  ]);
+  ship.onDraw(() => {
+    drawCircle({
+      pos: vec2(0),
+      radius: gorasize * 0.8 + Math.sin(time()) * 3,
+      color: rgb(0, 0, 0)
+    });
+    drawSprite({
+      sprite: "ship",
+      pos: vec2(0),
+      width: gorasize * 0.8 + Math.sin(time()) * 3,
+      height: gorasize * 0.8 + Math.sin(time()) * 3,
+      origin: "center"
+    });
+  });
+  gameoverenemypos = vec2(0);
+  gameoverenemysize = 0;
+  ship.onCollide("enemy", (enemy) => {
+    if (gameover == 0 && enemy.death == 0) {
+      play("explosion");
+      music.pause();
+      gameover = 1;
+      gameoverenemypos = enemy.pos;
+      gameoverenemysize = enemy.size;
+      destroyAll("enemy");
+    }
+  });
+  gameoverdrawer = add([
+    layer("gameover"),
+    pos(0, 0)
+  ]);
+  scoreopacity = -10;
+  gameoverdrawer.onDraw(() => {
+    if (gameover == 1) {
+      drawRect({
+        pos: vec2(-20, -20),
+        width: width() + 40,
+        height: height() + 40,
+        color: rgb(255, 255, 255)
+      });
+      drawCircle({
+        pos: center(),
+        radius: gorasize * 0.8 + 3,
+        color: rgb(0, 0, 0)
+      });
+      drawSprite({
+        sprite: "ship",
+        pos: center(),
+        origin: "center",
+        width: gorasize,
+        height: gorasize
+      });
+      drawCircle({
+        pos: gameoverenemypos,
+        radius: gameoverenemysize * 0.8,
+        color: rgb(0, 0, 0)
+      });
+      drawText({
+        text: score,
+        font: "sink",
+        pos: vec2(width() * 0.5, height() * 0.25),
+        origin: "center",
+        size: scoreboard.size * 0.25,
+        color: rgb(0, 0, 0),
+        opacity: scoreopacity
+      });
+      if (scoreopacity < 1)
+        scoreopacity += 0.1;
+    }
   });
 })();
 //# sourceMappingURL=game.js.map
