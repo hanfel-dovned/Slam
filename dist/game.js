@@ -3028,7 +3028,8 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
       chargerate: 5,
       chargeloss: 15,
       movespeed: 400
-    }
+    },
+    "player"
   ]);
   onMousePress(() => {
     player.charging = 1;
@@ -3079,6 +3080,7 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
         shake(5);
         play("bump", { volume: 0.5 });
       }
+      collideopacity = 1;
     }
   });
   goraBackground = rgb(0, 0, 0);
@@ -3086,7 +3088,7 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
     goraBackground = rgb(player.charge * (255 / player.maxcharge), 0, 0);
     drawCircle({
       pos: vec2(0),
-      radius: gorasize * 0.8,
+      radius: gorasize * 0.8 + player.charge / player.maxcharge * 5,
       color: goraBackground,
       outline: { width: 1, color: rgb(0, 0, 0) }
     });
@@ -3169,7 +3171,7 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
         score += 1;
       }
       enemy.deathglow += 50;
-      enemy.scale = 1 + enemy.deathglow / 100;
+      enemy.scale = 1 + enemy.deathglow / 250;
     }
     if (enemy.attacked == 1 && enemy.death == 0) {
       enemy.move(Vec2.fromAngle(enemy.direction).scale(-enemy.charge));
@@ -3193,7 +3195,7 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
     drawcolor = rgb(enemy.color[0], enemy.color[1], enemy.color[2]);
     drawCircle({
       pos: vec2(0),
-      radius: enemy.size * 0.8,
+      radius: enemy.size * 0.8 + Math.sin(time() * 500 / enemy.size),
       color: drawcolor,
       outline: { width: 1, color: rgb(0, 0, 0) }
     });
@@ -3204,6 +3206,13 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
       height: enemy.size,
       origin: "center"
     });
+    if (enemy.deathglow > 100) {
+      drawCircle({
+        pos: vec2(0),
+        radius: enemy.size,
+        color: rgb(255, 255, 255)
+      });
+    }
   });
   ship = add([
     sprite("ship", { width: gorasize, height: gorasize }),
@@ -3242,7 +3251,7 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
     layer("gameover"),
     pos(0, 0)
   ]);
-  scoreopacity = -10;
+  scoreopacity = -1;
   gameoverdrawer.onDraw(() => {
     if (gameover == 1) {
       drawRect({
@@ -3277,8 +3286,14 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
         color: rgb(0, 0, 0),
         opacity: scoreopacity
       });
+      drawRect({
+        pos: vec2(0, height() * 0.33),
+        width: width(),
+        height: 10,
+        color: rgb(255, 255, 255)
+      });
       if (scoreopacity < 1)
-        scoreopacity += 0.1;
+        scoreopacity += 0.01;
     }
   });
 })();

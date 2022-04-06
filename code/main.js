@@ -154,7 +154,8 @@ player = add([
         chargerate: 5,
         chargeloss: 15,
         movespeed: 400,
-    }
+    },
+    "player"
 ])
 
 //Mouse Controls - Charging and Slamming
@@ -219,7 +220,12 @@ player.onCollide("enemy", (enemy) => {
             shake(5)
             play("bump", {volume: .5})
         }
+        collideopacity = 1
     }
+    /*else
+    {
+        
+    }*/
 })
 
 
@@ -230,7 +236,7 @@ player.onDraw(() => {
     goraBackground = rgb(player.charge*(255/player.maxcharge), 0, 0)
     drawCircle({
         pos: vec2(0),
-        radius: gorasize*.8,
+        radius: gorasize*.8 + player.charge/player.maxcharge*5,
         color: goraBackground,
         outline: {width: 1, color: rgb(0, 0, 0)}
     })
@@ -241,6 +247,7 @@ player.onDraw(() => {
         height: gorasize,
         origin: "center"
     })
+
 })
 
 
@@ -315,7 +322,7 @@ loop(2, () => {
                 size: size,
                 pal: pal,
                 color: hsv2rgb(hue, 1, 1 - weight*.7),
-                sprite: enemysprite
+                sprite: enemysprite,
             },
             "enemy"
         ])
@@ -347,11 +354,12 @@ onUpdate("enemy", (enemy) => {
         }
         
         enemy.deathglow += 50
-        enemy.scale = 1 + enemy.deathglow/100
+        enemy.scale = 1 + enemy.deathglow/250
     }
     
     if(enemy.attacked == 1 && enemy.death == 0)
     {
+
         enemy.move(Vec2.fromAngle(enemy.direction).scale(-enemy.charge))
         //enemy.charge -= 0
         enemy.charge -= enemy.weight*100 //make this weight
@@ -369,6 +377,8 @@ onUpdate("enemy", (enemy) => {
         else
             enemy.move(Vec2.fromAngle(enemy.direction).scale(-100))
     }
+
+    //enemy.blinking = rand(200)
 })
 
 onCollide("enemy", "enemy", (enemy1, enemy2) => {
@@ -376,18 +386,13 @@ onCollide("enemy", "enemy", (enemy1, enemy2) => {
     enemy2.death = 1
 })
 
-
 onDraw("enemy", (enemy) => {
-    //if(enemy.isColliding(player) && enemy.attacked == 1) 
-    //    drawcolor = rgb(255, 255, 255)
-    //else
-        drawcolor = rgb(enemy.color[0], enemy.color[1], enemy.color[2])
+    drawcolor = rgb(enemy.color[0], enemy.color[1], enemy.color[2])
     
     drawCircle({
         pos: vec2(0),
-        radius: enemy.size*.8,
+        radius: enemy.size*.8 + Math.sin(time()*500/enemy.size),
         color: drawcolor,
-        //color: rgb(enemy.color[0], enemy.color[1], enemy.color[2]),
         outline: {width: 1, color: rgb(0, 0, 0)}
     })
     drawSprite({
@@ -397,7 +402,53 @@ onDraw("enemy", (enemy) => {
         height: enemy.size,
         origin: "center"
     })
+
+    //eyes slow the game down and don't fit well with the art style
+   /* if(enemy.blinking > 1)
+    {
+        drawCircle({
+            pos: vec2(-enemy.size*.4, -enemy.size*.5),
+            radius: enemy.size*.3,
+            color: rgb(255, 255, 255),
+            outline: {width: 1, color: rgb(0, 0, 0)}
+        })
+        drawCircle({
+            pos: vec2(enemy.size*.4, -enemy.size*.5),
+            radius: enemy.size*.3,
+            color: rgb(255, 255, 255),
+            outline: {width: 1, color: rgb(0, 0, 0)}
+        })
+        drawCircle({
+            pos: vec2(-enemy.size*.4, -enemy.size*.5),
+            radius: enemy.size*.1,
+            color: rgb(0, 0, 0),
+            outline: {width: 1, color: rgb(0, 0, 0)}
+        })
+        drawCircle({
+            pos: vec2(enemy.size*.4, -enemy.size*.5),
+            radius: enemy.size*.1,
+            color: rgb(0, 0, 0),
+            outline: {width: 1, color: rgb(0, 0, 0)}
+        })
+    }*/
+    
+    if(enemy.deathglow > 100)
+    {   
+        drawCircle({
+            pos: vec2(0),
+            radius: enemy.size,
+            color: rgb(255, 255, 255),
+        })
+    }
 })
+
+/*onDraw("enemy", (enemy) => {
+            drawCircle({
+                pos: vec2(0),
+                radius: enemy.size,
+                color: rgb(255, 255, 255),
+            })
+})*/
 
 
 
@@ -446,7 +497,7 @@ gameoverdrawer = add([
     pos(0, 0)
 ])
 
-scoreopacity = -10
+scoreopacity = -1
 gameoverdrawer.onDraw(() => {
     if(gameover == 1)
     {
@@ -484,8 +535,14 @@ gameoverdrawer.onDraw(() => {
             color: rgb(0, 0, 0),
             opacity: scoreopacity
 	    })
+        drawRect({
+            pos: vec2(0, height()*.33),
+            width: width(),
+            height: 10,
+            color: rgb(255, 255, 255),
+        })
 
         if(scoreopacity < 1)
-            scoreopacity += .1
+            scoreopacity += .01
     }
 })
