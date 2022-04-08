@@ -6,7 +6,11 @@ function hsv2rgb(h,s,v)
   return [f(5)*255,f(3)*255,f(1)*255];       
 }   
 
-bghue = Math.random()*360
+invadingpalpatp1 = Math.random()*255
+invadingpalpatp2 = Math.random()*255
+
+//bghue = Math.random()*360
+bghue = invadingpalpatp1 * 360/255
 bgcolor = hsv2rgb(bghue, .75, .75)
 
 kaboom({
@@ -44,6 +48,8 @@ gameover = 0
 
 layers([
     "bg",
+    "bgparticles",
+    "ship",
     "game",
     "ui",
     "gameover"
@@ -100,38 +106,81 @@ scoreboard.onDraw(() => {
 })
 
 
-effectdrawer = add([
-    layer("ui"),
-    pos(0, height()/2),
-    {
-        color: hsv2rgb(bghue, .8, .4)
-    }
-])
+particlespeed = 1
+loop(.4, () => {
 
-effectdrawer.onDraw(() => {
-    for(i = 0; i < 12; i++)
+    if(invadingpalpatp2 < 64)
     {
-        drawRect({
-            pos: (100*i+Math.sin(time())*1000, 100*i+Math.cos(time())*800),
-            width: 20,
-            height: 20,
-            //color: rgb(0, 0, 0)
-            color: rgb(effectdrawer.color[0], effectdrawer.color[1], effectdrawer.color[2]),
-            opacity: .4
-        })
+        particlespawnx = width() + 90
+        particlespawny = rand(height())
+        particlemovex = -particlespeed
+        particlemovey = 0
     }
+    else if(invadingpalpatp2 < 128)
+    {
+        particlespawnx = -90
+        particlespawny = rand(height())
+        particlemovex = particlespeed
+        particlemovey = 0
+    }
+    else if(invadingpalpatp2 < 192)
+    {
+        particlespawnx = rand(width())
+        particlespawny = height() + 90
+        particlemovex = 0
+        particlemovey = -particlespeed
+    }
+    else if(invadingpalpatp2 < 256)
+    {
+        particlespawnx = rand(width())
+        particlespawny = -90
+        particlemovex = 0
+        particlemovey = particlespeed
+    }
+
+    if(invadingpalpatp2 % 2 == 0)
+        particleshape = "square"
+    else
+        particleshape = "circle"
+
+     add([
+        pos(particlespawnx, particlespawny),
+        layer("bgparticles"),
+        origin("center"),
+        {
+            direction: 0,
+            color: hsv2rgb(bghue, .8, .4),
+            movex: particlemovex * rand(.3, 2),
+            movey: particlemovey * rand(.3, 2),
+            shape: particleshape
+        },
+        "backgroundparticle"
+    ])
+
 })
 
-effectdrawer.onUpdate(() => {
-    effectdrawer.pos.y = Math.sin(time())*100
-    /*if(effectdrawer.pos.x < -effectdrawer.size)
-    {
-        effectdrawer.pos.x = width()
-        effectdrawer.pos.y = rand(effectdrawer.size, height() - effectdrawer.size)
-    }*/
+
+onDraw("backgroundparticle", (particle) => {
+    particle.pos.x += particle.movex
+    particle.pos.y += particle.movey
+    
+    if(particle.pos.x < -100 || particle.pos.x > width() + 100 || particle.pos.y < -100 || particle.pos.y > height() + 100)
+        destroy(particle)
+
+    if(particle.movey == 0)
+        mycolor = rgb(particle.color[0] + particle.pos.x % 255, particle.color[1] + particle.pos.x % 255, particle.color[2] + particle.pos.x % 255)
+    else if(particle.movex == 0)
+        mycolor = rgb(particle.color[0] + particle.pos.y % 255, particle.color[1] + particle.pos.y % 255, particle.color[2] + particle.pos.y % 255)
+    
+    drawRect({
+        pos: vec2(0),
+        width: 80,
+        height: 80,
+        color: mycolor,
+        opacity: .15
+    })
 })
-
-
+         
 
 /**************** PLAYER ****************/
 player = add([
@@ -139,6 +188,7 @@ player = add([
     //scale(.7, .7),
 	pos(width()/2, height()/2 - 100),
 	area(),
+    layer("game"),
     origin("center"),
     {
         charging: 0,
@@ -309,6 +359,7 @@ loop(2, () => {
             //move(ship.pos.angle(pos), 12),
             area({scale: 1.2}),
             origin("center"),
+            layer("game"),
             //color = rgb(100, 100, 0),
             {
                 direction: 0,
@@ -459,7 +510,7 @@ ship = add([
 	pos(width()/2, height()/2),
 	area(),
     origin("center"),
-    layer("bg")
+    layer("ship")
 ])
 
 ship.onDraw(() => {

@@ -9,19 +9,19 @@
   var rr = Object.getOwnPropertySymbols;
   var Ji = Object.prototype.hasOwnProperty;
   var Qi = Object.prototype.propertyIsEnumerable;
-  var Nt = /* @__PURE__ */ __name((i2, t, l) => t in i2 ? ir(i2, t, { enumerable: true, configurable: true, writable: true, value: l }) : i2[t] = l, "Nt");
-  var P = /* @__PURE__ */ __name((i2, t) => {
+  var Nt = /* @__PURE__ */ __name((i, t, l) => t in i ? ir(i, t, { enumerable: true, configurable: true, writable: true, value: l }) : i[t] = l, "Nt");
+  var P = /* @__PURE__ */ __name((i, t) => {
     for (var l in t || (t = {}))
-      Ji.call(t, l) && Nt(i2, l, t[l]);
+      Ji.call(t, l) && Nt(i, l, t[l]);
     if (rr)
       for (var l of rr(t))
-        Qi.call(t, l) && Nt(i2, l, t[l]);
-    return i2;
+        Qi.call(t, l) && Nt(i, l, t[l]);
+    return i;
   }, "P");
-  var D = /* @__PURE__ */ __name((i2, t) => Hi(i2, zi(t)), "D");
-  var a = /* @__PURE__ */ __name((i2, t) => ir(i2, "name", { value: t, configurable: true }), "a");
-  var b = /* @__PURE__ */ __name((i2, t, l) => (Nt(i2, typeof t != "symbol" ? t + "" : t, l), l), "b");
-  var sr = /* @__PURE__ */ __name((i2, t, l) => new Promise((w, U) => {
+  var D = /* @__PURE__ */ __name((i, t) => Hi(i, zi(t)), "D");
+  var a = /* @__PURE__ */ __name((i, t) => ir(i, "name", { value: t, configurable: true }), "a");
+  var b = /* @__PURE__ */ __name((i, t, l) => (Nt(i, typeof t != "symbol" ? t + "" : t, l), l), "b");
+  var sr = /* @__PURE__ */ __name((i, t, l) => new Promise((w, U) => {
     var p = /* @__PURE__ */ __name((q) => {
       try {
         A(l.next(q));
@@ -35,14 +35,14 @@
         U(V);
       }
     }, "S"), A = /* @__PURE__ */ __name((q) => q.done ? w(q.value) : Promise.resolve(q.value).then(p, S), "A");
-    A((l = l.apply(i2, t)).next());
+    A((l = l.apply(i, t)).next());
   }), "sr");
   var or = (() => {
-    for (var i2 = new Uint8Array(128), t = 0; t < 64; t++)
-      i2[t < 26 ? t + 65 : t < 52 ? t + 71 : t < 62 ? t - 4 : t * 4 - 205] = t;
+    for (var i = new Uint8Array(128), t = 0; t < 64; t++)
+      i[t < 26 ? t + 65 : t < 52 ? t + 71 : t < 62 ? t - 4 : t * 4 - 205] = t;
     return (l) => {
       for (var w = l.length, U = new Uint8Array((w - (l[w - 1] == "=") - (l[w - 2] == "=")) * 3 / 4 | 0), p = 0, S = 0; p < w; ) {
-        var A = i2[l.charCodeAt(p++)], q = i2[l.charCodeAt(p++)], V = i2[l.charCodeAt(p++)], j = i2[l.charCodeAt(p++)];
+        var A = i[l.charCodeAt(p++)], q = i[l.charCodeAt(p++)], V = i[l.charCodeAt(p++)], j = i[l.charCodeAt(p++)];
         U[S++] = A << 2 | q >> 4, U[S++] = q << 4 | V >> 2, U[S++] = V << 6 | j;
       }
       return U;
@@ -64,80 +64,80 @@
     }
   }, "$");
   a($, "IDList");
-  function jt(i2, t) {
-    let l = typeof i2, w = typeof t;
+  function jt(i, t) {
+    let l = typeof i, w = typeof t;
     if (l !== w)
       return false;
     if (l === "object" && w === "object") {
-      let U = Object.keys(i2), p = Object.keys(t);
+      let U = Object.keys(i), p = Object.keys(t);
       if (U.length !== p.length)
         return false;
       for (let S of U) {
-        let A = i2[S], q = t[S];
+        let A = i[S], q = t[S];
         if (!(typeof A == "function" && typeof q == "function") && !jt(A, q))
           return false;
       }
       return true;
     }
-    return i2 === t;
+    return i === t;
   }
   __name(jt, "jt");
   a(jt, "deepEq");
-  function Yt(i2, t) {
+  function Yt(i, t) {
     let l = document.createElement("a");
-    document.body.appendChild(l), l.setAttribute("style", "display: none"), l.href = i2, l.download = t, l.click(), document.body.removeChild(l);
+    document.body.appendChild(l), l.setAttribute("style", "display: none"), l.href = i, l.download = t, l.click(), document.body.removeChild(l);
   }
   __name(Yt, "Yt");
   a(Yt, "downloadURL");
-  function ur(i2, t) {
-    let l = URL.createObjectURL(i2);
+  function ur(i, t) {
+    let l = URL.createObjectURL(i);
     Yt(l, t), URL.revokeObjectURL(l);
   }
   __name(ur, "ur");
   a(ur, "downloadBlob");
-  function cr(i2) {
-    return i2.match(/^data:\w+\/\w+;base64,.+/);
+  function cr(i) {
+    return i.match(/^data:\w+\/\w+;base64,.+/);
   }
   __name(cr, "cr");
   a(cr, "isDataURL");
   var lr = (() => {
-    let i2 = 0;
-    return () => i2++;
+    let i = 0;
+    return () => i++;
   })();
   var ar = /* @__PURE__ */ new Set();
-  function B(i2, t) {
-    ar.has(i2) || (ar.add(i2), console.warn(`${i2} is deprecated. Use ${t} instead.`));
+  function B(i, t) {
+    ar.has(i) || (ar.add(i), console.warn(`${i} is deprecated. Use ${t} instead.`));
   }
   __name(B, "B");
   a(B, "deprecateMsg");
-  var T = a((i2, t, l) => (...w) => (B(i2, t), l(...w)), "deprecate");
-  function he(i2) {
-    return i2 * Math.PI / 180;
+  var T = a((i, t, l) => (...w) => (B(i, t), l(...w)), "deprecate");
+  function he(i) {
+    return i * Math.PI / 180;
   }
   __name(he, "he");
   a(he, "deg2rad");
-  function Xt(i2) {
-    return i2 * 180 / Math.PI;
+  function Xt(i) {
+    return i * 180 / Math.PI;
   }
   __name(Xt, "Xt");
   a(Xt, "rad2deg");
-  function z(i2, t, l) {
-    return t > l ? z(i2, l, t) : Math.min(Math.max(i2, t), l);
+  function z(i, t, l) {
+    return t > l ? z(i, l, t) : Math.min(Math.max(i, t), l);
   }
   __name(z, "z");
   a(z, "clamp");
-  function Ve(i2, t, l) {
-    return i2 + (t - i2) * l;
+  function Ve(i, t, l) {
+    return i + (t - i) * l;
   }
   __name(Ve, "Ve");
   a(Ve, "lerp");
-  function dt(i2, t, l, w, U) {
-    return w + (i2 - t) / (l - t) * (U - w);
+  function dt(i, t, l, w, U) {
+    return w + (i - t) / (l - t) * (U - w);
   }
   __name(dt, "dt");
   a(dt, "map");
-  function dr(i2, t, l, w, U) {
-    return z(dt(i2, t, l, w, U), w, U);
+  function dr(i, t, l, w, U) {
+    return z(dt(i, t, l, w, U), w, U);
   }
   __name(dr, "dr");
   a(dr, "mapc");
@@ -204,14 +204,14 @@
   }, "N");
   var L = N;
   a(L, "Vec2"), b(L, "LEFT", new N(-1, 0)), b(L, "RIGHT", new N(1, 0)), b(L, "UP", new N(0, -1)), b(L, "DOWN", new N(0, 1));
-  function f(...i2) {
-    if (i2.length === 1) {
-      if (i2[0] instanceof L)
-        return f(i2[0].x, i2[0].y);
-      if (Array.isArray(i2[0]) && i2[0].length === 2)
-        return f.apply(null, i2[0]);
+  function f(...i) {
+    if (i.length === 1) {
+      if (i[0] instanceof L)
+        return f(i[0].x, i[0].y);
+      if (Array.isArray(i[0]) && i[0].length === 2)
+        return f.apply(null, i[0]);
     }
-    return new L(...i2);
+    return new L(...i);
   }
   __name(f, "f");
   a(f, "vec2");
@@ -227,7 +227,7 @@
     }
   }, "Fe");
   a(Fe, "Vec3");
-  var de = a((i2, t, l) => new Fe(i2, t, l), "vec3");
+  var de = a((i, t, l) => new Fe(i, t, l), "vec3");
   var ue = /* @__PURE__ */ __name(class {
     constructor(t, l, w) {
       b(this, "r", 255);
@@ -271,20 +271,20 @@
   }, "ue");
   var v = ue;
   a(v, "Color"), b(v, "RED", E(255, 0, 0)), b(v, "GREEN", E(0, 255, 0)), b(v, "BLUE", E(0, 0, 255)), b(v, "YELLOW", E(255, 255, 0)), b(v, "MAGENTA", E(255, 0, 255)), b(v, "CYAN", E(0, 255, 255)), b(v, "WHITE", E(255, 255, 255)), b(v, "BLACK", E(0, 0, 0));
-  function E(...i2) {
-    if (i2.length === 0)
+  function E(...i) {
+    if (i.length === 0)
       return new v(255, 255, 255);
-    if (i2.length === 1) {
-      if (i2[0] instanceof v)
-        return i2[0].clone();
-      if (Array.isArray(i2[0]) && i2[0].length === 3)
-        return v.fromArray(i2[0]);
+    if (i.length === 1) {
+      if (i[0] instanceof v)
+        return i[0].clone();
+      if (Array.isArray(i[0]) && i[0].length === 3)
+        return v.fromArray(i[0]);
     }
-    return new v(...i2);
+    return new v(...i);
   }
   __name(E, "E");
   a(E, "rgb");
-  var fr = a((i2, t, l) => v.fromHSL(i2, t, l), "hsl2rgb");
+  var fr = a((i, t, l) => v.fromHSL(i, t, l), "hsl2rgb");
   var k = /* @__PURE__ */ __name(class {
     constructor(t, l, w, U) {
       b(this, "x", 0);
@@ -307,8 +307,8 @@
     }
   }, "k");
   a(k, "Quad");
-  function pr(i2, t, l, w) {
-    return new k(i2, t, l, w);
+  function pr(i, t, l, w) {
+    return new k(i, t, l, w);
   }
   __name(pr, "pr");
   a(pr, "quad");
@@ -381,8 +381,8 @@
     }
   }, "R");
   a(R, "Mat4");
-  function Kt(i2, t, l, w = Math.sin) {
-    return i2 + (w(l) + 1) / 2 * (t - i2);
+  function Kt(i, t, l, w = Math.sin) {
+    return i + (w(l) + 1) / 2 * (t - i);
   }
   __name(Kt, "Kt");
   a(Kt, "wave");
@@ -416,124 +416,124 @@
   }, "be");
   a(be, "RNG");
   var $t = new be(Date.now());
-  function mr(i2) {
-    return B("rng()", "new RNG()"), new be(i2);
+  function mr(i) {
+    return B("rng()", "new RNG()"), new be(i);
   }
   __name(mr, "mr");
   a(mr, "rng");
-  function wr(i2) {
-    return i2 != null && ($t.seed = i2), $t.seed;
+  function wr(i) {
+    return i != null && ($t.seed = i), $t.seed;
   }
   __name(wr, "wr");
   a(wr, "randSeed");
-  function Ge(...i2) {
-    return $t.gen(...i2);
+  function Ge(...i) {
+    return $t.gen(...i);
   }
   __name(Ge, "Ge");
   a(Ge, "rand");
-  function Ht(...i2) {
-    return Math.floor(Ge(...i2));
+  function Ht(...i) {
+    return Math.floor(Ge(...i));
   }
   __name(Ht, "Ht");
   a(Ht, "randi");
-  function gr(i2) {
-    return Ge() <= i2;
+  function gr(i) {
+    return Ge() <= i;
   }
   __name(gr, "gr");
   a(gr, "chance");
-  function Ur(i2) {
-    return i2[Ht(i2.length)];
+  function Ur(i) {
+    return i[Ht(i.length)];
   }
   __name(Ur, "Ur");
   a(Ur, "choose");
-  function yr(i2, t) {
-    return i2.p2.x >= t.p1.x && i2.p1.x <= t.p2.x && i2.p2.y >= t.p1.y && i2.p1.y <= t.p2.y;
+  function yr(i, t) {
+    return i.p2.x >= t.p1.x && i.p1.x <= t.p2.x && i.p2.y >= t.p1.y && i.p1.y <= t.p2.y;
   }
   __name(yr, "yr");
   a(yr, "testRectRect2");
-  function zt(i2, t) {
-    return i2.p2.x > t.p1.x && i2.p1.x < t.p2.x && i2.p2.y > t.p1.y && i2.p1.y < t.p2.y;
+  function zt(i, t) {
+    return i.p2.x > t.p1.x && i.p1.x < t.p2.x && i.p2.y > t.p1.y && i.p1.y < t.p2.y;
   }
   __name(zt, "zt");
   a(zt, "testRectRect");
-  function Jt(i2, t) {
-    if (i2.p1.x === i2.p2.x && i2.p1.y === i2.p2.y || t.p1.x === t.p2.x && t.p1.y === t.p2.y)
+  function Jt(i, t) {
+    if (i.p1.x === i.p2.x && i.p1.y === i.p2.y || t.p1.x === t.p2.x && t.p1.y === t.p2.y)
       return null;
-    let l = (t.p2.y - t.p1.y) * (i2.p2.x - i2.p1.x) - (t.p2.x - t.p1.x) * (i2.p2.y - i2.p1.y);
+    let l = (t.p2.y - t.p1.y) * (i.p2.x - i.p1.x) - (t.p2.x - t.p1.x) * (i.p2.y - i.p1.y);
     if (l === 0)
       return null;
-    let w = ((t.p2.x - t.p1.x) * (i2.p1.y - t.p1.y) - (t.p2.y - t.p1.y) * (i2.p1.x - t.p1.x)) / l, U = ((i2.p2.x - i2.p1.x) * (i2.p1.y - t.p1.y) - (i2.p2.y - i2.p1.y) * (i2.p1.x - t.p1.x)) / l;
+    let w = ((t.p2.x - t.p1.x) * (i.p1.y - t.p1.y) - (t.p2.y - t.p1.y) * (i.p1.x - t.p1.x)) / l, U = ((i.p2.x - i.p1.x) * (i.p1.y - t.p1.y) - (i.p2.y - i.p1.y) * (i.p1.x - t.p1.x)) / l;
     return w < 0 || w > 1 || U < 0 || U > 1 ? null : w;
   }
   __name(Jt, "Jt");
   a(Jt, "testLineLineT");
-  function ce(i2, t) {
-    let l = Jt(i2, t);
-    return l ? f(i2.p1.x + l * (i2.p2.x - i2.p1.x), i2.p1.y + l * (i2.p2.y - i2.p1.y)) : null;
+  function ce(i, t) {
+    let l = Jt(i, t);
+    return l ? f(i.p1.x + l * (i.p2.x - i.p1.x), i.p1.y + l * (i.p2.y - i.p1.y)) : null;
   }
   __name(ce, "ce");
   a(ce, "testLineLine");
-  function ft(i2, t) {
-    return ae(i2, t.p1) || ae(i2, t.p2) ? true : !!ce(t, new le(i2.p1, f(i2.p2.x, i2.p1.y))) || !!ce(t, new le(f(i2.p2.x, i2.p1.y), i2.p2)) || !!ce(t, new le(i2.p2, f(i2.p1.x, i2.p2.y))) || !!ce(t, new le(f(i2.p1.x, i2.p2.y), i2.p1));
+  function ft(i, t) {
+    return ae(i, t.p1) || ae(i, t.p2) ? true : !!ce(t, new le(i.p1, f(i.p2.x, i.p1.y))) || !!ce(t, new le(f(i.p2.x, i.p1.y), i.p2)) || !!ce(t, new le(i.p2, f(i.p1.x, i.p2.y))) || !!ce(t, new le(f(i.p1.x, i.p2.y), i.p1));
   }
   __name(ft, "ft");
   a(ft, "testRectLine");
-  function ae(i2, t) {
-    return t.x > i2.p1.x && t.x < i2.p2.x && t.y > i2.p1.y && t.y < i2.p2.y;
+  function ae(i, t) {
+    return t.x > i.p1.x && t.x < i.p2.x && t.y > i.p1.y && t.y < i.p2.y;
   }
   __name(ae, "ae");
   a(ae, "testRectPoint");
-  function br(i2, t) {
-    let l = Math.max(i2.p1.x, Math.min(t.center.x, i2.p2.x)), w = Math.max(i2.p1.y, Math.min(t.center.y, i2.p2.y));
+  function br(i, t) {
+    let l = Math.max(i.p1.x, Math.min(t.center.x, i.p2.x)), w = Math.max(i.p1.y, Math.min(t.center.y, i.p2.y));
     return f(l, w).dist(t.center) <= t.radius;
   }
   __name(br, "br");
   a(br, "testRectCircle");
-  function pt(i2, t) {
-    return wt(t, [i2.p1, f(i2.p2.x, i2.p1.y), i2.p2, f(i2.p1.x, i2.p2.y)]);
+  function pt(i, t) {
+    return wt(t, [i.p1, f(i.p2.x, i.p1.y), i.p2, f(i.p1.x, i.p2.y)]);
   }
   __name(pt, "pt");
   a(pt, "testRectPolygon");
-  function xr(i2, t) {
+  function xr(i, t) {
     return false;
   }
   __name(xr, "xr");
   a(xr, "testLinePoint");
-  function vr(i2, t) {
+  function vr(i, t) {
     return false;
   }
   __name(vr, "vr");
   a(vr, "testLineCircle");
-  function _e(i2, t) {
-    if (xe(t, i2.p1) || xe(t, i2.p2))
+  function _e(i, t) {
+    if (xe(t, i.p1) || xe(t, i.p2))
       return true;
     for (let l = 0; l < t.length; l++) {
       let w = t[l], U = t[(l + 1) % t.length];
-      if (ce(i2, { p1: w, p2: U }))
+      if (ce(i, { p1: w, p2: U }))
         return true;
     }
     return false;
   }
   __name(_e, "_e");
   a(_e, "testLinePolygon");
-  function mt(i2, t) {
-    return i2.center.dist(t) < i2.radius;
+  function mt(i, t) {
+    return i.center.dist(t) < i.radius;
   }
   __name(mt, "mt");
   a(mt, "testCirclePoint");
-  function Qt(i2, t) {
-    return i2.center.dist(t.center) < i2.radius + t.radius;
+  function Qt(i, t) {
+    return i.center.dist(t.center) < i.radius + t.radius;
   }
   __name(Qt, "Qt");
   a(Qt, "testCircleCircle");
-  function Er(i2, t) {
+  function Er(i, t) {
     return false;
   }
   __name(Er, "Er");
   a(Er, "testCirclePolygon");
-  function wt(i2, t) {
-    for (let l = 0; l < i2.length; l++) {
-      let w = { p1: i2[l], p2: i2[(l + 1) % i2.length] };
+  function wt(i, t) {
+    for (let l = 0; l < i.length; l++) {
+      let w = { p1: i[l], p2: i[(l + 1) % i.length] };
       if (_e(w, t))
         return true;
     }
@@ -541,123 +541,123 @@
   }
   __name(wt, "wt");
   a(wt, "testPolygonPolygon");
-  function xe(i2, t) {
+  function xe(i, t) {
     let l = false;
-    for (let w = 0, U = i2.length - 1; w < i2.length; U = w++)
-      i2[w].y > t.y != i2[U].y > t.y && t.x < (i2[U].x - i2[w].x) * (t.y - i2[w].y) / (i2[U].y - i2[w].y) + i2[w].x && (l = !l);
+    for (let w = 0, U = i.length - 1; w < i.length; U = w++)
+      i[w].y > t.y != i[U].y > t.y && t.x < (i[U].x - i[w].x) * (t.y - i[w].y) / (i[U].y - i[w].y) + i[w].x && (l = !l);
     return l;
   }
   __name(xe, "xe");
   a(xe, "testPolygonPoint");
-  function ts(i2, t) {
-    return i2.eq(t);
+  function ts(i, t) {
+    return i.eq(t);
   }
   __name(ts, "ts");
   a(ts, "testPointPoint");
-  function gt(i2, t) {
-    switch (i2.shape) {
+  function gt(i, t) {
+    switch (i.shape) {
       case "rect":
-        return zt(t, i2);
+        return zt(t, i);
       case "line":
-        return ft(t, i2);
+        return ft(t, i);
       case "circle":
-        return br(t, i2);
+        return br(t, i);
       case "polygon":
-        return pt(t, i2.pts);
+        return pt(t, i.pts);
       case "point":
-        return ae(t, i2.pt);
+        return ae(t, i.pt);
     }
-    throw new Error(`Unknown area shape: ${i2.shape}`);
+    throw new Error(`Unknown area shape: ${i.shape}`);
   }
   __name(gt, "gt");
   a(gt, "testAreaRect");
-  function Zt(i2, t) {
-    switch (i2.shape) {
+  function Zt(i, t) {
+    switch (i.shape) {
       case "rect":
-        return ft(i2, t);
+        return ft(i, t);
       case "line":
-        return Boolean(ce(i2, t));
+        return Boolean(ce(i, t));
       case "circle":
-        return vr(t, i2);
+        return vr(t, i);
       case "polygon":
-        return _e(t, i2.pts);
+        return _e(t, i.pts);
       case "point":
-        return xr(t, i2.pt);
+        return xr(t, i.pt);
     }
-    throw new Error(`Unknown area shape: ${i2.shape}`);
+    throw new Error(`Unknown area shape: ${i.shape}`);
   }
   __name(Zt, "Zt");
   a(Zt, "testAreaLine");
-  function en(i2, t) {
-    switch (i2.shape) {
+  function en(i, t) {
+    switch (i.shape) {
       case "rect":
-        return br(i2, t);
+        return br(i, t);
       case "line":
-        return vr(i2, t);
+        return vr(i, t);
       case "circle":
-        return Qt(i2, t);
+        return Qt(i, t);
       case "polygon":
-        return Er(t, i2.pts);
+        return Er(t, i.pts);
       case "point":
-        return mt(t, i2.pt);
+        return mt(t, i.pt);
     }
-    throw new Error(`Unknown area shape: ${i2.shape}`);
+    throw new Error(`Unknown area shape: ${i.shape}`);
   }
   __name(en, "en");
   a(en, "testAreaCircle");
-  function tn(i2, t) {
-    switch (i2.shape) {
+  function tn(i, t) {
+    switch (i.shape) {
       case "rect":
-        return pt(i2, t);
+        return pt(i, t);
       case "line":
-        return _e(i2, t);
+        return _e(i, t);
       case "circle":
-        return Er(i2, t);
+        return Er(i, t);
       case "polygon":
-        return wt(t, i2.pts);
+        return wt(t, i.pts);
       case "point":
-        return xe(t, i2.pt);
+        return xe(t, i.pt);
     }
-    throw new Error(`Unknown area shape: ${i2.shape}`);
+    throw new Error(`Unknown area shape: ${i.shape}`);
   }
   __name(tn, "tn");
   a(tn, "testAreaPolygon");
-  function Ut(i2, t) {
-    switch (i2.shape) {
+  function Ut(i, t) {
+    switch (i.shape) {
       case "rect":
-        return ae(i2, t);
+        return ae(i, t);
       case "line":
-        return xr(i2, t);
+        return xr(i, t);
       case "circle":
-        return mt(i2, t);
+        return mt(i, t);
       case "polygon":
-        return xe(i2.pts, t);
+        return xe(i.pts, t);
       case "point":
-        return ts(i2.pt, t);
+        return ts(i.pt, t);
     }
-    throw new Error(`Unknown area shape: ${i2.shape}`);
+    throw new Error(`Unknown area shape: ${i.shape}`);
   }
   __name(Ut, "Ut");
   a(Ut, "testAreaPoint");
-  function nn(i2, t) {
+  function nn(i, t) {
     switch (t.shape) {
       case "rect":
-        return gt(i2, t);
+        return gt(i, t);
       case "line":
-        return Zt(i2, t);
+        return Zt(i, t);
       case "circle":
-        return en(i2, t);
+        return en(i, t);
       case "polygon":
-        return tn(i2, t.pts);
+        return tn(i, t.pts);
       case "point":
-        return Ut(i2, t.pt);
+        return Ut(i, t.pt);
     }
     throw new Error(`Unknown area shape: ${t.shape}`);
   }
   __name(nn, "nn");
   a(nn, "testAreaArea");
-  function yt(i2, t) {
-    return { p1: f(i2.p1.x - t.p2.x, i2.p1.y - t.p2.y), p2: f(i2.p2.x - t.p1.x, i2.p2.y - t.p1.y) };
+  function yt(i, t) {
+    return { p1: f(i.p1.x - t.p2.x, i.p1.y - t.p2.y), p2: f(i.p2.x - t.p1.x, i.p2.y - t.p1.y) };
   }
   __name(yt, "yt");
   a(yt, "minkDiff");
@@ -795,13 +795,13 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
 `;
   var ys = /* @__PURE__ */ new Set(["id", "require"]);
   var bs = /* @__PURE__ */ new Set(["add", "load", "update", "draw", "destroy", "inspect"]);
-  function kr(i2) {
-    return i2 === "pressed" || i2 === "rpressed" ? "down" : i2 === "released" ? "up" : i2;
+  function kr(i) {
+    return i === "pressed" || i === "rpressed" ? "down" : i === "released" ? "up" : i;
   }
   __name(kr, "kr");
   a(kr, "processButtonState");
-  function xs(i2) {
-    i2.requestFullscreen ? i2.requestFullscreen() : i2.webkitRequestFullscreen && i2.webkitRequestFullscreen();
+  function xs(i) {
+    i.requestFullscreen ? i.requestFullscreen() : i.webkitRequestFullscreen && i.webkitRequestFullscreen();
   }
   __name(xs, "xs");
   a(xs, "enterFullscreen");
@@ -815,8 +815,8 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
   }
   __name(Es, "Es");
   a(Es, "getFullscreenElement");
-  function Ye(i2) {
-    switch (i2) {
+  function Ye(i) {
+    switch (i) {
       case "topleft":
         return f(-1, -1);
       case "top":
@@ -836,7 +836,7 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
       case "botright":
         return f(1, 1);
       default:
-        return i2;
+        return i;
     }
   }
   __name(Ye, "Ye");
@@ -846,25 +846,25 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
   }
   __name(Gr, "Gr");
   a(Gr, "createEmptyAudioBuffer");
-  var no = a((i2 = {}) => {
+  var no = a((i = {}) => {
     let t = (() => {
       var s, o, d;
-      let e = (s = i2.root) != null ? s : document.body;
+      let e = (s = i.root) != null ? s : document.body;
       e === document.body && (document.body.style.width = "100%", document.body.style.height = "100%", document.body.style.margin = "0px", document.documentElement.style.width = "100%", document.documentElement.style.height = "100%");
-      let n = (o = i2.canvas) != null ? o : (() => {
+      let n = (o = i.canvas) != null ? o : (() => {
         let h = document.createElement("canvas");
         return e.appendChild(h), h;
-      })(), r = (d = i2.scale) != null ? d : 1;
-      i2.width && i2.height && !i2.stretch && !i2.letterbox ? (n.width = i2.width * r, n.height = i2.height * r) : (n.width = n.parentElement.offsetWidth, n.height = n.parentElement.offsetHeight);
+      })(), r = (d = i.scale) != null ? d : 1;
+      i.width && i.height && !i.stretch && !i.letterbox ? (n.width = i.width * r, n.height = i.height * r) : (n.width = n.parentElement.offsetWidth, n.height = n.parentElement.offsetHeight);
       let u = ["outline: none", "cursor: default"];
-      i2.crisp && (u.push("image-rendering: pixelated"), u.push("image-rendering: crisp-edges")), n.style = u.join(";"), n.setAttribute("tabindex", "0");
+      i.crisp && (u.push("image-rendering: pixelated"), u.push("image-rendering: crisp-edges")), n.style = u.join(";"), n.setAttribute("tabindex", "0");
       let c = n.getContext("webgl", { antialias: true, depth: true, stencil: true, alpha: true, preserveDrawingBuffer: true });
       return { canvas: n, scale: r, gl: c, keyStates: {}, mouseStates: {}, charInputted: [], isMouseMoved: false, isKeyPressed: false, isKeyPressedRepeat: false, isKeyReleased: false, mousePos: f(0, 0), mouseDeltaPos: f(0, 0), time: 0, realTime: 0, skipTime: false, dt: 0, numFrames: 0, isTouch: "ontouchstart" in window || navigator.maxTouchPoints > 0, loopID: null, stopped: false, paused: false, fpsCounter: new Be(), loaded: false };
     })(), l = (() => {
       var d;
-      let e = t.gl, n = cn(sn, on), r = Ke(new ImageData(new Uint8ClampedArray([255, 255, 255, 255]), 1, 1)), u = (d = i2.background) != null ? d : E(0, 0, 0);
-      if (i2.background) {
-        let h = v.fromArray(i2.background);
+      let e = t.gl, n = cn(sn, on), r = Ke(new ImageData(new Uint8ClampedArray([255, 255, 255, 255]), 1, 1)), u = (d = i.background) != null ? d : E(0, 0, 0);
+      if (i.background) {
+        let h = v.fromArray(i.background);
         e.clearColor(h.r / 255, h.g / 255, h.b / 255, 1);
       }
       e.enable(e.BLEND), e.enable(e.SCISSOR_TEST), e.blendFuncSeparate(e.SRC_ALPHA, e.ONE_MINUS_SRC_ALPHA, e.ONE, e.ONE_MINUS_SRC_ALPHA);
@@ -873,7 +873,7 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
       let s = e.createBuffer();
       e.bindBuffer(e.ELEMENT_ARRAY_BUFFER, s), e.bufferData(e.ELEMENT_ARRAY_BUFFER, bt * 2, e.DYNAMIC_DRAW), e.bindBuffer(e.ELEMENT_ARRAY_BUFFER, null);
       let o = Ke(new ImageData(new Uint8ClampedArray([128, 128, 128, 255, 190, 190, 190, 255, 190, 190, 190, 255, 128, 128, 128, 255]), 2, 2), { wrap: "repeat", filter: "nearest" });
-      return { drawCalls: 0, lastDrawCalls: 0, defShader: n, curShader: n, defTex: r, curTex: r, curUniform: {}, vbuf: c, ibuf: s, vqueue: [], iqueue: [], transform: new R(), transformStack: [], bgTex: o, width: i2.width, height: i2.height, viewport: { x: 0, y: 0, width: e.drawingBufferWidth, height: e.drawingBufferHeight } };
+      return { drawCalls: 0, lastDrawCalls: 0, defShader: n, curShader: n, defTex: r, curTex: r, curUniform: {}, vbuf: c, ibuf: s, vqueue: [], iqueue: [], transform: new R(), transformStack: [], bgTex: o, width: i.width, height: i.height, viewport: { x: 0, y: 0, width: e.drawingBufferWidth, height: e.drawingBufferHeight } };
     })();
     Un();
     let w = (() => {
@@ -1143,7 +1143,7 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
       r.bindTexture(r.TEXTURE_2D, u), r.texImage2D(r.TEXTURE_2D, 0, r.RGBA, r.RGBA, r.UNSIGNED_BYTE, e);
       let c = (() => {
         var o;
-        switch ((o = n.filter) != null ? o : i2.texFilter) {
+        switch ((o = n.filter) != null ? o : i.texFilter) {
           case "linear":
             return r.LINEAR;
           case "nearest":
@@ -1223,7 +1223,7 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
     __name(ln, "ln");
     a(ln, "flush");
     function He() {
-      t.gl.clear(t.gl.COLOR_BUFFER_BIT), i2.background || pe({ width: F(), height: G(), quad: new k(0, 0, F() * t.scale / Fr, G() * t.scale / Fr), tex: l.bgTex, fixed: true }), l.drawCalls = 0, l.transformStack = [], l.transform = new R();
+      t.gl.clear(t.gl.COLOR_BUFFER_BIT), i.background || pe({ width: F(), height: G(), quad: new k(0, 0, F() * t.scale / Fr, G() * t.scale / Fr), tex: l.bgTex, fixed: true }), l.drawCalls = 0, l.transformStack = [], l.transform = new R();
     }
     __name(He, "He");
     a(He, "frameStart");
@@ -1465,7 +1465,7 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
       var Qn, Zn, er;
       if (e.text === void 0)
         throw new Error('formatText() requires property "text".');
-      let n = gn((Qn = e.font) != null ? Qn : i2.font, U.fonts, ws);
+      let n = gn((Qn = e.font) != null ? Qn : i.font, U.fonts, ws);
       if (!n)
         throw new Error(`Font not found: ${e.font}`);
       let { charStyleMap: r, text: u } = $r(e.text + ""), c = u.split(""), s = n.qw * n.tex.width, o = n.qh * n.tex.height, d = e.size || o, h = f(d / o).scale(f(e.scale || 1)), m = h.x * s + ((Zn = e.letterSpacing) != null ? Zn : 0), g = h.y * o + ((er = e.lineSpacing) != null ? er : 0), y = 0, x = g, W = 0, O = [], M = [], ee = null, te = 0;
@@ -1527,23 +1527,23 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
         }
         return;
       }
-      if (i2.letterbox) {
-        if (!i2.width || !i2.height)
+      if (i.letterbox) {
+        if (!i.width || !i.height)
           throw new Error("Letterboxing requires width and height defined.");
-        let s = n / r, o = i2.width / i2.height;
+        let s = n / r, o = i.width / i.height;
         if (s > o) {
-          i2.stretch || (l.width = r * o, l.height = r);
+          i.stretch || (l.width = r * o, l.height = r);
           let d = r * o, h = r, m = (n - d) / 2;
           e.scissor(m, 0, d, h), e.viewport(m, 0, d, r), l.viewport = { x: m, y: 0, width: d, height: r };
         } else {
-          i2.stretch || (l.width = n, l.height = n / o);
+          i.stretch || (l.width = n, l.height = n / o);
           let d = n, h = n / o, m = (r - h) / 2;
           e.scissor(0, m, d, h), e.viewport(0, m, n, h), l.viewport = { x: 0, y: m, width: n, height: h };
         }
         return;
       }
-      if (i2.stretch) {
-        if (!i2.width || !i2.height)
+      if (i.stretch) {
+        if (!i.width || !i.height)
           throw new Error("Stretching requires width and height defined.");
         e.viewport(0, 0, n, r), l.viewport = { x: 0, y: 0, width: n, height: r };
         return;
@@ -1576,21 +1576,21 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
       let n = Pr[e.key] || e.key.toLowerCase();
       t.keyStates[n] = "released", t.isKeyReleased = true;
     }), t.canvas.addEventListener("touchstart", (e) => {
-      if (!i2.touchToMouse)
+      if (!i.touchToMouse)
         return;
       e.preventDefault();
       let n = e.touches[0];
       t.mousePos = f(n.clientX, n.clientY).scale(1 / t.scale), t.mouseStates.left = "pressed";
     }), t.canvas.addEventListener("touchmove", (e) => {
-      if (!i2.touchToMouse)
+      if (!i.touchToMouse)
         return;
       e.preventDefault();
       let n = e.touches[0];
       t.mousePos = f(n.clientX, n.clientY).scale(1 / t.scale), t.isMouseMoved = true;
     }), t.canvas.addEventListener("touchend", (e) => {
-      !i2.touchToMouse || (t.mouseStates.left = "released");
+      !i.touchToMouse || (t.mouseStates.left = "released");
     }), t.canvas.addEventListener("touchcancel", (e) => {
-      !i2.touchToMouse || (t.mouseStates.left = "released");
+      !i.touchToMouse || (t.mouseStates.left = "released");
     }), t.canvas.addEventListener("touchstart", (e) => {
       [...e.changedTouches].forEach((n) => {
         p.trigger("onTouchStart", n.identifier, f(n.clientX, n.clientY).scale(1 / t.scale));
@@ -2614,7 +2614,7 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
       let r = p.on("updateStart", () => {
         p.events = {}, p.objEvents = { add: new $(), update: new $(), draw: new $(), destroy: new $() }, p.root.every((u) => {
           u.is("stay") || p.root.remove(u);
-        }), p.root.clearEvents(), p.timers = new $(), p.cam = { pos: ot(), scale: f(1), angle: 0, shake: 0, transform: new R() }, p.layers = {}, p.defLayer = null, p.gravity = Vr, p.scenes[e](...n), i2.debug !== false && In(), i2.burp && Vn(), r();
+        }), p.root.clearEvents(), p.timers = new $(), p.cam = { pos: ot(), scale: f(1), angle: 0, shake: 0, transform: new R() }, p.layers = {}, p.defLayer = null, p.gravity = Vr, p.scenes[e](...n), i.debug !== false && In(), i.burp && Vn(), r();
       });
     }
     __name(Mi, "Mi");
@@ -2636,7 +2636,7 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
     function Bn(e) {
       let n = e(ye);
       for (let r in n)
-        ye[r] = n[r], i2.global !== false && (window[r] = n[r]);
+        ye[r] = n[r], i.global !== false && (window[r] = n[r]);
       return ye;
     }
     __name(Bn, "Bn");
@@ -2836,7 +2836,7 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
     function zn() {
       var e, n;
       if (C.inspect) {
-        let r = null, u = v.fromArray((e = i2.inspectColor) != null ? e : [0, 0, 255]);
+        let r = null, u = v.fromArray((e = i.inspectColor) != null ? e : [0, 0, 255]);
         if (p.root.every((c) => {
           if (!c.area || c.hidden)
             return;
@@ -2872,7 +2872,7 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
       }
       if (C.curRecording && (re(), I(0, G()), ne(1 / t.scale), I(24, -24), Ct({ radius: 12, color: E(255, 0, 0), opacity: Kt(0, 1, nt() * 4), fixed: true }), ie()), C.showLog && p.logs.length > 0) {
         re(), I(0, G()), ne(1 / t.scale), I(8, -8);
-        let r = 8, u = (n = i2.logMax) != null ? n : 1;
+        let r = 8, u = (n = i.logMax) != null ? n : 1;
         p.logs.length > u && (p.logs = p.logs.slice(0, u));
         let c = me({ text: p.logs.join(`
 `), font: U.fonts[rn], pos: f(r, -r), origin: "botleft", size: 16, width: F() * t.scale * 0.6, lineSpacing: r / 2, fixed: true, styles: { time: { color: E(127, 127, 127) }, info: { color: E(255, 255, 255) }, error: { color: E(255, 0, 127) } } });
@@ -2880,7 +2880,7 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
       }
     }
     __name(zn, "zn");
-    a(zn, "drawDebug"), i2.debug !== false && In(), i2.burp && Vn(), window.addEventListener("error", (e) => {
+    a(zn, "drawDebug"), i.debug !== false && In(), i.burp && Vn(), window.addEventListener("error", (e) => {
       C.error(`Error: ${e.error.message}`), zr(), Jn(() => {
         A() === 1 && (He(), zn(), ze());
       });
@@ -2903,10 +2903,10 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
     }
     __name(Jn, "Jn");
     a(Jn, "run"), Jn(() => {
-      Un(), t.loaded ? (p.trigger("input"), C.paused || Kn(), He(), Gi(), i2.debug !== false && zn(), ze()) : (He(), _i(), ze());
+      Un(), t.loaded ? (p.trigger("input"), C.paused || Kn(), He(), Gi(), i.debug !== false && zn(), ze()) : (He(), _i(), ze());
     }), X("apl386", Tr, 45, 74), X("apl386o", Sr, 45, 74), X("sink", Cr, 6, 8, { chars: "\u2588\u263A\u263B\u2665\u2666\u2663\u2660\u25CF\u25CB\u25AA\u25A1\u25A0\u25D8\u266A\u266B\u2261\u25BA\u25C4\u2302\xDE\xC0\xDF\xD7\xA5\u2191\u2193\u2192\u2190\u25CC\u25CF\u25BC\u25B2 !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~\u03A7\u2591\u2592\u2593\u1E00\u1E01\u1E02\u2502\u252C\u2524\u250C\u2510\u1E03\u1E04\u253C\u1E05\u1E06\u1E07\u1E08\u1E09\u1E0A\u1E0B\u1E0C\u2500\u251C\u2534\u2514\u2518\u1E0D\u1E0E\u205E\u1E0F\u1E10\u1E11\u1E12\u1E13\u1E14\u1E15\u1E16\u1E17\u1E18\u2584\u1E19\u1E1A\u1E1B\u1E1C\u2026\u1E1D\u1E1E\u1E1F\u1E20\u1E21\u1E22\u1E23\u1E24\u1E25\u1E26\u258C\u2590\u1E27\u1E28\u1E29\u1E2A\u1E2B\u1E2C\u1E2D\u1E2E\u1E2F\u1E30\u1E31\u1E32\u1E33\u1E34\u1E35\u1E36\u1E37\u1E38\u1E39\u1E3A\u1E3B\u1E3C\u1E3D\u1E3E\u1E3F\u1E40\u1E41\u1E42\u1E43\u1E44\u1E45\u1E46\u1E47\u1E48\u1E49\u1E4A\u1E4B\u1E4C\u1E4D\u1E4E\u1E4F\u1E50\u1E51\u1E52\u1E53\u1E54\u1E55\u1E56\u1E57\u1E58\u1E59\u1E5A\u1E5B\u1E5C\u1E5D\u1E5E\u1E5F\u1E60\u1E61\u1E62\u1E63\u1E64\u1E65\u1E66\u1E67\u1E68\u1E69\u1E6A\u1E6B\u1E6C\u1E6D\u1E6E\u1E6F\u1E70\u1E71\u1E72\u1E73\u1E74\u1E75\u1E76\u1E77\u1E78\u1E79\u1E7A\u1E7B\u1E7C" }), X("sinko", Rr, 8, 10), He(), ze();
     let ye = { loadRoot: q, loadSprite: J, loadSpriteAtlas: Ee, loadSound: Ce, loadFont: X, loadShader: Se, loadAseprite: Et, loadPedit: $e, loadBean: _r, load: S, width: F, height: G, center: ot, dt: Z, time: nt, screenshot: bn, record: Nn, isFocused: jn, focus: Di, cursor: xn, regCursor: ii, fullscreen: Hr, isFullscreen: vn, onLoad: Ue, isTouch: () => t.isTouch, layers: Qr, camPos: Zr, camScale: ei, camRot: ti, shake: ni, toScreen: rt, toWorld: Lt, gravity: Fn, add: kt, readd: Ai, destroy: at, destroyAll: Oi, get: Ii, every: Vi, revery: Fi, pos: it, scale: st, rotate: si, color: oi, opacity: ai, origin: Ot, layer: ui, area: fi, sprite: Vt, text: pi, rect: mi, circle: gi, uvquad: wi, outline: Ui, body: xi, shader: vi, timer: Gn, solid: Ei, fixed: Ti, stay: Ft, health: Si, lifespan: Ci, z: ci, move: hi, outview: It, cleanup: di, follow: li, state: Ri, on: qe, onUpdate: Pe, onDraw: Tn, onCollide: Sn, onClick: Cn, onHover: Rn, onKeyDown: qt, onKeyPress: H, onKeyPressRepeat: Pt, onKeyRelease: Dt, onMouseDown: Mn, onMousePress: At, onMouseRelease: Ln, onMouseMove: qn, onCharInput: Pn, onTouchStart: Dn, onTouchMove: An, onTouchEnd: On, mousePos: K, mouseWorldPos: Jr, mouseDeltaPos: yn, isKeyDown: Mt, isKeyPressed: Le, isKeyPressedRepeat: Wt, isKeyReleased: tt, isMouseDown: Ze, isMousePressed: Me, isMouseReleased: et, isMouseMoved: Rt, loop: ri, wait: Wn, play: Xe, volume: Br, burp: un, audioCtx: w.ctx, Timer: fe, Line: le, Rect: ke, Circle: ht, Vec2: L, Color: v, Mat4: R, Quad: k, RNG: be, rng: mr, rand: Ge, randi: Ht, randSeed: wr, vec2: f, rgb: E, hsl2rgb: fr, quad: pr, choose: Ur, chance: gr, lerp: Ve, map: dt, mapc: dr, wave: Kt, deg2rad: he, rad2deg: Xt, testAreaRect: gt, testAreaLine: Zt, testAreaCircle: en, testAreaPolygon: tn, testAreaPoint: Ut, testAreaArea: nn, testLineLine: ce, testRectRect: zt, testRectLine: ft, testRectPoint: ae, testPolygonPoint: xe, testLinePolygon: _e, testPolygonPolygon: wt, testCircleCircle: Qt, testCirclePoint: mt, testRectPolygon: pt, drawSprite: hn, drawText: Xr, formatText: me, drawRect: Q, drawLine: We, drawLines: dn, drawTriangle: fn, drawCircle: Ct, drawEllipse: pn, drawUVQuad: pe, drawPolygon: Qe, drawFormattedText: we, pushTransform: re, popTransform: ie, pushTranslate: I, pushRotate: Je, pushScale: ne, debug: C, scene: Wi, go: Mi, addLevel: Pi, getData: Li, setData: _n, plug: Bn, ASCII_CHARS: Ar, CP437_CHARS: hs, canvas: t.canvas, addKaboom: ki, LEFT: L.LEFT, RIGHT: L.RIGHT, UP: L.UP, DOWN: L.DOWN, RED: v.RED, GREEN: v.GREEN, BLUE: v.BLUE, YELLOW: v.YELLOW, MAGENTA: v.MAGENTA, CYAN: v.CYAN, WHITE: v.WHITE, BLACK: v.BLACK, keyIsDown: T("keyIsDown()", "isKeyDown()", Mt), keyIsPressed: T("keyIsPressed()", "isKeyPressed()", Le), keyIsPressedRep: T("keyIsPressedRep()", "isKeyPressedRepeat()", Wt), keyIsReleased: T("keyIsReleased()", "isKeyReleased()", tt), mouseIsDown: T("mouseIsDown()", "isMouseDown()", Ze), mouseIsClicked: T("mouseIsClicked()", "isMousePressed()", Me), mouseIsReleased: T("mouseIsReleased()", "isMouseReleased()", et), mouseIsMoved: T("mouseIsMoved()", "isMouseMoved()", Rt), dir: T("dir()", "Vec2.fromAngle()", L.fromAngle), action: T("action()", "onUpdate()", Pe), render: T("render()", "onDraw()", Tn), collides: T("collides()", "onCollide()", Sn), clicks: T("clicks()", "onClick()", Cn), hovers: T("hovers()", "onHover()", Rn), keyDown: T("keyDown()", "onKeyDown()", qt), keyPress: T("keyPress()", "onKeyPress()", H), keyPressRep: T("keyPressRep()", "onKeyPressRepeat()", Pt), keyRelease: T("keyRelease()", "onKeyRelease()", Dt), mouseDown: T("mouseDown()", "onMouseDown()", Mn), mouseClick: T("mouseClick()", "onMousePress()", At), mouseRelease: T("mouseRelease()", "onMouseRelease()", Ln), mouseMove: T("mouseMove()", "onMouseMove()", qn), charInput: T("charInput()", "onCharInput()", Pn), touchStart: T("touchStart()", "onTouchStart()", Dn), touchMove: T("touchMove()", "onTouchMove()", An), touchEnd: T("touchEnd()", "onTouchEnd()", On), focused: T("focused()", "isFocused()", jn), ready: T("ready()", "onLoad()", Ue) };
-    if (i2.plugins && i2.plugins.forEach(Bn), i2.global !== false)
+    if (i.plugins && i.plugins.forEach(Bn), i.global !== false)
       for (let e in ye)
         window[e] = ye[e];
     return ye;
@@ -2918,7 +2918,9 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
     return [f2(5) * 255, f2(3) * 255, f2(1) * 255];
   }
   __name(hsv2rgb, "hsv2rgb");
-  bghue = Math.random() * 360;
+  invadingpalpatp1 = Math.random() * 255;
+  invadingpalpatp2 = Math.random() * 255;
+  bghue = invadingpalpatp1 * 360 / 255;
   bgcolor = hsv2rgb(bghue, 0.75, 0.75);
   no({
     background: [bgcolor[0], bgcolor[1], bgcolor[2]],
@@ -2944,6 +2946,8 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
   gameover = 0;
   layers([
     "bg",
+    "bgparticles",
+    "ship",
     "game",
     "ui",
     "gameover"
@@ -2992,31 +2996,69 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
       opacity: 0.1
     });
   });
-  effectdrawer = add([
-    layer("ui"),
-    pos(0, height() / 2),
-    {
-      color: hsv2rgb(bghue, 0.8, 0.4)
+  particlespeed = 1;
+  loop(0.4, () => {
+    if (invadingpalpatp2 < 64) {
+      particlespawnx = width() + 90;
+      particlespawny = rand(height());
+      particlemovex = -particlespeed;
+      particlemovey = 0;
+    } else if (invadingpalpatp2 < 128) {
+      particlespawnx = -90;
+      particlespawny = rand(height());
+      particlemovex = particlespeed;
+      particlemovey = 0;
+    } else if (invadingpalpatp2 < 192) {
+      particlespawnx = rand(width());
+      particlespawny = height() + 90;
+      particlemovex = 0;
+      particlemovey = -particlespeed;
+    } else if (invadingpalpatp2 < 256) {
+      particlespawnx = rand(width());
+      particlespawny = -90;
+      particlemovex = 0;
+      particlemovey = particlespeed;
     }
-  ]);
-  effectdrawer.onDraw(() => {
-    for (i = 0; i < 12; i++) {
-      drawRect({
-        pos: (100 * i + Math.sin(time()) * 1e3, 100 * i + Math.cos(time()) * 800),
-        width: 20,
-        height: 20,
-        color: rgb(effectdrawer.color[0], effectdrawer.color[1], effectdrawer.color[2]),
-        opacity: 0.4
-      });
-    }
+    if (invadingpalpatp2 % 2 == 0)
+      particleshape = "square";
+    else
+      particleshape = "circle";
+    add([
+      pos(particlespawnx, particlespawny),
+      layer("bgparticles"),
+      origin("center"),
+      {
+        direction: 0,
+        color: hsv2rgb(bghue, 0.8, 0.4),
+        movex: particlemovex * rand(0.3, 2),
+        movey: particlemovey * rand(0.3, 2),
+        shape: particleshape
+      },
+      "backgroundparticle"
+    ]);
   });
-  effectdrawer.onUpdate(() => {
-    effectdrawer.pos.y = Math.sin(time()) * 100;
+  onDraw("backgroundparticle", (particle) => {
+    particle.pos.x += particle.movex;
+    particle.pos.y += particle.movey;
+    if (particle.pos.x < -100 || particle.pos.x > width() + 100 || particle.pos.y < -100 || particle.pos.y > height() + 100)
+      destroy(particle);
+    if (particle.movey == 0)
+      mycolor = rgb(particle.color[0] + particle.pos.x % 255, particle.color[1] + particle.pos.x % 255, particle.color[2] + particle.pos.x % 255);
+    else if (particle.movex == 0)
+      mycolor = rgb(particle.color[0] + particle.pos.y % 255, particle.color[1] + particle.pos.y % 255, particle.color[2] + particle.pos.y % 255);
+    drawRect({
+      pos: vec2(0),
+      width: 80,
+      height: 80,
+      color: mycolor,
+      opacity: 0.15
+    });
   });
   player = add([
     sprite("player", { width: gorasize, height: gorasize }),
     pos(width() / 2, height() / 2 - 100),
     area(),
+    layer("game"),
     origin("center"),
     {
       charging: 0,
@@ -3136,6 +3178,7 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
         pos(spawnpositionx, spawnpositiony),
         area({ scale: 1.2 }),
         origin("center"),
+        layer("game"),
         {
           direction: 0,
           charge: 0,
@@ -3219,7 +3262,7 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
     pos(width() / 2, height() / 2),
     area(),
     origin("center"),
-    layer("bg")
+    layer("ship")
   ]);
   ship.onDraw(() => {
     drawCircle({
