@@ -32,6 +32,9 @@ loadSound("slam", "/sounds/slam.wav")
 loadSound("bump", "/sounds/bump.wav")
 
 //TODO: handle case where gora fails to load
+//In final version, can attempt to loadSprite() into the name of the sprite
+//And then before spawning an enemy, check to make sure that that name
+//actually exists
 loadSprite("enemy1", "https://minderimages.nyc3.digitaloceanspaces.com/minder-folden/2022.1.13..22.42.38-Week%2002%202022.png")
 loadSprite("enemy2", "https://minderimages.nyc3.digitaloceanspaces.com/minder-folden/2022.3.25..13.19.35-Week%2012%202022.png")
 loadSprite("enemy3", "https://minderimages.nyc3.digitaloceanspaces.com/mister-master-minder-folden/2022.3.04..13.58.06-Week%2009%202022.png")
@@ -77,7 +80,7 @@ bgdrawer.onDraw(() => {
 
 scoreboard = add([
     layer("bg"),
-    pos(-1000, -1000),
+    pos(width() - 100, rand(500, height() - 500)),
     {
         size: 500,
         color: hsv2rgb(bghue, .8, .4)
@@ -86,7 +89,7 @@ scoreboard = add([
 
 scoreboard.onUpdate(() => {
     scoreboard.pos.x -= .5
-    if(scoreboard.pos.x < -scoreboard.size)
+    if(scoreboard.pos.x < -scoreboard.size*2)
     {
         scoreboard.pos.x = width()
         scoreboard.pos.y = rand(scoreboard.size, height() - scoreboard.size)
@@ -98,7 +101,7 @@ scoreboard.onDraw(() => {
 		text: score,
         font: "sink",
 		pos: vec2(0, 0),
-		origin: "center",
+		origin: "left",
         size: scoreboard.size,
         color: rgb(scoreboard.color[0], scoreboard.color[1], scoreboard.color[2]),
         opacity: .1
@@ -180,7 +183,10 @@ onDraw("backgroundparticle", (particle) => {
         opacity: .15
     })
 })
-         
+
+
+
+
 
 /**************** PLAYER ****************/
 player = add([
@@ -254,6 +260,19 @@ player.onUpdate(() => {
         if(player.slamspeed <= 0)
             player.slamming = 0;
     }
+
+    /*if(player.slamming == 1)
+    {
+        if(player.slamspeed > 20)
+        {
+            player.move(Vec2.fromAngle(player.slamdirection).scale(-player.slamspeed))
+            player.slamspeed -= 20
+        }
+        else
+        {
+            player.slamspeed = 10
+        }
+    }*/
 })
 
 player.onCollide("enemy", (enemy) => {
@@ -272,10 +291,6 @@ player.onCollide("enemy", (enemy) => {
         }
         collideopacity = 1
     }
-    /*else
-    {
-        
-    }*/
 })
 
 
@@ -423,10 +438,10 @@ onUpdate("enemy", (enemy) => {
     }
     else if(enemy.death == 0)
     {
-        if(!enemy.isColliding(player)) 
+        //if(!enemy.isColliding(player)) 
             enemy.moveTo(width()/2, height()/2, enemy.invasionspeed*200)
-        else
-            enemy.move(Vec2.fromAngle(enemy.direction).scale(-100))
+        //else
+          //  enemy.move(Vec2.fromAngle(enemy.direction).scale(-100))
     }
 
     //enemy.blinking = rand(200)

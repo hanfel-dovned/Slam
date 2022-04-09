@@ -2972,7 +2972,7 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
   });
   scoreboard = add([
     layer("bg"),
-    pos(-1e3, -1e3),
+    pos(width() - 100, rand(500, height() - 500)),
     {
       size: 500,
       color: hsv2rgb(bghue, 0.8, 0.4)
@@ -2980,7 +2980,7 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
   ]);
   scoreboard.onUpdate(() => {
     scoreboard.pos.x -= 0.5;
-    if (scoreboard.pos.x < -scoreboard.size) {
+    if (scoreboard.pos.x < -scoreboard.size * 2) {
       scoreboard.pos.x = width();
       scoreboard.pos.y = rand(scoreboard.size, height() - scoreboard.size);
     }
@@ -2990,7 +2990,7 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
       text: score,
       font: "sink",
       pos: vec2(0, 0),
-      origin: "center",
+      origin: "left",
       size: scoreboard.size,
       color: rgb(scoreboard.color[0], scoreboard.color[1], scoreboard.color[2]),
       opacity: 0.1
@@ -3224,10 +3224,7 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
         enemy.charge = 0;
       }
     } else if (enemy.death == 0) {
-      if (!enemy.isColliding(player))
-        enemy.moveTo(width() / 2, height() / 2, enemy.invasionspeed * 200);
-      else
-        enemy.move(Vec2.fromAngle(enemy.direction).scale(-100));
+      enemy.moveTo(width() / 2, height() / 2, enemy.invasionspeed * 200);
     }
   });
   onCollide("enemy", "enemy", (enemy1, enemy2) => {
