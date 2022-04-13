@@ -30,6 +30,7 @@ loadSound("explosion", "/sounds/explosion.wav")
 loadSound("charge", "/sounds/charge.wav")
 loadSound("slam", "/sounds/slam.wav")
 loadSound("bump", "/sounds/bump.wav")
+loadSound("dodge", "/sounds/dodge.wav")
 
 //TODO: handle case where gora fails to load
 //In final version, can attempt to loadSprite() into the name of the sprite
@@ -291,6 +292,8 @@ player.onCollide("enemy", (enemy) => {
         }
         collideopacity = 1
     }
+    else
+        play("dodge", {volume: .5})
 })
 
 
@@ -438,13 +441,11 @@ onUpdate("enemy", (enemy) => {
     }
     else if(enemy.death == 0)
     {
-        //if(!enemy.isColliding(player)) 
+        if(!enemy.isColliding(player)) 
             enemy.moveTo(width()/2, height()/2, enemy.invasionspeed*200)
-        //else
-          //  enemy.move(Vec2.fromAngle(enemy.direction).scale(-100))
+        else
+            enemy.moveTo(width()/2, height()/2, 2000)
     }
-
-    //enemy.blinking = rand(200)
 })
 
 onCollide("enemy", "enemy", (enemy1, enemy2) => {
@@ -468,35 +469,6 @@ onDraw("enemy", (enemy) => {
         height: enemy.size,
         origin: "center"
     })
-
-    //eyes slow the game down and don't fit well with the art style
-   /* if(enemy.blinking > 1)
-    {
-        drawCircle({
-            pos: vec2(-enemy.size*.4, -enemy.size*.5),
-            radius: enemy.size*.3,
-            color: rgb(255, 255, 255),
-            outline: {width: 1, color: rgb(0, 0, 0)}
-        })
-        drawCircle({
-            pos: vec2(enemy.size*.4, -enemy.size*.5),
-            radius: enemy.size*.3,
-            color: rgb(255, 255, 255),
-            outline: {width: 1, color: rgb(0, 0, 0)}
-        })
-        drawCircle({
-            pos: vec2(-enemy.size*.4, -enemy.size*.5),
-            radius: enemy.size*.1,
-            color: rgb(0, 0, 0),
-            outline: {width: 1, color: rgb(0, 0, 0)}
-        })
-        drawCircle({
-            pos: vec2(enemy.size*.4, -enemy.size*.5),
-            radius: enemy.size*.1,
-            color: rgb(0, 0, 0),
-            outline: {width: 1, color: rgb(0, 0, 0)}
-        })
-    }*/
     
     if(enemy.deathglow > 100)
     {   
@@ -507,15 +479,6 @@ onDraw("enemy", (enemy) => {
         })
     }
 })
-
-/*onDraw("enemy", (enemy) => {
-            drawCircle({
-                pos: vec2(0),
-                radius: enemy.size,
-                color: rgb(255, 255, 255),
-            })
-})*/
-
 
 
 
@@ -610,5 +573,6 @@ gameoverdrawer.onDraw(() => {
 
         if(scoreopacity < 1)
             scoreopacity += .01
+
     }
 })

@@ -2933,6 +2933,7 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
   loadSound("charge", "/sounds/charge.wav");
   loadSound("slam", "/sounds/slam.wav");
   loadSound("bump", "/sounds/bump.wav");
+  loadSound("dodge", "/sounds/dodge.wav");
   loadSprite("enemy1", "https://minderimages.nyc3.digitaloceanspaces.com/minder-folden/2022.1.13..22.42.38-Week%2002%202022.png");
   loadSprite("enemy2", "https://minderimages.nyc3.digitaloceanspaces.com/minder-folden/2022.3.25..13.19.35-Week%2012%202022.png");
   loadSprite("enemy3", "https://minderimages.nyc3.digitaloceanspaces.com/mister-master-minder-folden/2022.3.04..13.58.06-Week%2009%202022.png");
@@ -3123,7 +3124,8 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
         play("bump", { volume: 0.5 });
       }
       collideopacity = 1;
-    }
+    } else
+      play("dodge", { volume: 0.5 });
   });
   goraBackground = rgb(0, 0, 0);
   player.onDraw(() => {
@@ -3224,7 +3226,10 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
         enemy.charge = 0;
       }
     } else if (enemy.death == 0) {
-      enemy.moveTo(width() / 2, height() / 2, enemy.invasionspeed * 200);
+      if (!enemy.isColliding(player))
+        enemy.moveTo(width() / 2, height() / 2, enemy.invasionspeed * 200);
+      else
+        enemy.moveTo(width() / 2, height() / 2, 2e3);
     }
   });
   onCollide("enemy", "enemy", (enemy1, enemy2) => {
