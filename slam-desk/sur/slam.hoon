@@ -2,15 +2,21 @@
 +$  name  @p
 +$  defend-score  @ud
 +$  invade-score  @ud
-::  +$  gora  [whatever a gora is]
-::  +$  team  (list gora)
-::  +$  profile  (map name [team defend-score invade-score])
 +$  profile  (map name [defend-score invade-score])
-+$  friends  (list profiles)
-+$  myprofile  profile
++$  profiles  (list profile)
 +$  action
-  $%  [%invaded =name]
-      [%hiscore =defend-score]
+  $%  [%hiscore =defend-score]
+      ::  [%invaded =name]
       ::  [%newteam =team]
   ==
 --
+
+
+::  Implement these later
+::  +$  gora  [whatever a gora is]
+::  +$  team  (list gora)
+::  +$  profile  (map name [team defend-score invade-score])
+
+::  Seperate out myprofile?
+::  +$  friends  (list profile)
+::  +$  myprofile  profile
