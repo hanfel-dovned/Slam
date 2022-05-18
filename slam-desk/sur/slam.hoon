@@ -1,22 +1,18 @@
 |%
 +$  name  @p
-+$  defend-score  @ud
-+$  invade-score  @ud
-+$  profile  (map name [defend-score invade-score])
-+$  profiles  (list profile)
++$  score  [defend=@ud invade=@ud]
++$  gora  @t  ::placeholder typedef
++$  team  (set gora)
++$  profile  [score team]
++$  profiles  (map name profile)
 +$  action
-  $%  [%hiscore =defend-score]
-      ::  [%invaded =name]
+  $%  [%hiscore newscore=@ud]
+      [%add-friend name=@p]
+      ::  [%invaded =name =gora]
       ::  [%newteam =team]
   ==
++$  update
+  $%  [%profile-update =profile]
+  ::    [%invasion-success]
+  ==
 --
-
-
-::  Implement these later
-::  +$  gora  [whatever a gora is]
-::  +$  team  (list gora)
-::  +$  profile  (map name [team defend-score invade-score])
-
-::  Seperate out myprofile?
-::  +$  friends  (list profile)
-::  +$  myprofile  profile

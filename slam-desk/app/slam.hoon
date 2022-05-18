@@ -17,43 +17,50 @@
 ::
 ++  on-init
   ^-  (quip card _this)
-  `this(profiles ~[(my ~[[our.bowl 0 0]])])
+  `this(profiles (my ~[[our.bowl [[0 0] ~]]]))
 ::
 ++  on-save
   ^-  vase
   !>(state)
 ::
 ++  on-load
-  |=  old-state=vase
-  ^-  (quip card _this)
-  =/  old  !<(versioned-state old-state)
-  ?-  -.old
-    %0  `this(state old)
-  ==
+|=  old-state=vase
+^-  (quip card _this)
+=/  old  !<(versioned-state old-state)
+?-  -.old
+%0  `this(state old)
+==
 ::
-++  on-poke  on-poke:def
-::  |=  [=mark =vase]
-::  ^-  (quip card _this)
-::  |^
-::  ?>  =(src.bowl our.bowl)
-::  ?+    mark  (on-poke:def mark vase)
-::      %todo-action
-::    =^  cards  state
-::      (handle-poke !<(action:todo vase))
-::    [cards this]
-::  ==
-::  ::
-::  ++  handle-poke
-::    |=  =action:todo
-::    ^-  (quip card _state)
-::    ?-    -.action
-::        %hiscore
-::      `state(tasks (~(put by tasks) now.bowl [name.action %.n]))
-::    ::
-::    ::    %invaded
-::    ::  `state(friends (~(put in friends) who.action))
-::    ==
-::  --
+++  on-poke
+  |=  [=mark =vase]
+  ^-  (quip card _this)
+  |^
+  ?>  =(src.bowl our.bowl)
+  ?+    mark  (on-poke:def mark vase)
+      %slam-action
+    =^  cards  state
+      (handle-poke !<(action:slam vase))
+    [cards this]
+  ==
+  ::
+  ++  handle-poke
+    |=  =action:slam
+    ^-  (quip card _state)
+    ?-    -.action
+        %hiscore
+      :: should this check if newscore > oldscore? or can frontend just do that?
+      :: what's the best way of retrieving invade:score and team here?
+      :: give fact /updates myprofile
+      `state(profiles (~(put by profiles) [our.bowl [newscore:action 0] ~]))
+    ::
+        %add-friend
+      :: subscribe to friend
+      `state(profiles (~(put by profiles) [name:action [0 0] ~]))
+    ::
+    ::    %invaded
+    ::  `state(friends (~(put in friends) who.action))
+    ==
+  --
 ++  on-watch  on-watch:def
 ++  on-leave  on-leave:def
 ++  on-peek   on-peek:def
