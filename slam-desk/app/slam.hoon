@@ -49,22 +49,49 @@
     ?-    -.action
         %hiscore
       :: should this check if newscore > oldscore? or can frontend just do that?
-      :: what's the best way of retrieving invade:score and team here?
-      :: give fact /updates myprofile
-      `state(profiles (~(put by profiles) [our.bowl [newscore:action 0] ~]))
+      :: what's the best way of retrieving invade:score and team here? right now they're just overwritten
+      :_  state(profiles (~(put by profiles) our.bowl [[newscore:action 0] ~]))
+      :~  [%give %fact ~[/updates/out] %slam-update !>(`update:slam`profile-update+[[newscore:action 0] ~])]
+      ==
     ::
         %add-friend
-      :: subscribe to friend
-      `state(profiles (~(put by profiles) [name:action [0 0] ~]))
-    ::
-    ::    %invaded
-    ::  `state(friends (~(put in friends) who.action))
+      :_  state(profiles (~(put by profiles) [name:action [0 0] ~]))
+      :~  [%pass /updates/in %agent [name:action %slam] %watch /updates/out]
+      ==
     ==
   --
-++  on-watch  on-watch:def
+::
+++  on-watch
+  |=  =path
+  ^-  (quip card _this)
+  ?+    path  (on-watch:def path)
+      [%updates %out ~]
+    :_  this
+    :~  [%give %fact ~ %slam-update !>(`update:slam`profile-update+(~(got by profiles) our.bowl))]
+    ==
+  ==
+::
 ++  on-leave  on-leave:def
 ++  on-peek   on-peek:def
-++  on-agent  on-agent:def
+++  on-agent
+  |=  [=wire =sign:agent:gall]
+  ^-  (quip card _this)
+  ~&  'update!'
+  ?+    wire  (on-agent:def wire sign)
+      [%updates %in ~]
+    ?+    -.sign  (on-agent:def wire sign)
+        %fact
+      ?+    p.cage.sign  (on-agent:def wire sign)
+          %slam-update
+        =/  newupdate  !<(update:slam q.cage.sign)
+        ?-    -.newupdate
+            %profile-update
+          `this(profiles (~(put by profiles) [src.bowl profile:newupdate]))
+        ==
+      ==
+    ==
+  ==
+::
 ++  on-arvo   on-arvo:def
 ++  on-fail   on-fail:def
 --
