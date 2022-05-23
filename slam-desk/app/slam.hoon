@@ -49,9 +49,10 @@
     ?-    -.action
         %hiscore
       :: should this check if newscore > oldscore? or can frontend just do that?
-      :: what's the best way of retrieving invade:score and team here? right now they're just overwritten
-      :_  state(profiles (~(put by profiles) our.bowl [[newscore:action 0] ~]))
-      :~  [%give %fact ~[/updates/out] %slam-update !>(`update:slam`profile-update+[[newscore:action 0] ~])]
+      =/  invadescore  +5:(~(got by profiles) our.bowl)
+      =/  goralist  +3:(~(got by profiles) our.bowl)
+      :_  state(profiles (~(put by profiles) our.bowl [[newscore:action invadescore] goralist]))
+      :~  [%give %fact ~[/updates/out] %slam-update !>(`update:slam`profile-update+[[newscore:action invadescore] goralist])]
       ==
     ::
         %add-friend
@@ -88,6 +89,10 @@
             %profile-update
           `this(profiles (~(put by profiles) [src.bowl profile:newupdate]))
         ==
+      ==
+        %kick
+      :_  this
+      :~  [%pass /updates/in %agent [src.bowl %slam] %watch /updates/out]
       ==
     ==
   ==
