@@ -55,6 +55,13 @@
       :~  [%give %fact ~[/updates/out] %slam-update !>(`update:slam`profile-update+[[newscore:action invadescore] goralist])]
       ==
     ::
+        %new-team
+      =/  profilescore  +2:(~(got by profiles) our.bowl)
+      =/  goralist  team:action
+      :_  state(profiles (~(put by profiles) our.bowl [profilescore goralist]))
+      :~  [%give %fact ~[/updates/out] %slam-update !>(`update:slam`profile-update+[profilescore goralist])]
+      ==
+    ::
         %add-friend
       :_  state(profiles (~(put by profiles) [name:action [0 0] ~]))
       :~  [%pass /updates/in %agent [name:action %slam] %watch /updates/out]
@@ -71,7 +78,7 @@
     :~  [%give %fact ~ %slam-update !>(`update:slam`profile-update+(~(got by profiles) our.bowl))]
     ==
   ==
-::
+:: 
 ++  on-leave  on-leave:def
 ++  on-peek   on-peek:def
 ++  on-agent
