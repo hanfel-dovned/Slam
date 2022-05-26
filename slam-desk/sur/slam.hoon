@@ -9,10 +9,10 @@
   $%  [%hiscore newscore=@ud]
       [%new-team =team]
       [%add-friend name=@p]
-      ::  [%invaded =name =gora]
+      [%invaded =name =invader]
   ==
 +$  update
   $%  [%profile-update =profile]
-  ::    [%invasion-success]
+      [%invasion-success =name =invader]
   ==
 --

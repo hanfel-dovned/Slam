@@ -1,4 +1,4 @@
-/-  slam
+/-  slam, pals
 /+  default-agent, dbug
 |%
 +$  versioned-state
@@ -17,7 +17,9 @@
 ::
 ++  on-init
   ^-  (quip card _this)
-  `this(profiles (my ~[[our.bowl [[0 0] ~]]]))
+  :_  this(profiles (my ~[[our.bowl [[0 0] ~]]]))
+  :~  [%pass /newpals %agent [our.bowl %pals] %watch /targets]
+  ==
 ::
 ++  on-save
   ^-  vase
@@ -66,6 +68,11 @@
       :_  state(profiles (~(put by profiles) [name:action [0 0] ~]))
       :~  [%pass /updates/in %agent [name:action %slam] %watch /updates/out]
       ==
+    ::
+        %invaded
+      :_  state
+      :~  [%give %fact ~[/updates/out] %slam-update !>(`update:slam`invasion-success+[name:action invader:action])]
+      ==
     ==
   --
 ::
@@ -74,8 +81,11 @@
   ^-  (quip card _this)
   ?+    path  (on-watch:def path)
       [%updates %out ~]
+    ?.  (~(has by profiles) src.bowl)
+      !!
     :_  this
     :~  [%give %fact ~ %slam-update !>(`update:slam`profile-update+(~(got by profiles) our.bowl))]
+        [%pass /updates/in %agent [src.bowl %slam] %watch /updates/out]
     ==
   ==
 :: 
@@ -95,11 +105,39 @@
         ?-    -.newupdate
             %profile-update
           `this(profiles (~(put by profiles) [src.bowl profile:newupdate]))
+          ::
+            %invasion-success
+          =/  defendscore  +4:(~(got by profiles) our.bowl)
+          =/  invadescore  +5:(~(got by profiles) our.bowl)
+          =/  goralist  +3:(~(got by profiles) our.bowl)
+          ?.  =(our.bowl name:newupdate)
+            `this
+          :_  this(profiles (~(put by profiles) our.bowl [[defendscore +(invadescore)] goralist]))
+          :~  [%give %fact ~[/updates/out] %slam-update !>(`update:slam`profile-update+[[defendscore +(invadescore)] goralist])]
+          ==
         ==
       ==
         %kick
       :_  this
       :~  [%pass /updates/in %agent [src.bowl %slam] %watch /updates/out]
+      ==
+    ==
+      [%newpals ~]
+    ?+    -.sign  (on-agent:def wire sign)
+        %fact
+      ?+    p.cage.sign  (on-agent:def wire sign)
+          %pals-effect
+        =/  neweffect  !<(effect:pals q.cage.sign)  ::probably need to import pals/mar?
+        ?+    -.neweffect  (on-agent:def wire sign)
+            %meet
+          :_  this(profiles (~(put by profiles) [+.neweffect [0 0] ~]))
+          :~  [%pass /updates/in %agent [+.neweffect %slam] %watch /updates/out]
+          ==
+            %part
+          :_  this(profiles (~(del by profiles) +.neweffect))
+          :~  [%pass /updates/in %agent [+.neweffect %slam] %leave ~]
+          ==
+        ==
       ==
     ==
   ==
