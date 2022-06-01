@@ -8,7 +8,6 @@
 +$  action
   $%  [%hiscore newscore=@ud]
       [%new-team =team]
-      [%add-friend name=@p]
       [%invaded =name =invader]
   ==
 +$  update
