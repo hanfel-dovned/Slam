@@ -1,9 +1,0 @@
-:~  title+'Slam'
-    info+'Defend against invading gora.'
-    color+0x10.2791
-    base+'slam'
-    glob-http+['https://hanfel-dovned.sfo3.digitaloceanspaces.com/glob-0v2.4m23e.3c64t.438p3.ao0vk.93a19.glob' 0v2.4m23e.3c64t.438p3.ao0vk.93a19]
-    version+[0 1 0]
-    website+'https://urbit.org/grants'
-    license+'MIT'
-==
