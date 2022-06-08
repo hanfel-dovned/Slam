@@ -3,7 +3,7 @@
 |_  profs=profiles
 ++  grow
   |%
-  ++  noun  prof
+  ++  noun  profs
   ++  json  (enjs-profiles profs)
   --
 ++  grab

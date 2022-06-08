@@ -100,7 +100,7 @@
   |=  =path
   ^-  (unit (unit cage))
   ?+    path  (on-peek:def path)
-      [%x %profiles ~]  ``noun+!>(profiles)
+      [%x %profiles ~]  ``slam-profiles+!>(profiles)
   ==
 ::
 ++  on-agent
