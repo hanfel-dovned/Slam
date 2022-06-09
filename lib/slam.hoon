@@ -1,27 +1,27 @@
 /-  *slam
 |%
 ++  enjs-profiles
-  :: =,  enjs:format
+  =,  enjs:format
   |=  profs=profiles
   ^-  json
-  %-  pairs:enjs:format
+  %-  pairs
   %+  turn 
     %~  tap  by  profs
   |=  prof=[@p [[@ud @ud] (list [@t @t @p])]]
   :-  `@t`(scot %p -.prof)
   :-  %a
   :~ 
-      (numb:enjs:format +<-:prof)
-      (numb:enjs:format +<+.prof)
-      %-  pairs:enjs:format 
+      (numb +<-:prof)
+      (numb +<+.prof)
+      %-  pairs 
       %+  turn
         +>.prof
       |=  gora=[@t @t @p]
       :-  -.gora
       :-  %a
       :~
-         (frond:enjs:format 'gora-url' s++<.gora)
-         (frond:enjs:format 'issuer' s+(scot %p +>.gora))
+         (frond 'gora-url' s++<.gora)
+         (frond 'issuer' s+(scot %p +>.gora))
       ==
   ==
 --
