@@ -1,5 +1,15 @@
 /-  *slam
 |%
+++  dejs-action
+  =,  dejs:format
+  |=  jon=json
+  ^-  action
+  %.  jon
+  %-  of
+  :~  [%hiscore (ot ~[newscore+ni])]
+      [%new-team (ot ~[team+ni])]   :: to-do
+      [%invaded (ot ~[name+ni])]    :: to-do
+  ==
 ++  enjs-profiles
   =,  enjs:format
   |=  profs=profiles
