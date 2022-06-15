@@ -6,9 +6,9 @@
   ^-  action
   %.  jon
   %-  of
-  :~  [%hiscore (ot ~[newscore+ni])]
-      [%new-team (ot ~[team+ni])]   :: to-do
-      [%invaded (ot ~[name+ni])]    :: to-do
+  :~  hiscore+ni
+      new-team+(ar (at ~[so so (se %p)]))
+      invaded+(at ~[(se %p) (at ~[so so (se %p)])])
   ==
 ++  enjs-profiles
   =,  enjs:format

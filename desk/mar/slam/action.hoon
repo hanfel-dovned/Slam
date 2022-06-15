@@ -1,9 +1,9 @@
 /-  *slam
 /+  *slam
-|_  =action:slam
+|_  =action
 ++  grab
   |%
-  ++  noun  action:slam
+  ++  noun  action
   ++  json  dejs-action
   --
 ++  grow
