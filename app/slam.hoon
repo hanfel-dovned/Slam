@@ -1,5 +1,6 @@
 /-  slam, pals
-/+  default-agent, dbug
+/+  default-agent, dbug, server, schooner
+/*  slamui  %html  /app/slamui/html
 |%
 +$  versioned-state
   $%  state-0
@@ -18,9 +19,14 @@
 ++  on-init
   ^-  (quip card _this)
   :_  this(profiles (my ~[[our.bowl [[0 0] ~]]]))
-  :~  :*  %pass  /newpals  %agent
-          [our.bowl %pals]  %watch  /targets
-  ==  ==
+  :~  
+    :*  %pass  /newpals  %agent
+        [our.bowl %pals]  %watch  /targets
+    ==  
+    :*  %pass  /eyre/connect  %arvo  %e 
+        %connect  `/apps/slam  %slam
+    ==  
+  ==
 ::
 ++  on-save
   ^-  vase
@@ -42,11 +48,15 @@
   ?+    mark  (on-poke:def mark vase)
       %slam-action
     =^  cards  state
-      (handle-poke !<(action:slam vase))
+      (handle-action !<(action:slam vase))
+    [cards this]
+      %handle-http-request
+    =^  cards  state
+      (handle-http !<([@ta =inbound-request:eyre] vase))
     [cards this]
   ==
   ::
-  ++  handle-poke
+  ++  handle-action
     |=  =action:slam
     ^-  (quip card _state)
     ?-    -.action
@@ -76,12 +86,32 @@
           !>(`update:slam`invasion-success+[name:action invader:action])
       ==  ==
     ==
+  ++  handle-http
+    |=  [eyre-id=@ta =inbound-request:eyre]
+    ^-  (quip card _state)
+    =/  ,request-line:server
+      (parse-request-line:server url.request.inbound-request)
+    =+  send=(cury response:schooner eyre-id)
+      ?+  site  :_  state
+                %-  send
+                :+  404
+                  ~
+                [%plain "404 - Not Found"]
+          [%apps %slam ~]
+        :_  state
+        %-  send
+        :+  200
+          ~
+        [%html slamui]
+     ==
   --
 ::
 ++  on-watch
   |=  =path
   ^-  (quip card _this)
   ?+    path  (on-watch:def path)
+      [%http-response *]
+    `this
       [%updates %out ~]
     ?.  (~(has by profiles) src.bowl)
       !!
@@ -156,6 +186,12 @@
     ==
   ==
 ::
-++  on-arvo   on-arvo:def
+++  on-arvo
+  |=  [=wire =sign-arvo]
+  ^-  (quip card _this)
+  ?+  sign-arvo  (on-arvo:def wire sign-arvo)
+      [%eyre %bound *]
+    `this
+  ==
 ++  on-fail   on-fail:def
 --
