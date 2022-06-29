@@ -1,11 +1,11 @@
-/-  slam, pals
-/+  default-agent, dbug, server, schooner
+/-  *slam, pals
+/+  default-agent, dbug, server, schooner, *slam
 /*  slamui  %html  /app/slamui/html
 |%
 +$  versioned-state
   $%  state-0
   ==
-+$  state-0  [%0 =profiles:slam]
++$  state-0  [%0 =profiles]
 +$  card  card:agent:gall
 --
 %-  agent:dbug
@@ -48,7 +48,7 @@
   ?+    mark  (on-poke:def mark vase)
       %slam-action
     =^  cards  state
-      (handle-action !<(action:slam vase))
+      (handle-action !<(action vase))
     [cards this]
       %handle-http-request
     =^  cards  state
@@ -57,7 +57,7 @@
   ==
   ::
   ++  handle-action
-    |=  =action:slam
+    |=  =action
     ^-  (quip card _state)
     ?-    -.action
         %hiscore
@@ -69,7 +69,7 @@
       =/  newprofile  [[newscore:action invadescore] goralist]
       :_  state(profiles (~(put by profiles) our.bowl newprofile))
       :~  :*  %give  %fact  ~[/updates/out]  %slam-update 
-              !>(`update:slam`profile-update+newprofile)
+              !>(`update`profile-update+newprofile)
       ==  ==
     ::
         %new-team
@@ -77,33 +77,46 @@
       =/  newprofile  [profilescore team:action]
       :_  state(profiles (~(put by profiles) our.bowl newprofile))
       :~  :*  %give  %fact  ~[/updates/out]  %slam-update 
-              !>(`update:slam`profile-update+newprofile)
+              !>(`update`profile-update+newprofile)
       ==  ==
     ::
         %invaded
       :_  state
       :~  :*  %give  %fact  ~[/updates/out]  %slam-update 
-          !>(`update:slam`invasion-success+[name:action invader:action])
+          !>(`update`invasion-success+[name:action invader:action])
       ==  ==
     ==
+  ::
   ++  handle-http
     |=  [eyre-id=@ta =inbound-request:eyre]
     ^-  (quip card _state)
     =/  ,request-line:server
       (parse-request-line:server url.request.inbound-request)
     =+  send=(cury response:schooner eyre-id)
-      ?+  site  :_  state
-                %-  send
-                :+  404
-                  ~
-                [%plain "404 - Not Found"]
-          [%apps %slam ~]
-        :_  state
-        %-  send
-        :+  200
-          ~
-        [%html slamui]
-     ==
+    ?.  authenticated.inbound-request
+      :_  state
+      %-  send
+      [302 ~ [%login-redirect './apps/slam']]
+    ::
+    ?+  site  :_  state
+              %-  send
+              :+  404
+                ~
+              [%plain "404 - Not Found"]
+        [%apps %slam ~]
+      :_  state
+      %-  send
+      :+  200
+        ~
+      [%html slamui] 
+      ::
+        [%apps %slam %profiles ~]
+      :_  state
+      %-  send
+      :+  200
+        ~
+      [%json (enjs-profiles profiles)]
+    ==
   --
 ::
 ++  on-watch
@@ -117,7 +130,7 @@
       !!
     :_  this
     :~  :*  %give  %fact  ~  %slam-update
-            !>(`update:slam`profile-update+(~(got by profiles) our.bowl))
+            !>(`update`profile-update+(~(got by profiles) our.bowl))
         ==
         :*  %pass  /updates/in  %agent  
             [src.bowl %slam]  %watch  /updates/out
@@ -142,7 +155,7 @@
         %fact
       ?+    p.cage.sign  (on-agent:def wire sign)
           %slam-update
-        =/  newupdate  !<(update:slam q.cage.sign)
+        =/  newupdate  !<(update q.cage.sign)
         ?-    -.newupdate
             %profile-update
           `this(profiles (~(put by profiles) [src.bowl profile:newupdate]))
@@ -156,7 +169,7 @@
           =/  newprofile  [[defendscore +(invadescore)] goralist]
           :_  this(profiles (~(put by profiles) our.bowl newprofile))
           :~  :*  %give  %fact  ~[/updates/out]  %slam-update
-                  !>(`update:slam`profile-update+newprofile)
+                  !>(`update`profile-update+newprofile)
           ==  ==
         ==
       ==

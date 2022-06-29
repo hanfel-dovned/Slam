@@ -151,6 +151,18 @@ scene("defend", () => {
             opacity: .1
     	})
     })
+
+    fetch('/apps/slam/profiles')
+        .then(response => response.text())
+        .then(data => console.log(data))
+        
+        /*add([
+                text(data, {
+                    width: width(),
+                }),
+                pos(0, 0),
+                scale(.1)
+                ]));*/
     
     var particlespawnx = 0;
     var particlespawny = 0;
