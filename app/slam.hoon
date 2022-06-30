@@ -46,15 +46,54 @@
   |^
   ?>  =(src.bowl our.bowl)
   ?+    mark  (on-poke:def mark vase)
-      %slam-action
-    =^  cards  state
-      (handle-action !<(action vase))
-    [cards this]
       %handle-http-request
     =^  cards  state
       (handle-http !<([@ta =inbound-request:eyre] vase))
     [cards this]
   ==
+  ::
+  ++  handle-http
+    |=  [eyre-id=@ta =inbound-request:eyre]
+    ^-  (quip card _state)
+    =/  ,request-line:server
+      (parse-request-line:server url.request.inbound-request)
+    =+  send=(cury response:schooner eyre-id)
+    ?.  authenticated.inbound-request
+      :_  state
+      %-  send
+      [302 ~ [%login-redirect './apps/slam']]
+    ::
+    ?+    method.request.inbound-request  
+      [(send [405 ~ [%stock ~]]) state]
+      ::
+        %'POST'
+      ?~  body.request.inbound-request
+        [(send [405 ~ [%stock ~]]) state]
+      =/  json  (de-json:html q.u.body.request.inbound-request)
+      =/  action  (dejs-action +.json) 
+      (handle-action action) 
+      :: 
+        %'GET'
+      ?+  site  :_  state
+                %-  send
+                :+  404
+                  ~
+                [%plain "404 - Not Found"]
+          [%apps %slam ~]
+        :_  state
+        %-  send
+        :+  200
+          ~
+        [%html slamui] 
+        ::
+          [%apps %slam %profiles ~]
+        :_  state
+        %-  send
+        :+  200
+          ~
+        [%json (enjs-profiles profiles)]
+      ==
+    ==
   ::
   ++  handle-action
     |=  =action
@@ -86,37 +125,6 @@
           !>(`update`invasion-success+[name:action invader:action])
       ==  ==
     ==
-  ::
-  ++  handle-http
-    |=  [eyre-id=@ta =inbound-request:eyre]
-    ^-  (quip card _state)
-    =/  ,request-line:server
-      (parse-request-line:server url.request.inbound-request)
-    =+  send=(cury response:schooner eyre-id)
-    ?.  authenticated.inbound-request
-      :_  state
-      %-  send
-      [302 ~ [%login-redirect './apps/slam']]
-    ::
-    ?+  site  :_  state
-              %-  send
-              :+  404
-                ~
-              [%plain "404 - Not Found"]
-        [%apps %slam ~]
-      :_  state
-      %-  send
-      :+  200
-        ~
-      [%html slamui] 
-      ::
-        [%apps %slam %profiles ~]
-      :_  state
-      %-  send
-      :+  200
-        ~
-      [%json (enjs-profiles profiles)]
-    ==
   --
 ::
 ++  on-watch
@@ -139,13 +147,7 @@
   ==
 :: 
 ++  on-leave  on-leave:def
-++  on-peek
-  |=  =path
-  ^-  (unit (unit cage))
-  ?+    path  (on-peek:def path)
-      [%x %profiles ~]  ``slam-profiles+!>(profiles)
-  ==
-::
+++  on-peek  on-peek:def
 ++  on-agent
   |=  [=wire =sign:agent:gall]
   ^-  (quip card _this)

@@ -152,17 +152,41 @@ scene("defend", () => {
     	})
     })
 
-    fetch('/apps/slam/profiles')
+    //Get profiles
+    /*fetch('/apps/slam/profiles')
         .then(response => response.text())
-        .then(data => console.log(data))
+        .then(data => console.log(data))*/
         
-        /*add([
-                text(data, {
-                    width: width(),
-                }),
-                pos(0, 0),
-                scale(.1)
-                ]));*/
+    //Send hiscore to gall agent
+    function hiscore(score) {
+        fetch('/apps/slam', {
+            method: 'POST',
+            body: JSON.stringify({'hiscore': score})
+        })
+    }
+
+    //Send a new team to gall agent
+    //Expects an array of arrays of [string string @p],
+    //e.g. [['foo', 'bar', '~hanfel'], ['foo2', 'bar2', '~minder']]
+    function newteam(team) {
+        fetch('/apps/slam', {
+            method: 'POST',
+            body: JSON.stringify({'new-team': team})
+        }) 
+    }
+    //newteam([['foo', 'bar', '~hanfel'], ['foo2', 'bar2', '~minder']])
+
+    //Send an invasion notification to gall agent
+    //Expects [@p [string string @p]]
+    //e.g. [~zod ['foo', 'bar', '~hanfel']]
+    function invaded(team) {
+        fetch('/apps/slam', {
+            method: 'POST',
+            body: JSON.stringify({'invaded': team})
+        }) 
+    }
+    //invaded(['~zod', ['foo', 'bar', '~hanfel']])
+ 
     
     var particlespawnx = 0;
     var particlespawny = 0;
