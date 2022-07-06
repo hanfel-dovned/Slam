@@ -32,11 +32,39 @@
 
 import kaboom from "https://unpkg.com/kaboom/dist/kaboom.mjs";
 
+
 function hsv2rgb(h,s,v) 
 {                              
   let f= (n,k=(n+h/60)%6) => v - v*s*Math.max( Math.min(k,4-k,1), 0);     
   return [f(5)*255,f(3)*255,f(1)*255];       
 }   
+
+//Send hiscore to gall agent
+function hiscore(score) {
+    fetch('/apps/slam', {
+        method: 'POST',
+        body: JSON.stringify({'hiscore': score})
+    })
+}
+
+//Send a new team to gall agent
+//newteam([['foo', 'bar', '~hanfel'], ['foo2', 'bar2', '~minder']])
+function newteam(team) {
+    fetch('/apps/slam', {
+        method: 'POST',
+        body: JSON.stringify({'new-team': team})
+    }) 
+}
+
+//Send an invasion notification to gall agent
+//invaded(['~zod', ['foo', 'bar', '~hanfel']])
+function invaded(team) {
+    fetch('/apps/slam', {
+        method: 'POST',
+        body: JSON.stringify({'invaded': team})
+    }) 
+}
+
 
 kaboom({
 	//background: [ bgcolor[0], bgcolor[1], bgcolor[2] ],
@@ -44,15 +72,30 @@ kaboom({
     height: 700,
 })
 
-scene("title", () => {
 
-	add([
-		text("Welcome!"),
-		pos(12),
-	])
-})
+
+/*************** LOAD RESOURCES ***************/
+ 
+/*async function getprofiles() {
+    const response = await fetch('/apps/slam/profiles')
+    return response.json()
+}
+var profiles = await getprofiles()
+console.log(profiles)
+
+async function getmyship() {
+    const response = await fetch('/apps/slam/whoami')
+    return response.text()
+}
+var myshipname = await getmyship()*/
+
+
+// Need to try/catch ALL of these.
+
+loadSprite("ship", "https://api.urbit.live/images/" + "zod" + "_black.png")
     
-loadSound("music", "https://hanfel-dovned.sfo3.digitaloceanspaces.com/delete-this-music2.wav")
+//try {loadSound("music", "https://hanfel-dovned.sfo3.digitaloceanspaces.com/Slam-Gameplay-Song.mp3")}
+//catch {loadSound("music", "https://github.com/replit/kaboom/blob/master/assets/sounds/notice.mp3")}
 
 loadSound("explosion", "https://hanfel-dovned.sfo3.digitaloceanspaces.com/explosion.wav")
 loadSound("charge", "https://hanfel-dovned.sfo3.digitaloceanspaces.com/charge.wav")
@@ -60,28 +103,28 @@ loadSound("slam", "https://hanfel-dovned.sfo3.digitaloceanspaces.com/slam.wav")
 loadSound("bump", "https://hanfel-dovned.sfo3.digitaloceanspaces.com/bump.wav")
 loadSound("dodge", "https://hanfel-dovned.sfo3.digitaloceanspaces.com/dodge.wav")
 
-//TODO: handle case where gora fails to load
-//In final version, can attempt to loadSprite() into the name of the sprite
-//And then before spawning an enemy, check to make sure that that name
-//actually exists
-loadSprite("enemy1", "https://minderimages.nyc3.digitaloceanspaces.com/minder-folden/2022.1.13..22.42.38-Week%2002%202022.png")
-loadSprite("enemy2", "https://minderimages.nyc3.digitaloceanspaces.com/minder-folden/2022.3.25..13.19.35-Week%2012%202022.png")
-loadSprite("enemy3", "https://minderimages.nyc3.digitaloceanspaces.com/mister-master-minder-folden/2022.3.04..13.58.06-Week%2009%202022.png")
-loadSprite("enemy4", "https://minderimages.nyc3.digitaloceanspaces.com/minder-folden/2022.3.11..13.43.17-Week%2010%202022.png")
-loadSprite("enemy5", "https://minderimages.nyc3.digitaloceanspaces.com/minder-folden/2022.4.01..15.10.19-Week%2013%202022.png")
-loadSprite("enemy6", "https://minderimages.nyc3.digitaloceanspaces.com/minder-folden/2022.2.11..13.45.09-Week%2006%202022.png")
+//try {loadSprite("player", "https://nyc3.digitaloceanspaces.com/archiv/littel-wolfur/2021.11.02..21.41.08-image.png")}
+//catch {loadBean("player")}
 
-loadSprite("player", "https://nyc3.digitaloceanspaces.com/archiv/littel-wolfur/2021.11.02..21.41.08-image.png")
-loadSprite("ship", "https://hanfel-dovned.sfo3.digitaloceanspaces.com/sampel-palnet.png")
 
-    
-var music = play("music", {loop: true})
+
+
+
 
 scene("replay", () => {
 	go("defend")
 })
 
+scene("title", () => {
+	add([
+		text("Welcome!"),
+		pos(12),
+	])
+})
+
 scene("defend", () => {
+
+    //var music = play("music", {loop: true})
 
     var invadingpalpatp1 = Math.random()*255
     var invadingpalpatp2 = Math.random()*255
@@ -152,42 +195,6 @@ scene("defend", () => {
     	})
     })
 
-    //Get profiles
-    /*fetch('/apps/slam/profiles')
-        .then(response => response.text())
-        .then(data => console.log(data))*/
-        
-    //Send hiscore to gall agent
-    function hiscore(score) {
-        fetch('/apps/slam', {
-            method: 'POST',
-            body: JSON.stringify({'hiscore': score})
-        })
-    }
-
-    //Send a new team to gall agent
-    //Expects an array of arrays of [string string @p],
-    //e.g. [['foo', 'bar', '~hanfel'], ['foo2', 'bar2', '~minder']]
-    function newteam(team) {
-        fetch('/apps/slam', {
-            method: 'POST',
-            body: JSON.stringify({'new-team': team})
-        }) 
-    }
-    //newteam([['foo', 'bar', '~hanfel'], ['foo2', 'bar2', '~minder']])
-
-    //Send an invasion notification to gall agent
-    //Expects [@p [string string @p]]
-    //e.g. [~zod ['foo', 'bar', '~hanfel']]
-    function invaded(team) {
-        fetch('/apps/slam', {
-            method: 'POST',
-            body: JSON.stringify({'invaded': team})
-        }) 
-    }
-    //invaded(['~zod', ['foo', 'bar', '~hanfel']])
- 
-    
     var particlespawnx = 0;
     var particlespawny = 0;
     var particlemovex = 0;
@@ -271,12 +278,9 @@ scene("defend", () => {
     })
     
     
-    
-    
-    
     /**************** PLAYER ****************/
     var player = add([
-    	sprite("player", {width: gorasize, height: gorasize}),
+    	//sprite("player", {width: gorasize, height: gorasize}),
         //scale(.7, .7),
     	pos(width()/2, height()/2 - 100),
     	area(),
@@ -423,7 +427,7 @@ scene("defend", () => {
     var spawntime = 3
     var wavesize = 1
     
-    var enemysprite = "enemy1"
+    //var enemysprite = "enemy1"
     
     var issuer = 0
     var pal = 0
@@ -434,7 +438,7 @@ scene("defend", () => {
     
     loop(2, () => {
     
-        enemysprite = "enemy" + Math.ceil(rand(6))
+        //enemysprite = "enemy" + Math.ceil(rand(6))
     
         issuer = rand(255)
         pal = rand(255)
@@ -470,7 +474,7 @@ scene("defend", () => {
         if(gameover == 0)
         {
             add([
-                sprite(enemysprite, {width: size, height: size}),
+                //sprite(enemysprite, {width: size, height: size}),
                 pos(spawnpositionx, spawnpositiony),
                 //move(ship.pos.angle(pos), 12),
                 area({scale: 1.2}),
@@ -489,7 +493,7 @@ scene("defend", () => {
                     size: size,
                     pal: pal,
                     color: hsv2rgb(hue, 1, 1 - weight*.7),
-                    sprite: enemysprite,
+                    //sprite: enemysprite,
                 },
                 "enemy"
             ])
@@ -611,7 +615,7 @@ scene("defend", () => {
         if(gameover == 0 && enemy.death == 0)
         {
             play("explosion")
-            music.stop()
+            //music.stop()
             gameover = 1
             gameoverenemypos = enemy.pos 
             gameoverenemysize = enemy.size
@@ -678,7 +682,7 @@ scene("defend", () => {
             if(gameover == 1)
             {
                 go("replay")
-                music.play()
+                //music.play()
             }
         })
     

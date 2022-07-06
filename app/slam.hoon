@@ -1,4 +1,4 @@
-/-  *slam, pals
+/-  *slam, pals     
 /+  default-agent, dbug, server, schooner, *slam
 /*  slamui  %html  /app/slamui/html
 |%
@@ -10,7 +10,7 @@
 --
 %-  agent:dbug
 =|  state-0
-=*  state  -
+=*  state  - 
 ^-  agent:gall
 |_  =bowl:gall
 +*  this  .
@@ -74,27 +74,34 @@
       (handle-action action) 
       :: 
         %'GET'
-      ?+  site  :_  state
+      ?+  site  :_  state 
                 %-  send
                 :+  404
-                  ~
-                [%plain "404 - Not Found"]
+                  ~ 
+                [%plain "404 - Not Found"] 
           [%apps %slam ~]
         :_  state
-        %-  send
+        %-  send  
         :+  200
           ~
-        [%html slamui] 
+        [%html slamui]  
         ::
-          [%apps %slam %profiles ~]
-        :_  state
+          [%apps %slam %profiles ~] 
+        :_  state 
         %-  send
-        :+  200
-          ~
+        :+  200   
+          ~  
         [%json (enjs-profiles profiles)]
-      ==
+        :: 
+          [%apps %slam %whoami ~]
+        :_  state 
+        %-  send
+        :+  200 
+          ~  
+        [%plain (scow %p our.bowl)] 
+      == 
     ==
-  ::
+  :: 
   ++  handle-action
     |=  =action
     ^-  (quip card _state)
