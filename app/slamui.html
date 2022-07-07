@@ -65,37 +65,45 @@ function invaded(team) {
     }) 
 }
 
+async function getprofiles() {
+        const response = await fetch('/apps/slam/profiles')
+        return response.json()
+    }
+var profiles = await getprofiles()
+
+async function getmyship() {
+        const response = await fetch('/apps/slam/whoami')
+        return response.text()
+    }
+var myshipname = await getmyship()
+
+
+
+const windowWidth = document.documentElement.clientWidth
+const windowHeight = document.documentElement.clientHeight
+const gameWidth = 1200
+const gameHeight = 700
+const scaleX = windowWidth / gameWidth
+const scaleY = windowHeight / gameHeight 
+const scaleGame = Math.min(scaleX, scaleY)
 
 kaboom({
 	//background: [ bgcolor[0], bgcolor[1], bgcolor[2] ],
     width: 1200,
     height: 700,
+    scale: scaleGame,
+    background: [0, 0, 30]
 })
 
 
+try {loadSprite("ship", "https://api.urbit.live/images/" + myshipname + "_black.png")}
+catch {loadBean("ship")}
 
-/*************** LOAD RESOURCES ***************/
- 
-/*async function getprofiles() {
-    const response = await fetch('/apps/slam/profiles')
-    return response.json()
-}
-var profiles = await getprofiles()
-console.log(profiles)
-
-async function getmyship() {
-    const response = await fetch('/apps/slam/whoami')
-    return response.text()
-}
-var myshipname = await getmyship()*/
-
-
-// Need to try/catch ALL of these.
-
-loadSprite("ship", "https://api.urbit.live/images/" + "zod" + "_black.png")
-    
-//try {loadSound("music", "https://hanfel-dovned.sfo3.digitaloceanspaces.com/Slam-Gameplay-Song.mp3")}
-//catch {loadSound("music", "https://github.com/replit/kaboom/blob/master/assets/sounds/notice.mp3")}
+loadBean("playersprite")
+loadBean("enemysprite")
+        
+loadSound("music", "https://hanfel-dovned.sfo3.digitaloceanspaces.com/Slam-Gameplay-Song.mp3")
+loadSound("intromusic", "https://hanfel-dovned.sfo3.digitaloceanspaces.com/Slam-Intro-Song.mp3")
 
 loadSound("explosion", "https://hanfel-dovned.sfo3.digitaloceanspaces.com/explosion.wav")
 loadSound("charge", "https://hanfel-dovned.sfo3.digitaloceanspaces.com/charge.wav")
@@ -103,28 +111,104 @@ loadSound("slam", "https://hanfel-dovned.sfo3.digitaloceanspaces.com/slam.wav")
 loadSound("bump", "https://hanfel-dovned.sfo3.digitaloceanspaces.com/bump.wav")
 loadSound("dodge", "https://hanfel-dovned.sfo3.digitaloceanspaces.com/dodge.wav")
 
-//try {loadSprite("player", "https://nyc3.digitaloceanspaces.com/archiv/littel-wolfur/2021.11.02..21.41.08-image.png")}
-//catch {loadBean("player")}
-
-
-
-
-
 
 scene("replay", () => {
 	go("defend")
 })
 
+function sigilButton(f) {
+    const btn = add([
+        sprite("ship"),
+        pos(width()*.5, height()*.5),
+        area({ cursor: "pointer", }),
+        origin("center"),
+        scale(.25)
+    ])
+
+    btn.onClick(f)
+
+    btn.onUpdate(() => {
+        if (btn.isHovering()) {
+            btn.scale = vec2(.3)
+        } else {
+            btn.scale = vec2(.25)
+        }
+    })
+}
+
+scene("sigil", () => {
+    /*add([
+		text("~hanfel-dovned presents", {font: "sink", size: 40}),
+		pos(width()*.5, height()*.3),
+        origin("center"),
+	])*/
+
+    sigilButton(() => go("title"))
+})
+
+function defendTransition(newscene) {
+    go("defend")
+}
+
+function addButton(txt, p, f) {
+    const btn = add([
+        text(txt, {font: "sink", size: 50}),
+        pos(p),
+        area({ cursor: "pointer", }),
+        scale(1),
+        origin("center"),
+    ])
+
+    btn.onClick(f)
+
+    btn.onUpdate(() => {
+        if (btn.isHovering()) {
+            const t = time() * 2
+            btn.color = rgb(
+                wave(0, 255, t),
+                wave(0, 255, t + 2),
+                wave(0, 255, t + 4),
+            )
+            btn.scale = vec2(1.1)
+        } else {
+            btn.scale = vec2(1)
+            btn.color = rgb()
+        }
+    })
+}
+
 scene("title", () => {
-	add([
-		text("Welcome!"),
-		pos(12),
-	])
+
+    play("dodge")
+
+    var intromusic = play("intromusic", {loop: true})
+
+	/*add([
+		text("Slam", {font: "sink", size: 120}),
+		pos(width()*.5, height()*.3),
+        origin("center"),
+	])*/
+
+   add([
+        sprite("ship"),
+        pos(width()*.5, height()*.5),
+        origin("center"),
+        scale(.25)
+    ])
+
+    addButton("Defend", vec2(width()*.25, height()*.5), () => {
+        intromusic.stop()
+        go("defend")
+    })
+    addButton("Invade", vec2(width()*.75, height()*.5), () => burp())
+    onUpdate(() => cursor("default"))
 })
 
 scene("defend", () => {
 
-    //var music = play("music", {loop: true})
+    stop("intromusic")
+
+    var music = play("music", {loop: true})
 
     var invadingpalpatp1 = Math.random()*255
     var invadingpalpatp2 = Math.random()*255
@@ -280,7 +364,7 @@ scene("defend", () => {
     
     /**************** PLAYER ****************/
     var player = add([
-    	//sprite("player", {width: gorasize, height: gorasize}),
+    	sprite("playersprite", {width: gorasize, height: gorasize}),
         //scale(.7, .7),
     	pos(width()/2, height()/2 - 100),
     	area(),
@@ -363,12 +447,8 @@ scene("defend", () => {
         if(player.slamming == 1)
         {
             enemy.direction = player.slamdirection
-            //enemy.direction = Math.atan2(enemy.pos.y - player.pos.y, enemy.pos.x - player.pos.x) * 180 / Math.PI + 180;
 
-            
-            
             player.slamdirection = player.slamdirection + 180
-            //enemy.speed = player.slamspeed 
             enemy.charge = player.slamspeed
     	    player.slamspeed = player.slamspeed * .5
             enemy.attacked = 1
@@ -403,14 +483,13 @@ scene("defend", () => {
             color: goraBackground,
             outline: {width: 1, color: rgb(0, 0, 0)}
         })
-        drawSprite({
+        /*drawSprite({
             sprite: "player",
             pos: vec2(0),
             width: gorasize, 
             height: gorasize,
             origin: "center"
-        })
-    
+        })*/
     })
     
     
@@ -427,7 +506,7 @@ scene("defend", () => {
     var spawntime = 3
     var wavesize = 1
     
-    //var enemysprite = "enemy1"
+    var enemysprite = "enemysprite"
     
     var issuer = 0
     var pal = 0
@@ -474,7 +553,7 @@ scene("defend", () => {
         if(gameover == 0)
         {
             add([
-                //sprite(enemysprite, {width: size, height: size}),
+                sprite(enemysprite, {width: size, height: size}),
                 pos(spawnpositionx, spawnpositiony),
                 //move(ship.pos.angle(pos), 12),
                 area({scale: 1.2}),
@@ -493,7 +572,7 @@ scene("defend", () => {
                     size: size,
                     pal: pal,
                     color: hsv2rgb(hue, 1, 1 - weight*.7),
-                    //sprite: enemysprite,
+                    sprite: enemysprite,
                 },
                 "enemy"
             ])
@@ -615,7 +694,7 @@ scene("defend", () => {
         if(gameover == 0 && enemy.death == 0)
         {
             play("explosion")
-            //music.stop()
+            music.stop()
             gameover = 1
             gameoverenemypos = enemy.pos 
             gameoverenemysize = enemy.size
@@ -689,7 +768,7 @@ scene("defend", () => {
     })
 })
 
-go("defend");
+go("sigil");
 
 </script>
 

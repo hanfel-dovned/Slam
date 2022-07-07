@@ -1,4 +1,4 @@
-/-  *slam, pals     
+/-  *slam, pals
 /+  default-agent, dbug, server, schooner, *slam
 /*  slamui  %html  /app/slamui/html
 |%
@@ -7,7 +7,7 @@
   ==
 +$  state-0  [%0 =profiles]
 +$  card  card:agent:gall
---
+-- 
 %-  agent:dbug
 =|  state-0
 =*  state  - 
