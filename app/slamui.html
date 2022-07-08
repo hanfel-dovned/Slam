@@ -92,11 +92,13 @@ kaboom({
     width: 1200,
     height: 700,
     scale: scaleGame,
-    background: [0, 0, 30]
+    background: [0, 0, 50]
 })
 
 
-try {loadSprite("ship", "https://api.urbit.live/images/" + myshipname + "_black.png")}
+//try {loadSprite("ship", "https://api.urbit.live/images/" + myshipname + "_black.png")}
+try {loadSprite("ship", "https://api.urbit.live/images/" + "hanfel-dovned" + "_black.png")}
+
 catch {loadBean("ship")}
 
 loadBean("playersprite")
@@ -116,34 +118,37 @@ scene("replay", () => {
 	go("defend")
 })
 
-function sigilButton(f) {
-    const btn = add([
-        sprite("ship"),
-        pos(width()*.5, height()*.5),
-        area({ cursor: "pointer", }),
-        origin("center"),
-        scale(.25)
-    ])
-
-    btn.onClick(f)
-
-    btn.onUpdate(() => {
-        if (btn.isHovering()) {
-            btn.scale = vec2(.3)
-        } else {
-            btn.scale = vec2(.25)
-        }
-    })
-}
 
 scene("sigil", () => {
     /*add([
-		text("~hanfel-dovned presents", {font: "sink", size: 40}),
+		text("~hanfel-dovned presents", {font: "sinko", size: 40}),
 		pos(width()*.5, height()*.3),
         origin("center"),
 	])*/
 
-    sigilButton(() => go("title"))
+    layers([
+        "background",
+        "foreground"
+    ], "background")
+
+    onDraw(() => {
+        drawCircle({
+            pos: vec2(width()*.5, height()*.5),
+            radius: 100 + Math.sin(time())*3,
+            color: rgb(0,0,0)
+        })
+        drawSprite({
+            sprite: "ship",
+            pos: vec2(width()*.5, height()*.5),
+            width: 100 + Math.sin(time())*3, 
+            height: 100 + Math.sin(time())*3,
+            origin: "center"
+        })
+    })
+
+    onMousePress(() => {
+        go("title")
+    })
 })
 
 function defendTransition(newscene) {
@@ -152,7 +157,7 @@ function defendTransition(newscene) {
 
 function addButton(txt, p, f) {
     const btn = add([
-        text(txt, {font: "sink", size: 50}),
+        text(txt, {font: "sinko", size: 55}),
         pos(p),
         area({ cursor: "pointer", }),
         scale(1),
@@ -179,29 +184,83 @@ function addButton(txt, p, f) {
 
 scene("title", () => {
 
+    layers([
+        "background",
+        "default"
+    ], "default")
+
     play("dodge")
 
     var intromusic = play("intromusic", {loop: true})
 
-	/*add([
-		text("Slam", {font: "sink", size: 120}),
-		pos(width()*.5, height()*.3),
+	add([
+		text("SLAM", {font: "sinko", size: 150}),
+		pos(width()*.5, height()*.2),
         origin("center"),
-	])*/
+	])
+    
+    onDraw(() => {
+        drawCircle({
+            pos: vec2(width()*.5, height()*.5),
+            radius: 100 + Math.sin(time())*3,
+            color: rgb(0,0,0)
+        })
+        drawSprite({
+            sprite: "ship",
+            pos: vec2(width()*.5, height()*.5),
+            width: 100 + Math.sin(time())*3, 
+            height: 100 + Math.sin(time())*3,
+            origin: "center"
+        })
+    })
 
-   add([
-        sprite("ship"),
-        pos(width()*.5, height()*.5),
-        origin("center"),
-        scale(.25)
-    ])
-
-    addButton("Defend", vec2(width()*.25, height()*.5), () => {
+    addButton("Defend", vec2(width()*.35, height()*.75), () => {
         intromusic.stop()
         go("defend")
     })
-    addButton("Invade", vec2(width()*.75, height()*.5), () => burp())
+    addButton("Invade", vec2(width()*.65, height()*.75), () => burp())
+    addButton("Scores", vec2(width()*.5, height()*.87), () => burp())
+
     onUpdate(() => cursor("default"))
+
+    for(var i = 0; i < 20; i++)
+    {
+        add([
+            pos(rand(width()), rand(height())),
+            layer("background"),
+            origin("center"),
+            {
+                life: rand(1)
+            },
+            "titlecircle"
+        ])
+    }
+
+    loop(.4, () => {
+        add([
+            pos(rand(width()), rand(height())),
+            layer("background"),
+            origin("center"),
+            {
+                life: 0
+            },
+            "titlecircle"
+        ])
+    })
+
+    onDraw("titlecircle", (circle) => {
+        circle.life += .001
+        
+        if(circle.life > 1)
+            destroy(circle)
+
+        drawCircle({
+            pos: vec2(0),
+            radius: circle.life*80,
+            color: rgb(255, 255, 255),
+            opacity: 1 - circle.life
+        })
+    })
 })
 
 scene("defend", () => {
