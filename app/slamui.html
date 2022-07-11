@@ -96,9 +96,7 @@ kaboom({
 })
 
 
-//try {loadSprite("ship", "https://api.urbit.live/images/" + myshipname + "_black.png")}
-try {loadSprite("ship", "https://api.urbit.live/images/" + "hanfel-dovned" + "_black.png")}
-
+try {loadSprite("ship", "https://api.urbit.live/images/" + myshipname + "_black.png")}
 catch {loadBean("ship")}
 
 loadBean("playersprite")
@@ -186,7 +184,8 @@ scene("title", () => {
 
     layers([
         "background",
-        "default"
+        "default",
+        "transition"
     ], "default")
 
     play("dodge")
@@ -199,7 +198,12 @@ scene("title", () => {
         origin("center"),
 	])
     
-    onDraw(() => {
+    var shipdrawer = add([
+        layer("default"),
+        pos(0, 0)
+    ])
+
+    shipdrawer.onDraw(() => {
         drawCircle({
             pos: vec2(width()*.5, height()*.5),
             radius: 100 + Math.sin(time())*3,
@@ -214,12 +218,11 @@ scene("title", () => {
         })
     })
 
-    addButton("Defend", vec2(width()*.35, height()*.75), () => {
-        intromusic.stop()
-        go("defend")
+    addButton("Play", vec2(width()*.5, height()*.71), () => {
+        transition = 1;
     })
-    addButton("Invade", vec2(width()*.65, height()*.75), () => burp())
-    addButton("Scores", vec2(width()*.5, height()*.87), () => burp())
+    addButton("Invaders", vec2(width()*.5, height()*.82), () => burp())
+    addButton("Scores", vec2(width()*.5, height()*.93), () => burp())
 
     onUpdate(() => cursor("default"))
 
@@ -261,11 +264,41 @@ scene("title", () => {
             opacity: 1 - circle.life
         })
     })
+
+    var transitiondrawer = add([
+        layer("transition"),
+        pos(0, 0)
+    ])
+    
+    var transitionopacity = 0
+    var transition = 0
+    transitiondrawer.onDraw(() => {
+        if(transition == 1)
+        {
+            drawRect({
+                pos: vec2(-20, -20),
+                width: width() + 40,
+                height: height() + 40,
+                color: rgb(0, 0, 0),
+                opacity: transitionopacity
+            })
+            if(transitionopacity < 1)
+            {
+                transitionopacity += .02
+                volume(1 - transitionopacity)
+            }
+            else
+            {
+                intromusic.stop()
+                go("defend")
+            }
+        }
+    })
 })
 
 scene("defend", () => {
 
-    stop("intromusic")
+    volume(1)
 
     var music = play("music", {loop: true})
 
@@ -287,6 +320,26 @@ scene("defend", () => {
         "ui",
         "gameover"
     ], "game")
+
+    var transitiondrawer = add([
+        layer("gameover"),
+        pos(0, 0)
+    ])
+    
+    var transitionopacity = 1
+    transitiondrawer.onDraw(() => {
+            drawRect({
+                pos: vec2(-20, -20),
+                width: width() + 40,
+                height: height() + 40,
+                color: rgb(0, 0, 0),
+                opacity: transitionopacity
+            })
+            
+            transitionopacity -= .1
+            if(transitionopacity <= 0)
+                destroy()
+    })
     
     var bgdrawer = add([
         layer("bg"),
@@ -459,7 +512,37 @@ scene("defend", () => {
         if(player.charge < player.maxcharge && player.charging == 1)
             player.charge += player.chargerate;
         player.move(Vec2.fromAngle(rand(360)).scale(30))
+
+        if(rand(4) < 1)
+        {
+            add([
+                pos(player.pos.x, player.pos.y),
+                layer("bgparticles"),
+                {
+                    size: rand(13),
+                    direction: rand(360),
+                    speed: 300 + rand(50),
+                    life: 30
+                },
+                "chargeparticle"
+            ])
+        }
     })
+
+    onDraw("chargeparticle", (particle) => {
+        drawRect({
+            pos: vec2(0, 0),
+            width: particle.size,
+            height: particle.size,
+            color: rgb(255, 255, 255),
+            opacity: .3
+        })
+        particle.move(Vec2.fromAngle(particle.direction).scale(-particle.speed))
+        particle.life -= 1
+        if(particle.life <= 0)
+            destroy(particle)
+    })
+
     
     onMouseRelease(() => {
         if(player.charging == 1)
@@ -542,13 +625,16 @@ scene("defend", () => {
             color: goraBackground,
             outline: {width: 1, color: rgb(0, 0, 0)}
         })
-        /*drawSprite({
-            sprite: "player",
+        drawPolygon({
+            pts: [
+                vec2(0, -gorasize*.5),
+                vec2(-gorasize*.45, gorasize*.3),
+                vec2(gorasize*.45, gorasize*.3),
+            ],
             pos: vec2(0),
-            width: gorasize, 
-            height: gorasize,
-            origin: "center"
-        })*/
+            color: rgb(255, 255, 255),
+            outline: {width: 1, color: rgb(0, 0, 0)}
+        })
     })
     
     
@@ -748,6 +834,34 @@ scene("defend", () => {
     
     var gameoverenemypos = vec2(0)
     var gameoverenemysize = 0
+
+    function addButtonReplay(txt, p, f) {
+        const btn = add([
+            text(txt, {font: "sink", size: 30}),
+            layer("gameover"),
+            pos(p),
+            area(),
+            scale(1),
+            origin("center"),
+        ])
+
+        btn.onClick(f)
+
+        btn.onUpdate(() => {
+            if (btn.isHovering()) {
+                const t = time() * 2
+                btn.color = rgb(
+                    wave(0, 255, t),
+                    wave(0, 255, t + 2),
+                    wave(0, 255, t + 4),
+                )
+                btn.scale = vec2(1.1)
+            } else {
+                btn.scale = vec2(1)
+                btn.color = rgb(0, 0, 0)
+            }
+        })
+    }
     
     ship.onCollide("enemy", (enemy) => {
         if(gameover == 0 && enemy.death == 0)
@@ -758,6 +872,9 @@ scene("defend", () => {
             gameoverenemypos = enemy.pos 
             gameoverenemysize = enemy.size
             destroyAll("enemy")
+            addButtonReplay("Replay", vec2(width()*.5, height()*.82), () => go("replay"))
+            addButtonReplay("Menu", vec2(width()*.5, height()*.9), () => go("title"))
+
         }
     })
     
@@ -766,7 +883,7 @@ scene("defend", () => {
         pos(0, 0)
     ])
     
-    var scoreopacity = -1
+    var scoreopacity = 1
     gameoverdrawer.onDraw(() => {
         if(gameover == 1)
         {
@@ -815,14 +932,6 @@ scene("defend", () => {
                 scoreopacity += .01
     
         }
-
-        onMousePress(() => {
-            if(gameover == 1)
-            {
-                go("replay")
-                //music.play()
-            }
-        })
     
     })
 })
