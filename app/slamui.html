@@ -77,6 +77,11 @@ async function getmyship() {
     }
 var myshipname = await getmyship()
 
+function playSoundSafe(sound, vol = 1) {
+    try {play(sound, {volume: vol})}
+    catch {}
+}
+
 
 
 const windowWidth = document.documentElement.clientWidth
@@ -188,9 +193,10 @@ scene("title", () => {
         "transition"
     ], "default")
 
-    play("dodge")
+    playSoundSafe("dodge")
 
-    var intromusic = play("intromusic", {loop: true})
+    try{var intromusic = play("intromusic", {loop: true})}
+    catch{var intromusic = 0}
 
 	add([
 		text("SLAM", {font: "sinko", size: 150}),
@@ -289,7 +295,8 @@ scene("title", () => {
             }
             else
             {
-                intromusic.stop()
+                try{intromusic.stop()}
+                catch{}
                 go("defend")
             }
         }
@@ -300,7 +307,8 @@ scene("defend", () => {
 
     volume(1)
 
-    var music = play("music", {loop: true})
+    try{var music = play("music", {loop: true})}
+    catch{var music = 0}
 
     var invadingpalpatp1 = Math.random()*255
     var invadingpalpatp2 = Math.random()*255
@@ -505,7 +513,7 @@ scene("defend", () => {
     onMousePress(() => {
         player.charging = 1
         if(gameover == 0)
-            play("charge", {volume: .5})
+            playSoundSafe("charge", .5)
     })
     
     onMouseDown(() => {
@@ -554,7 +562,7 @@ scene("defend", () => {
             player.slamspeed = player.charge * 10
             player.charge = 0
             if(gameover == 0)
-                play("slam", {volume: .5})
+                playSoundSafe("slam", .5)
         }
     })
     
@@ -576,6 +584,16 @@ scene("defend", () => {
     
             if(player.slamspeed <= 0)
                 player.slamming = 0;
+
+            add([
+                pos(player.pos.x, player.pos.y),
+                layer("bgparticles"),
+                {
+                    size: 10,
+                    life: 30
+                },
+                "trailparticle"
+            ])
         }
     
         if(player.attacked > 0)
@@ -584,6 +602,20 @@ scene("defend", () => {
             player.attacked -= 1
         }
     })
+
+    onDraw("trailparticle", (particle) => {
+        drawRect({
+            pos: vec2(0, 0),
+            width: particle.size,
+            height: particle.size,
+            color: rgb(255, 255, 255),
+            opacity: particle.life/120
+        })
+        particle.life -= 1
+        if(particle.life <= 0)
+            destroy(particle)
+    })
+    
     
     player.onCollide("enemy", (enemy) => {
         if(player.slamming == 1)
@@ -597,9 +629,24 @@ scene("defend", () => {
             if(gameover == 0)
             {
                 shake(5)
-                play("bump", {volume: .5})
+                playSoundSafe("bump", .5)
             }
             collideopacity = 1
+
+            for(var i = 0; i < 8; i++)
+            {
+                add([
+                    pos(enemy.pos.x, enemy.pos.y),
+                    layer("bgparticles"),
+                    {
+                        size: rand(13) + 5,
+                        direction: rand(360),
+                        speed: 600 + rand(100),
+                        life: 15
+                    },
+                    "slamparticle"
+                ])
+            }
         }
         else
         {
@@ -608,10 +655,24 @@ scene("defend", () => {
             if(gameover == 0)
             {
                 shake(5)
-                play("bump", {volume: .5})
+                playSoundSafe("bump", .5)
             }
             collideopacity = 1
         }
+    })
+
+    onDraw("slamparticle", (particle) => {
+        drawRect({
+            pos: vec2(0, 0),
+            width: particle.size,
+            height: particle.size,
+            color: rgb(0, 0, 0),
+            opacity: .2
+        })
+        particle.move(Vec2.fromAngle(particle.direction).scale(-particle.speed))
+        particle.life -= 1
+        if(particle.life <= 0)
+            destroy(particle)
     })
     
     
@@ -732,9 +793,24 @@ scene("defend", () => {
             if(enemy.attacked == 1)
             {
                 destroy(enemy)
-                play("explosion")
+                playSoundSafe("explosion")
                 if(gameover == 0)
                     score += 1
+
+                for(var i = 0; i < 20; i++)
+                {
+                    add([
+                        pos(enemy.pos.x, enemy.pos.y),
+                        layer("bgparticles"),
+                        {
+                            size: rand(15) + 10,
+                            direction: rand(360),
+                            speed: 800 + rand(100),
+                            life: 15
+                        },
+                        "explodeparticle"
+                    ])
+                }
             }
         }
     
@@ -744,8 +820,23 @@ scene("defend", () => {
             if(enemy.deathglow > 255)
             {   
                 destroy(enemy)
-                play("explosion")
+                playSoundSafe("explosion")
                 score += 1
+
+                for(var i = 0; i < 20; i++)
+                {
+                    add([
+                        pos(enemy.pos.x, enemy.pos.y),
+                        layer("bgparticles"),
+                        {
+                            size: rand(15) + 10,
+                            direction: rand(360),
+                            speed: 800 + rand(100),
+                            life: 15
+                        },
+                        "explodeparticle"
+                    ])
+                }
             }
             
             enemy.deathglow += 50
@@ -774,6 +865,21 @@ scene("defend", () => {
         }
     })
     
+
+    onDraw("explodeparticle", (particle) => {
+        drawRect({
+            pos: vec2(0, 0),
+            width: particle.size,
+            height: particle.size,
+            color: rgb(255, 255, 255),
+            opacity: .35
+        })
+        particle.move(Vec2.fromAngle(particle.direction).scale(-particle.speed))
+        particle.life -= 1
+        if(particle.life <= 0)
+            destroy(particle)
+    })
+
     onCollide("enemy", "enemy", (enemy1, enemy2) => {
         enemy1.death = 1
         enemy2.death = 1
@@ -866,15 +972,15 @@ scene("defend", () => {
     ship.onCollide("enemy", (enemy) => {
         if(gameover == 0 && enemy.death == 0)
         {
-            play("explosion")
-            music.stop()
+            playSoundSafe("explosion")
+            try {music.stop()}
+            catch {}
             gameover = 1
             gameoverenemypos = enemy.pos 
             gameoverenemysize = enemy.size
             destroyAll("enemy")
             addButtonReplay("Replay", vec2(width()*.5, height()*.82), () => go("replay"))
             addButtonReplay("Menu", vec2(width()*.5, height()*.9), () => go("title"))
-
         }
     })
     
