@@ -71,6 +71,7 @@ async function getprofiles() {
     }
 var profiles = await getprofiles()
 
+
 async function getmyship() {
         const response = await fetch('/apps/slam/whoami')
         return response.text()
@@ -162,7 +163,7 @@ function addButton(txt, p, f) {
     const btn = add([
         text(txt, {font: "sinko", size: 55}),
         pos(p),
-        area({ cursor: "pointer", }),
+        area({ cursor: "default", }),
         scale(1),
         origin("center"),
     ])
@@ -185,8 +186,30 @@ function addButton(txt, p, f) {
     })
 }
 
+var intromusic;
+var isPlaying = 0;
+
+function playIntroMusic() {
+    if(isPlaying == 0)
+    {
+        try{intromusic = play("intromusic", {loop: true})}
+        catch{intromusic = 0}
+    }
+
+    isPlaying = 1;
+}
+
+function stopIntroMusic() {
+    try{intromusic.stop()}
+    catch{}
+
+    isPlaying = 0;
+}
+
 scene("title", () => {
 
+    playIntroMusic()
+        
     layers([
         "background",
         "default",
@@ -195,8 +218,7 @@ scene("title", () => {
 
     playSoundSafe("dodge")
 
-    try{var intromusic = play("intromusic", {loop: true})}
-    catch{var intromusic = 0}
+    
 
 	add([
 		text("SLAM", {font: "sinko", size: 150}),
@@ -228,7 +250,7 @@ scene("title", () => {
         transition = 1;
     })
     addButton("Invaders", vec2(width()*.5, height()*.82), () => burp())
-    addButton("Scores", vec2(width()*.5, height()*.93), () => burp())
+    addButton("Scores", vec2(width()*.5, height()*.93), () => go("scores"))
 
     onUpdate(() => cursor("default"))
 
@@ -295,17 +317,71 @@ scene("title", () => {
             }
             else
             {
-                try{intromusic.stop()}
-                catch{}
+                stopIntroMusic()                
                 go("defend")
             }
         }
     })
 })
 
+function drawScores() {
+    let highscores = []
+    let invadescores = []
+
+    for (var key in profiles) {
+        highscores.push([key, profiles[key][0]])
+        invadescores.push([key, profiles[key][1]])
+    }
+
+    highscores.sort(function(a, b) {
+        return b[1] - a[1];
+    })
+
+    invadescores.sort(function(a, b) {
+        return b[1] - a[1];
+    })
+
+    add([
+        text("High Score", {font: "sinko", size: 50}),
+        pos(width()*.1, height()*.1),
+        origin("left"),
+    ])
+    for(var i = 0; i < highscores.length; i++)
+    {
+        add([
+            text(highscores[i], {font: "sinko", size: 30}),
+            pos(width()*.1, height()*.18 + i * 40),
+            origin("left"),
+        ])
+    }
+
+    add([
+        text("Invasions", {font: "sinko", size: 50}),
+        pos(width()*.9, height()*.1),
+        origin("right"),
+    ])
+    for(var i = 0; i < invadescores.length; i++)
+    {
+        add([
+            text(invadescores[i], {font: "sinko", size: 30}),
+            pos(width()*.9, height()*.18 + i * 40),
+            origin("right"),
+        ])
+    }
+}
+
+
+scene("scores", () => {
+   playSoundSafe("dodge")
+   drawScores()
+   addButton("Back", vec2(width()*.5, height()*.93), () => go("title"))
+})
+
 scene("defend", () => {
 
     volume(1)
+
+    console.log(profiles)
 
     try{var music = play("music", {loop: true})}
     catch{var music = 0}
