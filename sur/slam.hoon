@@ -8,10 +8,10 @@
 +$  action
   $%  [%hiscore newscore=@ud]
       [%new-team =team]
-      [%invaded =name =invader]
+      [%invaded =name]
   ==
 +$  update
   $%  [%profile-update =profile]
-      [%invasion-success =name =invader]
+      [%invasion-success =name]
   ==
 --

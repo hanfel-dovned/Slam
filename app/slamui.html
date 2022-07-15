@@ -58,6 +58,7 @@ function newteam(team) {
 
 //Send an invasion notification to gall agent
 //invaded(['~zod', ['foo', 'bar', '~hanfel']])
+//actually, just invaded('~zod') hopefully
 function invaded(team) {
     fetch('/apps/slam', {
         method: 'POST',
@@ -69,8 +70,12 @@ async function getprofiles() {
         const response = await fetch('/apps/slam/profiles')
         return response.json()
     }
-var profiles = await getprofiles()
+//var profiles = await getprofiles()
 
+var profiles = {'~palfun-foslup': [10, 12, [['hello', 'http://www.thebestdinosaur.com/best-stegosaurus.png', '~minder'], ['hello2', 'http://www.thebestdinosaur.com/best-stegosaurus.png', '~minder-folden']]],
+                '~hanfel-dovned': [6, 3, [['mygora', 'https://noah.hanfeldovned.repl.co/noah.jpg', '~zod'], ['mygora2', 'https://noah.hanfeldovned.repl.co/noah.jpg', '~littel-wolfur']]],
+                '~minder-folden': [0, 35, [['firstg', 'https://raw.githubusercontent.com/sigilante/hsl-2022.02/master/gora-hsl-~2022.2.png', '~zod'], ['mygora2', 'https://noah.hanfeldovned.repl.co/noah.jpg', '~littel-wolfur']]],
+}
 
 async function getmyship() {
         const response = await fetch('/apps/slam/whoami')
@@ -380,8 +385,6 @@ scene("scores", () => {
 scene("defend", () => {
 
     volume(1)
-
-    console.log(profiles)
 
     try{var music = play("music", {loop: true})}
     catch{var music = 0}

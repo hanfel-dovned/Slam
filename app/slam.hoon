@@ -1,4 +1,4 @@
-/-  *slam, pals                                                                                                         
+/-  *slam, pals                                                                                                             
 /+  default-agent, dbug, server, schooner, *slam
 /*  slamui  %html  /app/slamui/html
 |%
@@ -129,7 +129,7 @@
         %invaded
       :_  state
       :~  :*  %give  %fact  ~[/updates/out]  %slam-update 
-          !>(`update`invasion-success+[name:action invader:action])
+          !>(`update`invasion-success+[name:action])
       ==  ==
     ==
   --
