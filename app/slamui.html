@@ -66,6 +66,12 @@ function invaded(team) {
     }) 
 }
 
+async function getmyship() {
+        const response = await fetch('/apps/slam/whoami')
+        return response.text()
+    }
+var myshipname = await getmyship()
+
 async function getprofiles() {
         const response = await fetch('/apps/slam/profiles')
         return response.json()
@@ -73,15 +79,23 @@ async function getprofiles() {
 //var profiles = await getprofiles()
 
 var profiles = {'~palfun-foslup': [10, 12, [['hello', 'http://www.thebestdinosaur.com/best-stegosaurus.png', '~minder'], ['hello2', 'http://www.thebestdinosaur.com/best-stegosaurus.png', '~minder-folden']]],
-                '~hanfel-dovned': [6, 3, [['mygora', 'https://noah.hanfeldovned.repl.co/noah.jpg', '~zod'], ['mygora2', 'https://noah.hanfeldovned.repl.co/noah.jpg', '~littel-wolfur']]],
+                '~zod': [6, 3, [['mygora', 'https://noah.hanfeldovned.repl.co/noah.jpg', '~zod'], ['mygora2', 'https://noah.hanfeldovned.repl.co/noah.jpg', '~littel-wolfur']]],
                 '~minder-folden': [0, 35, [['firstg', 'https://raw.githubusercontent.com/sigilante/hsl-2022.02/master/gora-hsl-~2022.2.png', '~zod'], ['mygora2', 'https://noah.hanfeldovned.repl.co/noah.jpg', '~littel-wolfur']]],
-}
+                //'~zod': [6, 3, []],
+            }
 
-async function getmyship() {
-        const response = await fetch('/apps/slam/whoami')
-        return response.text()
+var invaderlist = []
+for(var name in profiles) 
+{
+    if(name != myshipname)
+    {
+        for(var i = 0; i < profiles[name][2].length; i++)
+        {
+            invaderlist.push(profiles[name][2][i])
+            invaderlist[invaderlist.length - 1].unshift(name)
+        }
     }
-var myshipname = await getmyship()
+}
 
 function playSoundSafe(sound, vol = 1) {
     try {play(sound, {volume: vol})}
@@ -99,16 +113,25 @@ const scaleY = windowHeight / gameHeight
 const scaleGame = Math.min(scaleX, scaleY)
 
 kaboom({
-	//background: [ bgcolor[0], bgcolor[1], bgcolor[2] ],
     width: 1200,
     height: 700,
     scale: scaleGame,
     background: [0, 0, 50]
 })
 
+debug.showLog = false
 
-try {loadSprite("ship", "https://api.urbit.live/images/" + myshipname + "_black.png")}
-catch {loadBean("ship")}
+function loadSpriteSafe(name, url)
+{
+    loadBean(name)
+    try {loadSprite(name, url)}
+    catch {loadBean(name)}
+}
+
+loadSpriteSafe("ship", "https://api.urbit.live/images/" + myshipname + "_black.png")
+
+for(var i = 0; i < invaderlist.length; i++)
+    loadSpriteSafe("invader" + i, invaderlist[i][2])
 
 loadBean("playersprite")
 loadBean("enemysprite")
@@ -129,12 +152,6 @@ scene("replay", () => {
 
 
 scene("sigil", () => {
-    /*add([
-		text("~hanfel-dovned presents", {font: "sinko", size: 40}),
-		pos(width()*.5, height()*.3),
-        origin("center"),
-	])*/
-
     layers([
         "background",
         "foreground"
@@ -223,8 +240,6 @@ scene("title", () => {
 
     playSoundSafe("dodge")
 
-    
-
 	add([
 		text("SLAM", {font: "sinko", size: 150}),
 		pos(width()*.5, height()*.2),
@@ -251,10 +266,35 @@ scene("title", () => {
         })
     })
 
-    addButton("Play", vec2(width()*.5, height()*.71), () => {
-        transition = 1;
-    })
-    addButton("Invaders", vec2(width()*.5, height()*.82), () => burp())
+
+    if(invaderlist.length == 0)
+    {
+        add([
+            text("You must have %pals installed and one pal with Slam installed to play", {font: "sinko", size: 20}),
+            pos(width()*.5, height()*.71),
+            origin("center"),
+	    ])
+    }
+    else
+    {
+        addButton("Play", vec2(width()*.5, height()*.71), () => {
+            transition = 1;
+        })
+    }
+
+    if(profiles[myshipname][2].length === 0)
+    {
+        add([
+            text("You must have %gora installed and own one gora to invade others", {font: "sinko", size: 20}),
+            pos(width()*.5, height()*.82),
+            origin("center"),
+	    ])
+    }
+    else
+    {
+        addButton("Invaders", vec2(width()*.5, height()*.82), () => burp())
+    }
+
     addButton("Scores", vec2(width()*.5, height()*.93), () => go("scores"))
 
     onUpdate(() => cursor("default"))
@@ -799,10 +839,13 @@ scene("defend", () => {
     var weight = 0
     var size = 0
     var invasionspeed = 0
+
+    var invadercount = 0
+    var currentpal = ""
     
     loop(2, () => {
     
-        //enemysprite = "enemy" + Math.ceil(rand(6))
+        enemysprite = "invader" + invadercount
     
         issuer = rand(255)
         pal = rand(255)
@@ -861,6 +904,8 @@ scene("defend", () => {
                 },
                 "enemy"
             ])
+
+            invadercount += 1
         }
     })
     
