@@ -33,6 +33,62 @@
 import kaboom from "https://unpkg.com/kaboom/dist/kaboom.mjs";
 
 
+var suffixes = ["zod","nec","bud","wes","sev","per","sut","let","ful","pen","syt",
+"dur","wep","ser","wyl","sun","ryp","syx","dyr","nup","heb","peg","lup","dep",
+"dys","put","lug","hec","ryt","tyv","syd","nex","lun","mep","lut","sep","pes",
+"del","sul","ped","tem","led","tul","met","wen","byn","hex","feb","pyl","dul",
+"het","mev","rut","tyl","wyd","tep","bes","dex","sef","wyc","bur","der","nep",
+"pur","rys","reb","den","nut","sub","pet","rul","syn","reg","tyd","sup","sem",
+"wyn","rec","meg","net","sec","mul","nym","tev","web","sum","mut","nyx","rex",
+"teb","fus","hep","ben","mus","wyx","sym","sel","ruc","dec","wex","syr","wet",
+"dyl","myn","mes","det","bet","bel","tux","tug","myr","pel","syp","ter","meb",
+"set","dut","deg","tex","sur","fel","tud","nux","rux","ren","wyt","nub","med",
+"lyt","dus","neb","rum","tyn","seg","lyx","pun","res","red","fun","rev","ref",
+"mec","ted","rus","bex","leb","dux","ryn","num","pyx","ryg","ryx","fep","tyr",
+"tus","tyc","leg","nem","fer","mer","ten","lus","nus","syl","tec","mex","pub",
+"rym","tuc","fyl","lep","deb","ber","mug","hut","tun","byl","sud","pem","dev",
+"lur","def","bus","bep","run","mel","pex","dyt","byt","typ","lev","myl","wed",
+"duc","fur","fex","nul","luc","len","ner","lex","rup","ned","lec","ryd","lyd",
+"fen","wel","nyd","hus","rel","rud","nes","hes","fet","des","ret","dun","ler",
+"nyr","seb","hul","ryl","lud","rem","lys","fyn","wer","ryc","sug","nys","nyl",
+"lyn","dyn","dem","lux","fed","sed","bec","mun","lyr","tes","mud","nyt","byr",
+"sen","weg","fyr","mur","tel","rep","teg","pec","nel","nev","fes"]
+
+var prefixes = ["doz","mar","bin","wan","sam","lit","sig","hid","fid","lis","sog",
+"dir","wac","sab","wis","sib","rig","sol","dop","mod","fog","lid","hop","dar",
+"dor","lor","hod","fol","rin","tog","sil","mir","hol","pas","lac","rov","liv",
+"dal","sat","lib","tab","han","tic","pid","tor","bol","fos","dot","los","dil",
+"for","pil","ram","tir","win","tad","bic","dif","roc","wid","bis","das","mid",
+"lop","ril","nar","dap","mol","san","loc","nov","sit","nid","tip","sic","rop",
+"wit","nat","pan","min","rit","pod","mot","tam","tol","sav","pos","nap","nop",
+"som","fin","fon","ban","mor","wor","sip","ron","nor","bot","wic","soc","wat",
+"dol","mag","pic","dav","bid","bal","tim","tas","mal","lig","siv","tag","pad",
+"sal","div","dac","tan","sid","fab","tar","mon","ran","nis","wol","mis","pal",
+"las","dis","map","rab","tob","rol","lat","lon","nod","nav","fig","nom","nib",
+"pag","sop","ral","bil","had","doc","rid","moc","pac","rav","rip","fal","tod",
+"til","tin","hap","mic","fan","pat","tac","lab","mog","sim","son","pin","lom",
+"ric","tap","fir","has","bos","bat","poc","hac","tid","hav","sap","lin","dib",
+"hos","dab","bit","bar","rac","par","lod","dos","bor","toc","hil","mac","tom",
+"dig","fil","fas","mit","hob","har","mig","hin","rad","mas","hal","rag","lag",
+"fad","top","mop","hab","nil","nos","mil","fop","fam","dat","nol","din","hat",
+"nac","ris","fot","rib","hoc","nim","lar","fit","wal","rap","sar","nal","mos",
+"lan","don","dan","lad","dov","riv","bac","pol","lap","tal","pit","nam","bon",
+"ros","ton","fod","pon","sov","noc","sor","lav","mat","mip","fip"]
+
+// Last suffix and first prefix works better for stars
+// Prefixes will return -1 for galaxies, not a problem
+function patpToSufNum(name) {
+    var suf = name.slice(-3)
+    console.log(suffixes.indexOf(suf))
+    return suffixes.indexOf(suf)
+}
+function patpToPreNum(name) {
+    var pre = name.slice(1, 4)
+    console.log(pre)
+    console.log(prefixes.indexOf(pre))
+    return prefixes.indexOf(pre)
+}
+
 function hsv2rgb(h,s,v) 
 {                              
   let f= (n,k=(n+h/60)%6) => v - v*s*Math.max( Math.min(k,4-k,1), 0);     
@@ -78,10 +134,22 @@ async function getprofiles() {
     }
 //var profiles = await getprofiles()
 
-var profiles = {'~palfun-foslup': [10, 12, [['hello', 'http://www.thebestdinosaur.com/best-stegosaurus.png', '~minder'], ['hello2', 'http://www.thebestdinosaur.com/best-stegosaurus.png', '~minder-folden']]],
-                '~zod': [6, 3, [['mygora', 'https://noah.hanfeldovned.repl.co/noah.jpg', '~zod'], ['mygora2', 'https://noah.hanfeldovned.repl.co/noah.jpg', '~littel-wolfur']]],
-                '~minder-folden': [0, 35, [['firstg', 'https://raw.githubusercontent.com/sigilante/hsl-2022.02/master/gora-hsl-~2022.2.png', '~zod'], ['mygora2', 'https://noah.hanfeldovned.repl.co/noah.jpg', '~littel-wolfur']]],
-                //'~zod': [6, 3, []],
+var profiles = {'~palfun-foslup': [10, 12, [
+                ['hello', 'http://www.thebestdinosaur.com/best-stegosaurus.png', '~minder-folden'], 
+               // ['hello2', 'https://www.otherlife.co/content/images/size/w1000/2022/03/imperceptible-boarding.png', '~minder-folden'],
+               // ['spinner', 'https://siasky.net/AQDifELxAr0qpnEwa1JznJ1ogblWfISzRd6hC5IE_BEmWA?.gif', '~lagrev-nocfep'],
+               // ['hello4', 'https://minderimages.nyc3.digitaloceanspaces.com/minder-folden/2022.6.27..14.48.43-Week%2025%202022.png', '~hatryx-listud'],
+                ['hello5', 'https://minderimages.nyc3.digitaloceanspaces.com/minder-folden/2022.7.18..13.23.45-Temple%20Of%20Pythagoras.png', '~rabsef-bicrym']
+            ]],
+                '~minder-folden': [0, 35, [
+             //   ['firstg', 'https://raw.githubusercontent.com/sigilante/hsl-2022.02/master/gora-hsl-~2022.2.png', '~zod'], 
+             //   ['g2', 'https://www.otherlife.co/content/images/size/w1000/2022/03/imperceptible-boarding.png', '~hanfel-dovned'],
+             //   ['g3', 'https://siasky.net/AQDifELxAr0qpnEwa1JznJ1ogblWfISzRd6hC5IE_BEmWA?.gif', '~zod'],
+             //   ['masdfsadf', 'https://freedom-club.sfo2.digitaloceanspaces.com/rabsef-bicrym/2021.10.17..21.05.39-image.png', '~master-morzod'],
+                ['elephant', 'https://nartes-fasrum.s3.tirefire.pw/nartes-fasrum/2021.11.04..16.04.04-rab-pb-gora.png', '~litmus-ritten']
+            ]],
+                '~zod': [0, 3, [['mygora', 'https://noah.hanfeldovned.repl.co/noah.jpg', '~zod'], 
+                ['mygora2', 'https://noah.hanfeldovned.repl.co/noah.jpg', '~littel-wolfur']]],
             }
 
 var invaderlist = []
@@ -101,6 +169,7 @@ function playSoundSafe(sound, vol = 1) {
     try {play(sound, {volume: vol})}
     catch {}
 }
+
 
 
 
@@ -292,7 +361,7 @@ scene("title", () => {
     }
     else
     {
-        addButton("Invaders", vec2(width()*.5, height()*.82), () => burp())
+        addButton("Invaders", vec2(width()*.5, height()*.82), () => go("invaders"))
     }
 
     addButton("Scores", vec2(width()*.5, height()*.93), () => go("scores"))
@@ -422,17 +491,44 @@ scene("scores", () => {
    addButton("Back", vec2(width()*.5, height()*.93), () => go("title"))
 })
 
+scene("invaders", () => {
+    layers([
+        "background",
+        "default",
+    ], "default")
+
+   playSoundSafe("dodge")
+   addButton("Back", vec2(width()*.5, height()*.93), () => go("title"))
+   add([
+        text(myshipname + "'s Invaders", {font: "sinko", size: 50}),
+        pos(width()*.5, height()*.1),
+        origin("center"),
+    ])
+
+   var bgdrawer = add([
+        layer("background"),
+        pos(-10, -10),
+    ])
+   var invaderbghue = patpToPreNum(myshipname)
+   var invaderbgcolor = hsv2rgb(invaderbghue, .75, .75)
+   bgdrawer.onDraw(() => {
+        drawRect({
+            pos: vec2(0),
+            width: width() + 20,
+            height: height() + 20,
+            color: rgb(invaderbgcolor[0], invaderbgcolor[1], invaderbgcolor[2])
+        })
+    })
+})
+
 scene("defend", () => {
 
     volume(1)
 
     try{var music = play("music", {loop: true})}
     catch{var music = 0}
-
-    var invadingpalpatp1 = Math.random()*255
-    var invadingpalpatp2 = Math.random()*255
     
-    var bghue = invadingpalpatp1 * 360/255
+    var bghue = Math.random()*255 * 360/255
     var bgcolor = hsv2rgb(bghue, .75, .75)
         
     var gorasize = 50
@@ -471,10 +567,7 @@ scene("defend", () => {
     var bgdrawer = add([
         layer("bg"),
         pos(-10, -10),
-        {
-            size: 500,
-            color: hsv2rgb(bghue, .8, .4)
-        }
+ 
     ])
     
     var colorcounter = 0
@@ -518,36 +611,37 @@ scene("defend", () => {
     	})
     })
 
+    var particleDirection = Math.random()*255
+
     var particlespawnx = 0;
     var particlespawny = 0;
     var particlemovex = 0;
     var particlemovey = 0;
-    var particleshape = "";
     var particlespeed = 1
     loop(.4, () => {
     
-        if(invadingpalpatp2 < 64)
+        if(particleDirection < 64)
         {
             particlespawnx = width() + 90
             particlespawny = rand(height())
             particlemovex = -particlespeed
             particlemovey = 0
         }
-        else if(invadingpalpatp2 < 128)
+        else if(particleDirection < 128)
         {
             particlespawnx = -90
             particlespawny = rand(height())
             particlemovex = particlespeed
             particlemovey = 0
         }
-        else if(invadingpalpatp2 < 192)
+        else if(particleDirection < 192)
         {
             particlespawnx = rand(width())
             particlespawny = height() + 90
             particlemovex = 0
             particlemovey = -particlespeed
         }
-        else if(invadingpalpatp2 < 256)
+        else if(particleDirection < 256)
         {
             particlespawnx = rand(width())
             particlespawny = -90
@@ -555,10 +649,6 @@ scene("defend", () => {
             particlemovey = particlespeed
         }
     
-        if(invadingpalpatp2 % 2 == 0)
-            particleshape = "square"
-        else
-            particleshape = "circle"
     
          add([
             pos(particlespawnx, particlespawny),
@@ -569,7 +659,7 @@ scene("defend", () => {
                 color: hsv2rgb(bghue, .8, .4),
                 movex: particlemovex * rand(.3, 2),
                 movey: particlemovey * rand(.3, 2),
-                shape: particleshape
+                text: rand(10)
             },
             "backgroundparticle"
         ])
@@ -580,6 +670,7 @@ scene("defend", () => {
     var drawcolor = 0
     var collideopacity = 0
     onDraw("backgroundparticle", (particle) => {
+
         particle.pos.x += particle.movex
         particle.pos.y += particle.movey
         
@@ -591,13 +682,28 @@ scene("defend", () => {
         else if(particle.movex == 0)
             mycolor = rgb(particle.color[0] + particle.pos.y % 255, particle.color[1] + particle.pos.y % 255, particle.color[2] + particle.pos.y % 255)
         
-        drawRect({
-            pos: vec2(0),
-            width: 80,
-            height: 80,
-            color: mycolor,
-            opacity: .15
-        })
+        if(particle.text < 9)
+        {
+            drawRect({
+                pos: vec2(0),
+                width: 80,
+                height: 80,
+                color: mycolor,
+                opacity: .15
+            })
+        }
+        else
+        {
+            drawText({
+                text: currentpal,
+                font: "sink",
+                pos: vec2(0, 0),
+                origin: "center",
+                size: 75,
+                color: mycolor,
+                opacity: .2
+            })
+         }
     })
     
     
@@ -817,7 +923,14 @@ scene("defend", () => {
         })
     })
     
-    
+    function newscore(score)
+    {
+        if(score > profiles[myshipname][0])
+        {
+            hiscore(score)
+            profiles[myshipname][0] = score
+        }
+    }
     
     /**************** ENEMY ****************/
     var tempsprite = "player"
@@ -833,28 +946,20 @@ scene("defend", () => {
     
     var enemysprite = "enemysprite"
     
-    var issuer = 0
-    var pal = 0
+    var suffix = 0
+    var prefix = 0
     var hue = 0
     var weight = 0
     var size = 0
     var invasionspeed = 0
 
     var invadercount = 0
-    var currentpal = ""
+
+    var currentpal = invaderlist[invadercount][0]
+    bghue = patpToPreNum(currentpal) * 360/255
+    bgcolor = hsv2rgb(bghue, 1, .75)
     
     loop(2, () => {
-    
-        enemysprite = "invader" + invadercount
-    
-        issuer = rand(255)
-        pal = rand(255)
-        hue = pal * 360/255
-        
-        weight = issuer/255
-        size = gorasize + (gorasize * (weight-.5))
-        invasionspeed = 1 - weight
-    
         
         spawnseed = rand(4)
         if(spawnseed < 1)
@@ -878,27 +983,36 @@ scene("defend", () => {
             spawnpositiony = height() + 100
         }
     
-        if(gameover == 0)
+        if(gameover == 0 && invadercount < invaderlist.length && invaderlist[invadercount][0] == currentpal)
         {
+            enemysprite = "invader" + invadercount
+    
+            // Last suffix of issuer determines weight
+            // First prefix of issuer determines color
+            suffix = patpToSufNum(invaderlist[invadercount][3])
+            prefix = patpToPreNum(invaderlist[invadercount][3])
+
+            weight = suffix/255
+            hue = prefix * 360/255
+
+            size = gorasize + (gorasize * (weight-.5))
+            invasionspeed = 1 - weight
+
             add([
                 sprite(enemysprite, {width: size, height: size}),
                 pos(spawnpositionx, spawnpositiony),
-                //move(ship.pos.angle(pos), 12),
                 area({scale: 1.2}),
                 origin("center"),
                 layer("game"),
-                //color = rgb(100, 100, 0),
                 {
                     direction: 0,
                     charge: 0,
                     attacked: 0,
                     death: 0,
                     deathglow: 0,
-                    issuer: issuer,
                     invasionspeed: invasionspeed,
                     weight: weight,
                     size: size,
-                    pal: pal,
                     color: hsv2rgb(hue, 1, 1 - weight*.7),
                     sprite: enemysprite,
                 },
@@ -908,6 +1022,37 @@ scene("defend", () => {
             invadercount += 1
         }
     })
+
+    function enemyDeath(enemy)
+    {
+        destroy(enemy)
+        playSoundSafe("explosion")
+
+        if(gameover == 0)
+            score += 1
+
+        if(score == invadercount)
+        {
+            if(invadercount < invaderlist.length)
+            {
+                if(invaderlist[invadercount][0] != currentpal)
+                {
+                    currentpal = invaderlist[invadercount][0]
+
+                    bghue = patpToPreNum(currentpal) * 360/255
+                    bgcolor = hsv2rgb(bghue, 1, .75)
+                }
+            }
+            else
+            {
+                try {music.stop()}
+                catch {}
+                addButtonReplay("Menu", vec2(width()*.5, height()*.9), () => go("title"), "sinko")
+                gameover = 2
+                newscore(score)
+            }
+        }
+    }
     
     var buffer = gorasize*.8
     onUpdate("enemy", (enemy) => {
@@ -916,10 +1061,7 @@ scene("defend", () => {
         {
             if(enemy.attacked == 1)
             {
-                destroy(enemy)
-                playSoundSafe("explosion")
-                if(gameover == 0)
-                    score += 1
+                enemyDeath(enemy)
 
                 for(var i = 0; i < 20; i++)
                 {
@@ -943,9 +1085,9 @@ scene("defend", () => {
         {
             if(enemy.deathglow > 255)
             {   
-                destroy(enemy)
-                playSoundSafe("explosion")
-                score += 1
+                //destroy(enemy)
+                //playSoundSafe("explosion")
+                //score += 1
 
                 for(var i = 0; i < 20; i++)
                 {
@@ -961,6 +1103,8 @@ scene("defend", () => {
                         "explodeparticle"
                     ])
                 }
+
+                enemyDeath(enemy)
             }
             
             enemy.deathglow += 50
@@ -988,7 +1132,6 @@ scene("defend", () => {
             //    enemy.moveTo(width()/2, height()/2, 2000)
         }
     })
-    
 
     onDraw("explodeparticle", (particle) => {
         drawRect({
@@ -1065,9 +1208,9 @@ scene("defend", () => {
     var gameoverenemypos = vec2(0)
     var gameoverenemysize = 0
 
-    function addButtonReplay(txt, p, f) {
+    function addButtonReplay(txt, p, f, font) {
         const btn = add([
-            text(txt, {font: "sink", size: 30}),
+            text(txt, {font: font, size: 30}),
             layer("gameover"),
             pos(p),
             area(),
@@ -1088,7 +1231,10 @@ scene("defend", () => {
                 btn.scale = vec2(1.1)
             } else {
                 btn.scale = vec2(1)
-                btn.color = rgb(0, 0, 0)
+                if(font == "sinko")
+                    btn.color = rgb(255, 255, 255)
+                else
+                    btn.color = rgb(0, 0, 0)
             }
         })
     }
@@ -1100,11 +1246,12 @@ scene("defend", () => {
             try {music.stop()}
             catch {}
             gameover = 1
+            newscore(score)
             gameoverenemypos = enemy.pos 
             gameoverenemysize = enemy.size
             destroyAll("enemy")
-            addButtonReplay("Replay", vec2(width()*.5, height()*.82), () => go("replay"))
-            addButtonReplay("Menu", vec2(width()*.5, height()*.9), () => go("title"))
+            addButtonReplay("Replay", vec2(width()*.5, height()*.82), () => go("replay"), "sink")
+            addButtonReplay("Menu", vec2(width()*.5, height()*.9), () => go("title"), "sink")
         }
     })
     
@@ -1113,16 +1260,71 @@ scene("defend", () => {
         pos(0, 0)
     ])
     
-    var scoreopacity = 1
     gameoverdrawer.onDraw(() => {
-        if(gameover == 1)
+        if(gameover >= 1)
         {
-            drawRect({
-                pos: vec2(-20, -20),
-                width: width() + 40,
-                height: height() + 40,
-                color: rgb(255, 255, 255),
-            })
+            if(gameover == 2)
+            {
+                var victorybghue = patpToPreNum(myshipname)
+                var victorybgcolor = hsv2rgb(victorybghue, .75, .75)
+
+                drawRect({
+                    pos: vec2(-20, -20),
+                    width: width() + 40,
+                    height: height() + 40,
+                    color: rgb(victorybgcolor[0], victorybgcolor[1], victorybgcolor[2]),
+                })
+
+                drawText({
+                    text: score,
+                    font: "sinko",
+                    pos: vec2(width()*.5, height()*.25),
+                    origin: "center",
+                    size: scoreboard.size*.25,
+                    color: rgb(255, 255, 255),
+                })
+
+                drawText({
+                    text: "Victory!",
+                    font: "sinko",
+                    pos: vec2(width()*.5, height()*.75),
+                    origin: "center",
+                    size: 100,
+                    color: rgb(255, 255, 255)
+                })
+            }
+            else
+            {
+                drawRect({
+                    pos: vec2(-20, -20),
+                    width: width() + 40,
+                    height: height() + 40,
+                    color: rgb(255, 255, 255),
+                })
+
+                drawCircle({
+                pos: gameoverenemypos,
+                radius: gameoverenemysize*.8,
+                color: rgb(0, 0, 0),
+                })
+
+                drawRect({
+                    pos: vec2(0, height()*.33),
+                    width: width(),
+                    height: 10,
+                    color: rgb(255, 255, 255),
+                })
+
+                drawText({
+                    text: score,
+                    font: "sink",
+                    pos: vec2(width()*.5, height()*.25),
+                    origin: "center",
+                    size: scoreboard.size*.25,
+                    color: rgb(0, 0, 0),
+    	        })
+            }
+
             drawCircle({
                 pos: center(),
                 radius: gorasize*.8+3,
@@ -1136,31 +1338,7 @@ scene("defend", () => {
                 height: gorasize
             })
             
-            drawCircle({
-                pos: gameoverenemypos,
-                radius: gameoverenemysize*.8,
-                color: rgb(0, 0, 0),
-            })
-    
-            drawText({
-        		text: score,
-                font: "sink",
-        		pos: vec2(width()*.5, height()*.25),
-        		origin: "center",
-                size: scoreboard.size*.25,
-                color: rgb(0, 0, 0),
-                opacity: scoreopacity
-    	    })
-            drawRect({
-                pos: vec2(0, height()*.33),
-                width: width(),
-                height: 10,
-                color: rgb(255, 255, 255),
-            })
-    
-            if(scoreopacity < 1)
-                scoreopacity += .01
-    
+            
         }
     
     })
