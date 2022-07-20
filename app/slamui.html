@@ -79,13 +79,10 @@ var prefixes = ["doz","mar","bin","wan","sam","lit","sig","hid","fid","lis","sog
 // Prefixes will return -1 for galaxies, not a problem
 function patpToSufNum(name) {
     var suf = name.slice(-3)
-    console.log(suffixes.indexOf(suf))
     return suffixes.indexOf(suf)
 }
 function patpToPreNum(name) {
     var pre = name.slice(1, 4)
-    console.log(pre)
-    console.log(prefixes.indexOf(pre))
     return prefixes.indexOf(pre)
 }
 
@@ -115,10 +112,10 @@ function newteam(team) {
 //Send an invasion notification to gall agent
 //invaded(['~zod', ['foo', 'bar', '~hanfel']])
 //actually, just invaded('~zod') hopefully
-function invaded(team) {
+function invadedby(name) {
     fetch('/apps/slam', {
         method: 'POST',
-        body: JSON.stringify({'invaded': team})
+        body: JSON.stringify({'invaded': name})
     }) 
 }
 
@@ -128,21 +125,25 @@ async function getmyship() {
     }
 var myshipname = await getmyship()
 
+var mytruncname = myshipname
+if(myshipname.length > 14)
+    mytruncname = "~" + myshipname.slice(-13)
+
 async function getprofiles() {
         const response = await fetch('/apps/slam/profiles')
         return response.json()
     }
 //var profiles = await getprofiles()
 
-var profiles = {'~palfun-foslup': [10, 12, [
+var profiles = {'~mister-master-palfun-foslup': [10, 12, [
                 ['hello', 'http://www.thebestdinosaur.com/best-stegosaurus.png', '~minder-folden'], 
-               // ['hello2', 'https://www.otherlife.co/content/images/size/w1000/2022/03/imperceptible-boarding.png', '~minder-folden'],
+                ['hello2', 'https://www.otherlife.co/content/images/size/w1000/2022/03/imperceptible-boarding.png', '~minder-folden'],
                // ['spinner', 'https://siasky.net/AQDifELxAr0qpnEwa1JznJ1ogblWfISzRd6hC5IE_BEmWA?.gif', '~lagrev-nocfep'],
                // ['hello4', 'https://minderimages.nyc3.digitaloceanspaces.com/minder-folden/2022.6.27..14.48.43-Week%2025%202022.png', '~hatryx-listud'],
                 ['hello5', 'https://minderimages.nyc3.digitaloceanspaces.com/minder-folden/2022.7.18..13.23.45-Temple%20Of%20Pythagoras.png', '~rabsef-bicrym']
             ]],
                 '~minder-folden': [0, 35, [
-             //   ['firstg', 'https://raw.githubusercontent.com/sigilante/hsl-2022.02/master/gora-hsl-~2022.2.png', '~zod'], 
+                ['firstg', 'https://raw.githubusercontent.com/sigilante/hsl-2022.02/master/gora-hsl-~2022.2.png', '~zod'], 
              //   ['g2', 'https://www.otherlife.co/content/images/size/w1000/2022/03/imperceptible-boarding.png', '~hanfel-dovned'],
              //   ['g3', 'https://siasky.net/AQDifELxAr0qpnEwa1JznJ1ogblWfISzRd6hC5IE_BEmWA?.gif', '~zod'],
              //   ['masdfsadf', 'https://freedom-club.sfo2.digitaloceanspaces.com/rabsef-bicrym/2021.10.17..21.05.39-image.png', '~master-morzod'],
@@ -164,6 +165,14 @@ for(var name in profiles)
         }
     }
 }
+
+var myinvaders = []
+for(var i = 0; i < profiles[myshipname][2].length; i++)
+{
+    myinvaders.push(profiles[myshipname][2][i])
+    myinvaders[myinvaders.length - 1].unshift(myshipname)
+}
+
 
 function playSoundSafe(sound, vol = 1) {
     try {play(sound, {volume: vol})}
@@ -197,10 +206,13 @@ function loadSpriteSafe(name, url)
     catch {loadBean(name)}
 }
 
-loadSpriteSafe("ship", "https://api.urbit.live/images/" + myshipname + "_black.png")
+loadSpriteSafe("ship", "https://api.urbit.live/images/" + mytruncname + "_black.png")
 
 for(var i = 0; i < invaderlist.length; i++)
     loadSpriteSafe("invader" + i, invaderlist[i][2])
+
+for(var i = 0; i < myinvaders.length; i++)
+    loadSpriteSafe("myinvader" + i, invaderlist[i][2])
 
 loadBean("playersprite")
 loadBean("enemysprite")
@@ -443,8 +455,13 @@ function drawScores() {
     let invadescores = []
 
     for (var key in profiles) {
-        highscores.push([key, profiles[key][0]])
-        invadescores.push([key, profiles[key][1]])
+        var truncated = key
+
+        if(key.length > 14)
+            truncated = "~" + key.slice(-13)
+        
+        highscores.push([truncated, profiles[key][0]])
+        invadescores.push([truncated, profiles[key][1]])
     }
 
     highscores.sort(function(a, b) {
@@ -460,13 +477,14 @@ function drawScores() {
         pos(width()*.1, height()*.1),
         origin("left"),
     ])
-    for(var i = 0; i < highscores.length; i++)
+    for(var i = 0; i < 12; i++)
     {
-        add([
-            text(highscores[i], {font: "sinko", size: 30}),
-            pos(width()*.1, height()*.18 + i * 40),
-            origin("left"),
-        ])
+        if(i < highscores.length)
+            add([
+                text(highscores[i], {font: "sinko", size: 30}),
+                pos(width()*.1, height()*.18 + i * 40),
+                origin("left"),
+            ])
     }
 
     add([
@@ -474,13 +492,14 @@ function drawScores() {
         pos(width()*.9, height()*.1),
         origin("right"),
     ])
-    for(var i = 0; i < invadescores.length; i++)
+    for(var i = 0; i < 12; i++)
     {
-        add([
-            text(invadescores[i], {font: "sinko", size: 30}),
-            pos(width()*.9, height()*.18 + i * 40),
-            origin("right"),
-        ])
+        if(i < invadescores.length)
+            add([
+                text(invadescores[i], {font: "sinko", size: 30}),
+                pos(width()*.9, height()*.18 + i * 40),
+                origin("right"),
+            ])
     }
 }
 
@@ -498,9 +517,10 @@ scene("invaders", () => {
     ], "default")
 
    playSoundSafe("dodge")
+
    addButton("Back", vec2(width()*.5, height()*.93), () => go("title"))
    add([
-        text(myshipname + "'s Invaders", {font: "sinko", size: 50}),
+        text(mytruncname + "'s Invaders", {font: "sinko", size: 50}),
         pos(width()*.5, height()*.1),
         origin("center"),
     ])
@@ -517,6 +537,74 @@ scene("invaders", () => {
             width: width() + 20,
             height: height() + 20,
             color: rgb(invaderbgcolor[0], invaderbgcolor[1], invaderbgcolor[2])
+        })
+    })
+
+    
+    var columns = 10;
+    var rows = 5;
+
+    var invaderindex = 0;
+    var enemysprite = ""
+    var suffix = ""
+    var prefix = ""
+    var weight = 0
+    var hue = 0
+    var gorasize = 50
+    var size = 0
+    var drawcolor = 0
+
+   for(var i = 0; i < columns; i++)
+   {
+        for(var j = 0; j < rows; j++)
+        {
+            invaderindex = i*columns + j
+
+            if(invaderindex < myinvaders.length)
+            {
+                enemysprite = "myinvader" + invaderindex
+        
+                // Last suffix of issuer determines weight
+                // First prefix of issuer determines color
+                suffix = patpToSufNum(myinvaders[invaderindex][3])
+                prefix = patpToPreNum(myinvaders[invaderindex][3])
+
+                weight = suffix/255
+                hue = prefix * 360/255
+
+                size = gorasize + (gorasize * (weight-.5))
+
+                add([
+                    sprite(enemysprite, {width: size, height: size}),
+                    pos(j * 100 + 100, i * 100 + 200),
+                    area({scale: 1.2}),
+                    origin("center"),
+                    {
+                        weight: weight,
+                        size: size,
+                        color: hsv2rgb(hue, 1, 1 - weight*.7),
+                        sprite: enemysprite,
+                    },
+                    "enemy"
+                ])
+            }
+        }
+   }
+   onDraw("enemy", (enemy) => {
+        drawcolor = rgb(enemy.color[0], enemy.color[1], enemy.color[2])
+        
+        drawCircle({
+            pos: vec2(0),
+            radius: enemy.size*.8 + Math.sin(time()*500/enemy.size),
+            color: drawcolor,
+            outline: {width: 1, color: rgb(0, 0, 0)}
+        })
+        drawSprite({
+            sprite: enemy.sprite,
+            pos: vec2(0),
+            width: enemy.size, 
+            height: enemy.size,
+            origin: "center"
         })
     })
 })
@@ -953,11 +1041,21 @@ scene("defend", () => {
     var size = 0
     var invasionspeed = 0
 
+    var startindex = randi(invaderlist.length)
     var invadercount = 0
 
-    var currentpal = invaderlist[invadercount][0]
+    while(startindex > 0)
+    {
+        if(invaderlist[(startindex + invadercount) % invaderlist.length][0] == invaderlist[(startindex - 1 + invadercount) % invaderlist.length][0])
+            startindex -= 1
+        else
+            break
+    }
+
+    var currentpal = invaderlist[(startindex + invadercount) % invaderlist.length][0]
     bghue = patpToPreNum(currentpal) * 360/255
     bgcolor = hsv2rgb(bghue, 1, .75)
+
     
     loop(2, () => {
         
@@ -983,14 +1081,14 @@ scene("defend", () => {
             spawnpositiony = height() + 100
         }
     
-        if(gameover == 0 && invadercount < invaderlist.length && invaderlist[invadercount][0] == currentpal)
+        if(gameover == 0 && invadercount < invaderlist.length && invaderlist[(startindex + invadercount) % invaderlist.length][0] == currentpal)
         {
             enemysprite = "invader" + invadercount
     
             // Last suffix of issuer determines weight
             // First prefix of issuer determines color
-            suffix = patpToSufNum(invaderlist[invadercount][3])
-            prefix = patpToPreNum(invaderlist[invadercount][3])
+            suffix = patpToSufNum(invaderlist[(startindex + invadercount) % invaderlist.length][3])
+            prefix = patpToPreNum(invaderlist[(startindex + invadercount) % invaderlist.length][3])
 
             weight = suffix/255
             hue = prefix * 360/255
@@ -1035,9 +1133,9 @@ scene("defend", () => {
         {
             if(invadercount < invaderlist.length)
             {
-                if(invaderlist[invadercount][0] != currentpal)
+                if(invaderlist[(startindex + invadercount) % invaderlist.length][0] != currentpal)
                 {
-                    currentpal = invaderlist[invadercount][0]
+                    currentpal = invaderlist[(startindex + invadercount) % invaderlist.length][0]
 
                     bghue = patpToPreNum(currentpal) * 360/255
                     bgcolor = hsv2rgb(bghue, 1, .75)
@@ -1247,6 +1345,7 @@ scene("defend", () => {
             catch {}
             gameover = 1
             newscore(score)
+            invadedby(currentpal)
             gameoverenemypos = enemy.pos 
             gameoverenemysize = enemy.size
             destroyAll("enemy")
@@ -1323,6 +1422,14 @@ scene("defend", () => {
                     size: scoreboard.size*.25,
                     color: rgb(0, 0, 0),
     	        })
+                drawText({
+                    text: "Invaded by " + currentpal,
+                    font: "sink",
+                    pos: vec2(width()*.5, height()*.7),
+                    origin: "center",
+                    size: 40,
+                    color: rgb(0, 0, 0)
+                })
             }
 
             drawCircle({
