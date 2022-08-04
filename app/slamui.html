@@ -23,6 +23,7 @@
             margin-right: auto;
 		}
 	</style>
+    <link rel="icon" type="image/x-icon" href="https://hanfel-dovned.sfo3.digitaloceanspaces.com/slam-tile.png">
     
 </head>
 
@@ -251,6 +252,18 @@ scene("sigil", () => {
             height: 100 + Math.sin(time())*3,
             origin: "center"
         })
+
+        //For generating tile image
+        /*drawPolygon({
+            pts: [
+                vec2(0, -100*.5),
+                vec2(-100*.45, 100*.3),
+                vec2(100*.45, 100*.3),
+            ],
+            pos: vec2(width()/2, height()/2),
+            color: rgb(255, 255, 255),
+            outline: {width: 1, color: rgb(0, 0, 0)}
+        })*/
     })
 
     onMousePress(() => {
@@ -1083,7 +1096,7 @@ scene("defend", () => {
     
         if(gameover == 0 && invadercount < invaderlist.length && invaderlist[(startindex + invadercount) % invaderlist.length][0] == currentpal)
         {
-            enemysprite = "invader" + invadercount
+            enemysprite = "invader" + ((startindex + invadercount) % invaderlist.length)
     
             // Last suffix of issuer determines weight
             // First prefix of issuer determines color

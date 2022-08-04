@@ -1,4 +1,4 @@
-/-  *slam, pals                                                                                                                                                                                                    
+/-  *slam, pals                                                                                                                                                                                                          
 /+  default-agent, dbug, server, schooner, *slam
 /*  slamui  %html  /app/slamui/html
 |%

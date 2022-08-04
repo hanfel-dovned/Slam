@@ -1,6 +1,7 @@
 :~  title+'Slam'
-    info+'Defend against invading gora.'
-    color+0x10.2791
+    info+'A game where you battle your pals\' gora.'
+    color+0x10.0032
+    image+'https://hanfel-dovned.sfo3.digitaloceanspaces.com/slam-tile.png'
     base+'slam'
     site+/apps/slam
     version+[1 0 0]
