@@ -101,15 +101,6 @@ function hiscore(score) {
     })
 }
 
-//Send a new team to gall agent
-//newteam([['foo', 'bar', '~hanfel'], ['foo2', 'bar2', '~minder']])
-function newteam(team) {
-    fetch('/apps/slam', {
-        method: 'POST',
-        body: JSON.stringify({'new-team': team})
-    }) 
-}
-
 //Send an invasion notification to gall agent
 //invaded(['~zod', ['foo', 'bar', '~hanfel']])
 //actually, just invaded('~zod') hopefully

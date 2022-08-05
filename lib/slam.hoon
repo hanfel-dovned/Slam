@@ -7,7 +7,6 @@
   %.  jon
   %-  of
   :~  hiscore+ni
-      new-team+(ar (at ~[so so (se %p)]))
       invaded+(se %p)
   ==
 ++  enjs-profiles

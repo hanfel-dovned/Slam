@@ -86,12 +86,22 @@
           ~
         [%html slamui]  
         ::
-          [%apps %slam %profiles ~] 
-        :_  state 
+          [%apps %slam %profiles ~]
+        =/  defendscore  +4:(~(got by profiles) our.bowl)
+        =/  invadescore  +5:(~(got by profiles) our.bowl)
+        ::  This doesn't work yet, need (list [@t @t @p])
+        =/  goralist  ^.((list [@t @t]) %gy /=gora=/pub)
+        =/  newprofile  [[defendscore invadescore] goralist]
+        :_  state(profiles (~(put by profiles) our.bowl newprofile))
+        ::  Send returns a list of cards, so we weld two lists of cards
+        %-  weld
+          :~  :*  %give  %fact  ~[/updates/out]  %slam-update 
+                  !>(`update`profile-update+newprofile)
+          ==  ==
         %-  send
         :+  200   
           ~  
-        [%json (enjs-profiles profiles)]
+        [%json (enjs-profiles refreshed-profiles)]
         :: 
           [%apps %slam %whoami ~]
         :_  state 
@@ -113,14 +123,6 @@
       =/  invadescore  +5:(~(got by profiles) our.bowl)
       =/  goralist  +3:(~(got by profiles) our.bowl)
       =/  newprofile  [[newscore:action invadescore] goralist]
-      :_  state(profiles (~(put by profiles) our.bowl newprofile))
-      :~  :*  %give  %fact  ~[/updates/out]  %slam-update 
-              !>(`update`profile-update+newprofile)
-      ==  ==
-    ::
-        %new-team
-      =/  profilescore  +2:(~(got by profiles) our.bowl)
-      =/  newprofile  [profilescore team:action]
       :_  state(profiles (~(put by profiles) our.bowl newprofile))
       :~  :*  %give  %fact  ~[/updates/out]  %slam-update 
               !>(`update`profile-update+newprofile)
