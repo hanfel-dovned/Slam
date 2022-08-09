@@ -95,6 +95,7 @@ function hsv2rgb(h,s,v)
 
 //Send hiscore to gall agent
 function hiscore(score) {
+    profiles[myshipname][0] = hiscore
     fetch('/apps/slam', {
         method: 'POST',
         body: JSON.stringify({'hiscore': score})
@@ -102,9 +103,8 @@ function hiscore(score) {
 }
 
 //Send an invasion notification to gall agent
-//invaded(['~zod', ['foo', 'bar', '~hanfel']])
-//actually, just invaded('~zod') hopefully
 function invadedby(name) {
+    profiles[name][1] += 1
     fetch('/apps/slam', {
         method: 'POST',
         body: JSON.stringify({'invaded': name})
@@ -527,7 +527,7 @@ scene("invaders", () => {
     })
 
     
-    var columns = 10;
+    var columns = 8;
     var rows = 5;
 
     var invaderindex = 0;
@@ -562,7 +562,7 @@ scene("invaders", () => {
 
                 add([
                     sprite(enemysprite, {width: size, height: size}),
-                    pos(j * 100 + 100, i * 100 + 200),
+                    pos(j * 130 + 100, i * 130 + 170),
                     area({scale: 1.2}),
                     origin("center"),
                     {
@@ -1081,6 +1081,9 @@ scene("defend", () => {
 
             size = gorasize + (gorasize * (weight-.5))
             invasionspeed = 1 - weight
+
+            if(invasionspeed < .03)
+                invasionspeed = .03
 
             add([
                 sprite(enemysprite, {width: size, height: size}),

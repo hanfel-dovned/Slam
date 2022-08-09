@@ -134,7 +134,7 @@
       ==  ==
     ==
   --
-:: 
+::  
 ++  on-watch
   |=  =path
   ^-  (quip card _this)
