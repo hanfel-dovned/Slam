@@ -20,17 +20,30 @@
   :-  `@t`(scot %p -.prof)
   :-  %a
   :~ 
-      (numb +<-:prof)
-      (numb +<+.prof)
-      %-  pairs 
-      %+  turn
-        +>.prof
-      |=  gora=[@t @t @p]
-      :-  -.gora
-      :-  %a
-      :~
-         (frond 'gora-url' s++<.gora)
-         (frond 'issuer' s+(scot %p +>.gora))
-      ==
+    (numb +<-:prof)
+    (numb +<+.prof)
+    :-  %a
+    %+  turn
+      +>.prof
+    |=  gora=[@t @t @p]
+    :-  %a
+    :~
+        [%s -.gora]
+        [%s +<.gora]
+        [%s (scot %p +>.gora)]
+    ==
   ==
 --
+
+::  (numb +<-:prof)
+::       (numb +<+.prof)
+::       %-  pairs 
+::       %+  turn
+::         +>.prof
+::       |=  gora=[@t @t @p]
+::       :-  -.gora
+::       :-  %a
+::       :~
+::          (frond 'gora-url' s++<.gora)
+::          (frond 'issuer' s+(scot %p +>.gora))
+::       ==

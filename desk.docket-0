@@ -5,6 +5,6 @@
     base+'slam'
     site+/apps/slam
     version+[1 0 0]
-    website+'https://urbit.org/grants'
+    website+'https://github.com/hanfel-dovned/Slam'
     license+'MIT'
 ==

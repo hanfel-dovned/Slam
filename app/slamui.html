@@ -125,25 +125,7 @@ async function getprofiles() {
         const response = await fetch('/apps/slam/profiles')
         return response.json()
     }
-//var profiles = await getprofiles()
-
-var profiles = {'~mister-master-palfun-foslup': [10, 12, [
-                ['hello', 'http://www.thebestdinosaur.com/best-stegosaurus.png', '~minder-folden'], 
-                ['hello2', 'https://www.otherlife.co/content/images/size/w1000/2022/03/imperceptible-boarding.png', '~minder-folden'],
-               // ['spinner', 'https://siasky.net/AQDifELxAr0qpnEwa1JznJ1ogblWfISzRd6hC5IE_BEmWA?.gif', '~lagrev-nocfep'],
-               // ['hello4', 'https://minderimages.nyc3.digitaloceanspaces.com/minder-folden/2022.6.27..14.48.43-Week%2025%202022.png', '~hatryx-listud'],
-                ['hello5', 'https://minderimages.nyc3.digitaloceanspaces.com/minder-folden/2022.7.18..13.23.45-Temple%20Of%20Pythagoras.png', '~rabsef-bicrym']
-            ]],
-                '~minder-folden': [0, 35, [
-                ['firstg', 'https://raw.githubusercontent.com/sigilante/hsl-2022.02/master/gora-hsl-~2022.2.png', '~zod'], 
-             //   ['g2', 'https://www.otherlife.co/content/images/size/w1000/2022/03/imperceptible-boarding.png', '~hanfel-dovned'],
-             //   ['g3', 'https://siasky.net/AQDifELxAr0qpnEwa1JznJ1ogblWfISzRd6hC5IE_BEmWA?.gif', '~zod'],
-             //   ['masdfsadf', 'https://freedom-club.sfo2.digitaloceanspaces.com/rabsef-bicrym/2021.10.17..21.05.39-image.png', '~master-morzod'],
-                ['elephant', 'https://nartes-fasrum.s3.tirefire.pw/nartes-fasrum/2021.11.04..16.04.04-rab-pb-gora.png', '~litmus-ritten']
-            ]],
-                '~zod': [0, 3, [['mygora', 'https://noah.hanfeldovned.repl.co/noah.jpg', '~zod'], 
-                ['mygora2', 'https://noah.hanfeldovned.repl.co/noah.jpg', '~littel-wolfur']]],
-            }
+var profiles = await getprofiles()
 
 var invaderlist = []
 for(var name in profiles) 
@@ -204,7 +186,7 @@ for(var i = 0; i < invaderlist.length; i++)
     loadSpriteSafe("invader" + i, invaderlist[i][2])
 
 for(var i = 0; i < myinvaders.length; i++)
-    loadSpriteSafe("myinvader" + i, invaderlist[i][2])
+    loadSpriteSafe("myinvader" + i, myinvaders[i][2])
 
 loadBean("playersprite")
 loadBean("enemysprite")

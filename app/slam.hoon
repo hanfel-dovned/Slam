@@ -1,4 +1,4 @@
-/-  *slam, pals                                                                                                                                                                                                          
+/-  *slam, pals
 /+  default-agent, dbug, server, schooner, *slam
 /*  slamui  %html  /app/slamui/html
 |%
@@ -89,19 +89,18 @@
           [%apps %slam %profiles ~]
         =/  defendscore  +4:(~(got by profiles) our.bowl)
         =/  invadescore  +5:(~(got by profiles) our.bowl)
-        ::  This doesn't work yet, need (list [@t @t @p])
-        =/  goralist  ^.((list [@t @t]) %gy /=gora=/pub)
-        =/  newprofile  [[defendscore invadescore] goralist]
+        =/  goralist  .^((list [@t @t @p]) %gy /(scot %p our.bowl)/gora/(scot %da now.bowl)/slam)
+        =/  newprofile  `profile`[[defendscore invadescore] goralist]
         :_  state(profiles (~(put by profiles) our.bowl newprofile))
         ::  Send returns a list of cards, so we weld two lists of cards
-        %-  weld
+        %+  weld
           :~  :*  %give  %fact  ~[/updates/out]  %slam-update 
                   !>(`update`profile-update+newprofile)
           ==  ==
         %-  send
         :+  200   
-          ~  
-        [%json (enjs-profiles refreshed-profiles)]
+          ~ 
+        [%json (enjs-profiles (~(put by profiles) our.bowl newprofile))]
         :: 
           [%apps %slam %whoami ~]
         :_  state 
@@ -135,7 +134,7 @@
       ==  ==
     ==
   --
-::
+:: 
 ++  on-watch
   |=  =path
   ^-  (quip card _this)
