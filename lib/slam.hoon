@@ -34,16 +34,3 @@
     ==
   ==
 --
-
-::  (numb +<-:prof)
-::       (numb +<+.prof)
-::       %-  pairs 
-::       %+  turn
-::         +>.prof
-::       |=  gora=[@t @t @p]
-::       :-  -.gora
-::       :-  %a
-::       :~
-::          (frond 'gora-url' s++<.gora)
-::          (frond 'issuer' s+(scot %p +>.gora))
-::       ==
