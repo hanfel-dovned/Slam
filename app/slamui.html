@@ -527,8 +527,8 @@ scene("invaders", () => {
     })
 
     
-    var columns = 8;
-    var rows = 5;
+    var columns = 9;
+    var rows = 4;
 
     var invaderindex = 0;
     var enemysprite = ""
@@ -544,7 +544,7 @@ scene("invaders", () => {
    {
         for(var j = 0; j < columns; j++)
         {
-            invaderindex = i*j + j
+            invaderindex = i*columns + j
 
             if(invaderindex < myinvaders.length)
             {
@@ -562,7 +562,7 @@ scene("invaders", () => {
 
                 add([
                     sprite(enemysprite, {width: size, height: size}),
-                    pos(j * 130 + 100, i * 130 + 170),
+                    pos(j * 130 + 80, i * 130 + 170),
                     area({scale: 1.2}),
                     origin("center"),
                     {
