@@ -1033,7 +1033,7 @@ scene("defend", () => {
     while(startindex > 0)
     {
         if(invaderlist[(startindex + invadercount) % invaderlist.length][0] == invaderlist[(startindex - 1 + invadercount) % invaderlist.length][0])
-            startindex -= 1
+            startindex = randi(invaderlist.length)
         else
             break
     }
