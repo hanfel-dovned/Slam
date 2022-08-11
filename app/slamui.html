@@ -540,11 +540,11 @@ scene("invaders", () => {
     var size = 0
     var drawcolor = 0
 
-   for(var i = 0; i < columns; i++)
+   for(var i = 0; i < rows; i++)
    {
-        for(var j = 0; j < rows; j++)
+        for(var j = 0; j < columns; j++)
         {
-            invaderindex = i*columns + j
+            invaderindex = i*j + j
 
             if(invaderindex < myinvaders.length)
             {
