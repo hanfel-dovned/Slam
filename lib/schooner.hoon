@@ -19,6 +19,9 @@
     [%html h=cord]            [%login-redirect l=cord]
     [%redirect o=cord]        [%plain p=tape]
     [%none ~]                 [%stock ~]
+    [%audio-mpeg p=@]
+    [%audio-wav p=@]
+    [%image-png p=@]
   ==
 ::
 +$  http-status  @ud
@@ -30,6 +33,21 @@
     eyre-id
   ^-  simple-payload:http
   ?-  -.resource
+      %audio-mpeg
+    :_  `(as-octs:mimes:html p.resource)
+    :-  http-status
+    (weld headers ['content-type'^'audio/mpeg']~)
+    ::
+      %audio-wav
+    :_  `(as-octs:mimes:html p.resource)
+    :-  http-status
+    (weld headers ['content-type'^'audio/wav']~)
+    ::
+      %image-png
+    :_  `(as-octs:mimes:html p.resource)
+    :-  http-status
+    (weld headers ['content-type'^'image/png']~)
+    ::
       %manx
     :-  :-  http-status
       (weld headers ['content-type'^'text/html']~)
@@ -39,7 +57,7 @@
     :-  :-  http-status
         %+  weld  headers
         ['content-type'^'application/json']~
-    `(as-octt:mimes:html (en-json:html j.resource))
+    `(as-octt:mimes:html (trip (en:json:html j.resource)))
     ::
      %html
     :-  :-  http-status

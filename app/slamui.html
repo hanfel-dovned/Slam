@@ -23,7 +23,7 @@
             margin-right: auto;
 		}
 	</style>
-    <link rel="icon" type="image/x-icon" href="https://hanfel-dovned.sfo3.digitaloceanspaces.com/slam-tile.png">
+    <link rel="icon" type="image/x-icon" href="/apps/slam/tile/png">
     
 </head>
 
@@ -31,7 +31,7 @@
 
 <script type="module">
 
-import kaboom from "https://unpkg.com/kaboom/dist/kaboom.mjs";
+import kaboom from "https://unpkg.com/kaboom@2000.2.10/dist/kaboom.mjs";
 
 
 var suffixes = ["zod","nec","bud","wes","sev","per","sut","let","ful","pen","syt",
@@ -191,14 +191,14 @@ for(var i = 0; i < myinvaders.length; i++)
 loadBean("playersprite")
 loadBean("enemysprite")
         
-loadSound("music", "https://hanfel-dovned.sfo3.digitaloceanspaces.com/Slam-Gameplay-Song.mp3")
-loadSound("intromusic", "https://hanfel-dovned.sfo3.digitaloceanspaces.com/Slam-Intro-Song.mp3")
+loadSound("music", "/apps/slam/audio/music/mp3")
+loadSound("intromusic", "/apps/slam/audio/intromusic/mp3")
 
-loadSound("explosion", "https://hanfel-dovned.sfo3.digitaloceanspaces.com/explosion.wav")
-loadSound("charge", "https://hanfel-dovned.sfo3.digitaloceanspaces.com/charge.wav")
-loadSound("slam", "https://hanfel-dovned.sfo3.digitaloceanspaces.com/slam.wav")
-loadSound("bump", "https://hanfel-dovned.sfo3.digitaloceanspaces.com/bump.wav")
-loadSound("dodge", "https://hanfel-dovned.sfo3.digitaloceanspaces.com/dodge.wav")
+loadSound("explosion", "/apps/slam/audio/explosion/wav")
+loadSound("charge", "/apps/slam/audio/charge/wav")
+loadSound("slam", "/apps/slam/audio/slamsound/wav")
+loadSound("bump", "/apps/slam/audio/bump/wav")
+loadSound("dodge", "/apps/slam/audio/dodge/wav")
 
 
 scene("replay", () => {

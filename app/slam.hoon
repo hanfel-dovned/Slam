@@ -1,6 +1,14 @@
 /-  *slam, pals
 /+  default-agent, dbug, server, schooner, *slam
 /*  slamui  %html  /app/slamui/html
+/*  music       %mp3  /app/audio/music/mp3
+/*  intromusic  %mp3  /app/audio/intromusic/mp3
+/*  explosion   %wav  /app/audio/explosion/wav
+/*  charge      %wav  /app/audio/charge/wav
+/*  slamsound   %wav  /app/audio/slamsound/wav
+/*  bump        %wav  /app/audio/bump/wav
+/*  dodge       %wav  /app/audio/dodge/wav
+/*  tile        %png  /app/tile/png
 |%
 +$  versioned-state
   $%  state-0
@@ -69,7 +77,7 @@
         %'POST'
       ?~  body.request.inbound-request
         [(send [405 ~ [%stock ~]]) state]
-      =/  json  (de-json:html q.u.body.request.inbound-request)
+      =/  json  (de:json:html q.u.body.request.inbound-request)
       =/  action  (dejs-action +.json) 
       (handle-action action) 
       :: 
@@ -107,7 +115,39 @@
         %-  send
         :+  200 
           ~  
-        [%plain (scow %p our.bowl)] 
+        [%plain (scow %p our.bowl)]
+        ::
+          [%apps %slam %audio %music %mp3 ~]
+        :_  state
+        (send [200 ~ [%audio-mpeg music]])
+        ::
+          [%apps %slam %audio %intromusic %mp3 ~]
+        :_  state
+        (send [200 ~ [%audio-mpeg intromusic]])
+        ::
+          [%apps %slam %audio %explosion %wav ~]
+        :_  state
+        (send [200 ~ [%audio-wav explosion]])
+        ::
+          [%apps %slam %audio %charge %wav ~]
+        :_  state
+        (send [200 ~ [%audio-wav charge]])
+        ::
+          [%apps %slam %audio %slamsound %wav ~]
+        :_  state
+        (send [200 ~ [%audio-wav slamsound]])
+        ::
+          [%apps %slam %audio %bump %wav ~]
+        :_  state
+        (send [200 ~ [%audio-wav bump]])
+        ::
+          [%apps %slam %audio %dodge %wav ~]
+        :_  state
+        (send [200 ~ [%audio-wav dodge]])
+        ::
+          [%apps %slam %tile %png ~]
+        :_  state
+        (send [200 ~ [%image-png tile]])
       == 
     ==
   :: 
