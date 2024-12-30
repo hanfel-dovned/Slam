@@ -1,4 +1,4 @@
-Slam is a social arcade game for Urbit that integrates with %pals and [%gora](https://github.com/hanfel-dovned/gora). (Gameplay gif [here](https://x.com/hanfel_dovned/status/1729588187352191369).)
+Slam is a social arcade game for Urbit that integrates with %pals and [%gora](https://github.com/hanfel-dovned/gora). ([Gameplay GIF](https://x.com/hanfel_dovned/status/1729588187352191369))
 
 Each %gora token you own becomes an invader in your fleet, with properties generated according to the ID of the user who gave you the %gora token. These invaders will appear as enemies in your pals' Slam games.
 
